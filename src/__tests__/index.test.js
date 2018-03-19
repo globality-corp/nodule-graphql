@@ -1,4 +1,0 @@
-describe('tests', () => {
-    it('pass', () => {
-    });
-});

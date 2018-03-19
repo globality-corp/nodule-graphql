@@ -1,7 +1,7 @@
 {
     "name": "nodule-graphql",
     "version": "0.1.0",
-    "description": "GraphQL Conventions",
+    "description": "Node GraphQL Conventions",
     "main": "lib/",
     "repository": "git@github.com:globality-corp/nodule-graphql",
     "author": "Globality Engineering",
@@ -13,9 +13,12 @@
         "verify": "yarn lint && yarn test"
     },
     "dependencies": {
+        "graphql": "^0.13.2",
+        "http-status-codes": "^1.3.0",
         "lodash": "^4.17.5"
     },
     "devDependencies": {
+        "apollo-server-express": "^1.3.2",
         "babel-cli": "^6.26.0",
         "babel-eslint": "^8.2.2",
         "babel-plugin-transform-async-to-generator": "^6.24.1",
@@ -23,9 +26,15 @@
         "babel-plugin-transform-runtime": "^6.23.0",
         "babel-polyfill": "^6.26.0",
         "babel-preset-env": "^1.6.1",
+        "body-parser": "^1.18.2",
         "eslint": "^4.18.2",
         "eslint-config-airbnb-base": "^12.1.0",
         "eslint-plugin-import": "^2.9.0",
-        "jest": "^22.4.2"
+        "express": "^4.16.3",
+        "jest": "^22.4.2",
+        "supertest": "^3.0.0"
+    },
+    "jest": {
+        "testRegex": "/__tests__/.*(test)\\.js"
     }
 }
