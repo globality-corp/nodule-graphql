@@ -1,5 +1,5 @@
 {
-    "name": "nodule-graphql",
+    "name": "@globality/nodule-graphql",
     "version": "0.1.0",
     "description": "Node GraphQL Conventions",
     "main": "lib/",
