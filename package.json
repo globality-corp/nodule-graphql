@@ -1,6 +1,6 @@
 {
-    "name": "nodule-graphql",
-    "version": "0.1.0",
+    "name": "@globality/nodule-graphql",
+    "version": "0.2.0",
     "description": "Node GraphQL Conventions",
     "main": "lib/",
     "repository": "git@github.com:globality-corp/nodule-graphql",
