@@ -1,12 +1,18 @@
 import request from 'supertest';
 
-import createApp from './routes';
+import { Nodule } from '@globality/nodule-config';
+
+import createApp from './app';
 
 
 describe('routes', () => {
-    const app = createApp();
+    beforeEach(async () => {
+        await Nodule.testing().load();
+    });
 
     it('resolves requests', async () => {
+        const app = createApp();
+
         const query = `
           query example {
             user {
@@ -42,6 +48,7 @@ describe('routes', () => {
     });
 
     it('handles errors', async () => {
+        const app = createApp();
         const query = `
           query example {
             user(id: "99") {
@@ -74,6 +81,8 @@ describe('routes', () => {
     });
 
     it('handles errors', async () => {
+        const app = createApp();
+
         const query = `
           query example {
             user(id: "23") {

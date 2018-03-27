@@ -1,6 +1,9 @@
+import { bind } from '@globality/nodule-config';
 import { GraphQLObjectType, GraphQLSchema } from 'graphql';
 
 import { User } from './resources';
+// activate component bindings
+import './resolvers';
 
 
 const QueryType = new GraphQLObjectType({
@@ -12,6 +15,9 @@ const QueryType = new GraphQLObjectType({
 });
 
 
-export default new GraphQLSchema({
+const schema = new GraphQLSchema({
     query: QueryType,
 });
+
+
+bind('graphql.schema', () => schema);

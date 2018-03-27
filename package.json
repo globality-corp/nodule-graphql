@@ -13,12 +13,20 @@
         "verify": "yarn lint && yarn test"
     },
     "dependencies": {
-        "graphql": "^0.13.2",
+        "apollo-server-express": "^1.3.3",
+        "connect-requestid": "^1.1.0",
+        "cors": "^2.8.4",
+        "express": "^4.16.3",
+        "helmet": "^3.12.0",
         "http-status-codes": "^1.3.0",
         "lodash": "^4.17.5"
     },
+    "peerDependencies": {
+        "@globality/nodule-config": ">= 2.1.0 < 3",
+        "graphql": ">= 0.13.2 < 1"
+    },
     "devDependencies": {
-        "apollo-server-express": "^1.3.2",
+        "@globality/nodule-config": "^2.1.0",
         "babel-cli": "^6.26.0",
         "babel-eslint": "^8.2.2",
         "babel-plugin-transform-async-to-generator": "^6.24.1",
@@ -30,11 +38,14 @@
         "eslint": "^4.18.2",
         "eslint-config-airbnb-base": "^12.1.0",
         "eslint-plugin-import": "^2.9.0",
-        "express": "^4.16.3",
+        "graphql": "^0.13.2",
         "jest": "^22.4.2",
         "supertest": "^3.0.0"
     },
     "jest": {
-        "testRegex": "/__tests__/.*(test)\\.js"
+        "testRegex": "/__tests__/.*(test)\\.js",
+        "modulePaths": [
+            "<rootDir>/src"
+        ]
     }
 }

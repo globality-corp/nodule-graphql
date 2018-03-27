@@ -4,7 +4,7 @@ import {
     InternalServerError,
     NotFound,
     UnprocessableEntity,
-} from '..';
+} from 'index';
 
 
 describe('BadFound', () => {

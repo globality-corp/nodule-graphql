@@ -1,24 +1,31 @@
-import { createResolver, Forbidden } from '..';
-import { retrieveCompany, retrieveUser } from './services';
+import { bind, getContainer } from '@globality/nodule-config';
+
+import { createResolver, Forbidden } from 'index';
 
 
-export default {
-    company: {
-        retrieveName: createResolver({
-            aggregate: (context, { companyId }) => retrieveCompany(companyId),
-            transform: company => company.name,
-        }),
+const retrieveCompanyName = createResolver({
+    aggregate: ({ companyId }) => {
+        const { services } = getContainer();
+        return services.company.retrieve(companyId);
     },
-    user: {
-        retrieve: createResolver({
-            aggregate: (context, { userId }) => retrieveUser(userId),
-            authorize: (context, { userId }) => {
-                if (userId === '23') {
-                    throw new Forbidden('Not Authorized');
-                }
-                return true;
-            },
-            transform: user => ({ items: [user] }),
-        }),
+    transform: company => company.name,
+});
+
+
+const retrieveUser = createResolver({
+    aggregate: ({ userId }) => {
+        const { services } = getContainer();
+        return services.user.retrieve(userId);
     },
-};
+    authorize: ({ userId }) => {
+        if (userId === '23') {
+            throw new Forbidden('Not Authorized');
+        }
+        return true;
+    },
+    transform: user => ({ items: [user] }),
+});
+
+
+bind('graphql.resolvers.company.name.retrieve', () => retrieveCompanyName);
+bind('graphql.resolvers.user.retrieve', () => retrieveUser);
