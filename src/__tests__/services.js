@@ -1,7 +1,9 @@
-import { NotFound } from '..';
+import { bind } from '@globality/nodule-config';
+
+import { NotFound } from 'index';
 
 
-export async function retrieveCompany(companyId) {
+async function retrieveCompany(companyId) {
     if (companyId && companyId !== 'GSW') {
         throw new NotFound('No such user');
     }
@@ -13,7 +15,7 @@ export async function retrieveCompany(companyId) {
 }
 
 
-export async function retrieveUser(userId) {
+async function retrieveUser(userId) {
     if (userId && userId !== '30') {
         throw new NotFound('No such user');
     }
@@ -25,3 +27,7 @@ export async function retrieveUser(userId) {
         lastName: 'Curry',
     };
 }
+
+
+bind('services.company.retrieve', () => retrieveCompany);
+bind('services.user.retrieve', () => retrieveUser);

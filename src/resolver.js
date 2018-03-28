@@ -14,25 +14,25 @@ export class Resolver {
     }
 
     // NB: async class methods were added to node in v8.x
-    async resolve(context, args) {
+    async resolve(args, context) {
         if (this.authorize) {
-            await this.authorize(context, args, this);
+            await this.authorize(args, context, this);
         }
 
         // aggregate asynchronous requests over services.
-        const aggregated = await this.aggregate(context, args, this);
+        const aggregated = await this.aggregate(args, context, this);
 
         if (!this.transform) {
             return aggregated;
         }
 
         // transform aggregated service data into a resource
-        return this.transform(aggregated, context, args, this);
+        return this.transform(aggregated, args, context, this);
     }
 }
 
 
-export function createResolver(resolverArgs) {
-    const resolver = new Resolver(resolverArgs);
-    return (context, args) => resolver.resolve(context, args);
+export function createResolver(options) {
+    const resolver = new Resolver(options);
+    return (args, context) => resolver.resolve(args, context);
 }

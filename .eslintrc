@@ -3,11 +3,11 @@
     "parser": "babel-eslint",
     "rules": {
         "comma-dangle": [2, {
-          "arrays": "always-multiline",
-          "objects": "always-multiline",
-          "imports": "always-multiline",
-          "exports": "always-multiline",
-          "functions": "always-multiline"
+            "arrays": "always-multiline",
+            "objects": "always-multiline",
+            "imports": "always-multiline",
+            "exports": "always-multiline",
+            "functions": "always-multiline"
         }],
         "function-paren-newline": ["error", "consistent"],
         "object-curly-newline": ["error", {"consistent": true}],
@@ -18,4 +18,11 @@
     "env": {
         "jest": true
     },
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "paths": ["src"]
+            }
+        }
+    }
 }

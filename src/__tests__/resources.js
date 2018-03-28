@@ -5,6 +5,8 @@ import {
     GraphQLString,
 } from 'graphql';
 
+import { getContainer } from '@globality/nodule-config';
+
 
 export const CompanyType = new GraphQLObjectType({
     name: 'CompanyType',
@@ -29,9 +31,12 @@ export const UserType = new GraphQLObjectType({
         },
         companyName: {
             type: GraphQLString,
-            resolve: (user, args, context) => context.resolvers.company.retrieveName(context, {
-                companyId: user.companyId,
-            }),
+            resolve: (user, args, context) => {
+                const { resolvers } = getContainer('graphql');
+                return resolvers.company.name.retrieve({
+                    companyId: user.companyId,
+                }, context);
+            },
         },
         firstName: {
             type: GraphQLString,
@@ -64,8 +69,11 @@ export const User = {
                 type: GraphQLID,
             },
         },
-        resolve: (rootValue, args, context) => context.resolvers.user.retrieve(context, {
-            userId: args.id,
-        }),
+        resolve: (rootValue, args, context) => {
+            const { resolvers } = getContainer('graphql');
+            return resolvers.user.retrieve({
+                userId: args.id,
+            }, context);
+        },
     },
 };
