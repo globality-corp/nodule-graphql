@@ -15,6 +15,6 @@ setDefaults(
 );
 
 bind('middleware.cors', () => {
-    const config = getConfig();
-    return cors(config.cors);
+    const config = getConfig('cors');
+    return cors(config);
 });
