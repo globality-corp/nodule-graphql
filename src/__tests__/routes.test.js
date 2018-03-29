@@ -47,7 +47,7 @@ describe('routes', () => {
         });
     });
 
-    it('handles errors', async () => {
+    it('handles not found errors', async () => {
         const app = createApp();
         const query = `
           query example {
@@ -80,7 +80,7 @@ describe('routes', () => {
         ]);
     });
 
-    it('handles errors', async () => {
+    it('handles forbidden errors', async () => {
         const app = createApp();
 
         const query = `

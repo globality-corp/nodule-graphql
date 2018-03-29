@@ -10,5 +10,5 @@ export {
     NotFound,
     UnprocessableEntity,
 } from './errors';
-export { createResolver } from './resolver';
+export { createResolver, getResolver } from './resolver';
 export { wrapResolvers } from './wrapper';
