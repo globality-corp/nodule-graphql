@@ -23,6 +23,7 @@ const retrieveUser = createResolver({
         }
         return true;
     },
+    mask: (obj, { id }) => [{ userId: id }],
     transform: user => ({ items: [user] }),
 });
 

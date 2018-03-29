@@ -1,3 +1,11 @@
+import { getContainer } from '@globality/nodule-config';
+
+
+/* Default mask function: just passes args.
+ */
+function defaultMask(obj, args) {
+    return [args];
+}
 
 
 export class Resolver {
@@ -6,33 +14,44 @@ export class Resolver {
             aggregate,
             authorize,
             transform,
+            mask,
         },
     ) {
         this.aggregate = aggregate;
         this.authorize = authorize;
         this.transform = transform;
+        this.mask = mask || defaultMask;
     }
 
     // NB: async class methods were added to node in v8.x
-    async resolve(args, context) {
+    async resolve(obj, args, context, info) {
+        const masked = this.mask(obj, args, context, info);
+
         if (this.authorize) {
-            await this.authorize(args, context, this);
+            await this.authorize(...masked);
         }
 
         // aggregate asynchronous requests over services.
-        const aggregated = await this.aggregate(args, context, this);
+        const aggregated = await this.aggregate(...masked);
 
         if (!this.transform) {
             return aggregated;
         }
 
         // transform aggregated service data into a resource
-        return this.transform(aggregated, args, context, this);
+        return this.transform(aggregated, ...masked);
     }
 }
 
 
 export function createResolver(options) {
-    const resolver = new Resolver(options);
-    return (args, context) => resolver.resolve(args, context);
+    return new Resolver(options);
+}
+
+
+export function getResolver(name) {
+    return (obj, args, context, info) => {
+        const resolver = getContainer(`graphql.resolvers.${name}`);
+        return resolver.resolve(obj, args, context, info);
+    };
 }
