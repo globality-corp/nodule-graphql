@@ -1,4 +1,4 @@
-import { set } from 'lodash';
+import { isFunction, set } from 'lodash';
 
 import { OpenAPIError } from '@globality/nodule-openapi';
 
@@ -8,8 +8,8 @@ import { OpenAPIError } from '@globality/nodule-openapi';
 export function mockResponse(name, operationId, data) {
     const obj = {};
 
-    set(obj, `clients.mock.${name}.${operationId}`, jest.fn(async () => ({
-        data,
+    set(obj, `clients.mock.${name}.${operationId}`, jest.fn(async (req, args) => ({
+        data: isFunction(data) ? data(args) : data,
     })));
 
     return obj;
