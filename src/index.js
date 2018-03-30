@@ -12,3 +12,4 @@ export {
 } from './errors';
 export { createResolver, getResolver } from './resolver';
 export { wrapResolvers } from './wrapper';
+export { signSymmetric, signPrivate } from 'middleware/jwt/token';

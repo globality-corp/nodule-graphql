@@ -1,7 +1,9 @@
+/* Token generation functions (intended for testing).
+ */
 import jwt from 'jsonwebtoken';
 
 
-export function signSymmetric(audience, key, assertions) {
+export function signSymmetric(audience, key, assertions, expiresIn = 36000) {
     const secret = Buffer.from(key, 'base64');
     return jwt.sign(
         assertions,
@@ -9,21 +11,21 @@ export function signSymmetric(audience, key, assertions) {
         {
             algorithm: 'HS256',
             audience,
-            expiresIn: 36000,
+            expiresIn,
         },
     );
 }
 
 
-export function signPrivate(audience, key, assertions) {
+export function signPrivate(audience, key, assertions, expiresIn = 36000, keyid = 'kid') {
     return jwt.sign(
         assertions,
         key,
         {
             algorithm: 'RS256',
             audience,
-            expiresIn: 36000,
-            keyid: 'kid',
+            expiresIn,
+            keyid,
         },
     );
 }
