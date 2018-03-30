@@ -16,9 +16,9 @@ function chooseAudience(audience, audiences) {
         return 'audience';
     }
 
-//    if (typeof audiences === 'string') {
-//        return audience || audiences.split(',');
-//    }
+    if (typeof audiences === 'string') {
+        return audience || audiences.split(',');
+    }
 
     // the audience option of jwt.verify is a list or a string. If you pass a
     // list, jwt will automatically try to find at least one client id that
@@ -38,7 +38,6 @@ export default function middleware(req, res, next) {
     const config = getConfig('middleware.jwt') || {};
     const { audience, audiences } = config;
     const matchingAudience = chooseAudience(audience, audiences);
-    console.log("matching audience", matchingAudience);
 
     const validator = jwt({
         secret: negotiateKey,
@@ -47,14 +46,12 @@ export default function middleware(req, res, next) {
     });
 
     return validator(req, res, (error) => {
-        console.log("validation done");
         if (error) {
             // XXX log a warning here
             return res.status(UNAUTHORIZED).json({
                 message: 'Unauthorized',
             }).end();
         }
-        console.log("next gets called!!!");
         return next();
     });
 }
