@@ -11,5 +11,5 @@ export {
     UnprocessableEntity,
 } from './errors';
 export { createResolver, getResolver } from './resolver';
+export { signSymmetric, signPrivate } from './test';
 export { wrapResolvers } from './wrapper';
-export { signSymmetric, signPrivate } from 'middleware/jwt/token';
