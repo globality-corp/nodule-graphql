@@ -3,6 +3,7 @@ import './middleware';
 import './routes';
 import './terminal';
 
+export { createOpenAPIClient } from './clients';
 export {
     BadRequest,
     Forbidden,
@@ -11,5 +12,10 @@ export {
     UnprocessableEntity,
 } from './errors';
 export { createResolver, getResolver } from './resolver';
-export { signSymmetric, signPrivate } from './test';
+export {
+    mockError,
+    mockResponse,
+    signSymmetric,
+    signPrivate,
+} from './testing';
 export { wrapResolvers } from './wrapper';

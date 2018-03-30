@@ -1,6 +1,6 @@
 {
     "name": "@globality/nodule-graphql",
-    "version": "0.6.2",
+    "version": "0.7.0",
     "description": "Node GraphQL Conventions",
     "main": "lib/",
     "repository": "git@github.com:globality-corp/nodule-graphql",
@@ -25,10 +25,12 @@
     },
     "peerDependencies": {
         "@globality/nodule-config": ">= 2.3.0 < 3",
+        "@globality/nodule-openapi": ">= 0.6.0 < 1",
         "graphql": ">= 0.13.2 < 1"
     },
     "devDependencies": {
         "@globality/nodule-config": "^2.3.0",
+        "@globality/nodule-openapi": "^0.6.0",
         "babel-cli": "^6.26.0",
         "babel-eslint": "^8.2.2",
         "babel-plugin-transform-async-to-generator": "^6.24.1",
