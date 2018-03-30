@@ -7,6 +7,7 @@ describe('negotiateKey', () => {
 
     beforeEach(() => {
         clearBinding('config');
+        clearBinding('metadata');
     });
 
     it('requires a payload header', () => {
@@ -86,6 +87,8 @@ describe('negotiateKey', () => {
     });
 
     it('handles symmetric private key configuration errors', async () => {
+        await new Nodule({ name: 'test' }).load();
+
         const req = {};
         const header = {
             alg: 'HS256',

@@ -1,6 +1,6 @@
 import { get } from 'lodash';
 
-import { getConfig } from '@globality/nodule-config';
+import { getConfig, getMetadata } from '@globality/nodule-config';
 
 import loadPublicKey from './publicKey';
 
@@ -8,7 +8,13 @@ import loadPublicKey from './publicKey';
 export const ALGORITHMS = {
     HS256: ({ secret }) => {
         if (!secret) {
-            throw new Error('HS256 signing requires `middleware.jwt.secret` to be configured');
+            const metadata = getMetadata();
+            if (!metadata || !metadata.testing) {
+                throw new Error('HS256 signing requires `middleware.jwt.secret` to be configured');
+            }
+
+            // simplify test by having a test-only default value
+            secret = 'secret'; // eslint-disable-line no-param-reassign
         }
         return Buffer.from(secret, 'base64');
     },

@@ -3,8 +3,7 @@ import request from 'supertest';
 
 import { getContainer, Nodule } from '@globality/nodule-config';
 
-import 'index';
-import { signSymmetric, signPrivate } from './token';
+import { signSymmetric, signPrivate } from 'index';
 
 
 describe('Configuring the middleware', () => {

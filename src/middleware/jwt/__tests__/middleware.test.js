@@ -1,7 +1,7 @@
 import { clearBinding, Nodule } from '@globality/nodule-config';
 
+import { signSymmetric } from 'index';
 import middleware from '../middleware';
-import { signSymmetric } from './token';
 
 
 describe('JWT middleware', () => {
