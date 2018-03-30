@@ -56,22 +56,104 @@ describe('JWT middleware', () => {
             },
         }).load();
 
-        const token = signSymmetric({ email }, secret, 'audience');
+        const token = signSymmetric({ email }, secret, audience);
         const req = {
             headers: {
                 authorization: `Bearer ${token}`,
             },
         };
         const res = {};
+        res.status = jest.fn(() => res);
+        res.json = jest.fn(() => res);
+        res.end = jest.fn(() => null);
+
+
+        console.log("sarting test i care about");
+        const result = middleware(req, res, (error) => {
+            expect(error).not.toBeDefined();
+            console.log('does the callback happen');
+            console.log(res);
+            expect(res.status).toHaveBeenCalledTimes(0);
+            expect(req.locals.jwt.aud).toEqual(audience);
+            expect(req.locals.jwt.email).toEqual(email);
+        });
+        console.log('locals', req.locals);
+    });
+
+    it('validates a token with multiple audiences', async () => {
+        const email = 'first.last@example.com';
+        const audience = 'test-audience';
+        const audiences = [audience, 'purple-audience'];
+        const secret = 'secret';
+        console.log("multi audience test");
+        await Nodule.testing().fromObject({
+            middleware: {
+                jwt: {
+                    audiences,
+                    secret,
+                },
+            },
+        }).load();
+
+        const token = signSymmetric({ email }, secret, audience);
+        const req = {
+            headers: {
+                authorization: `Bearer ${token}`,
+            },
+        };
+        const res = {};
+        res.status = jest.fn(() => res);
+        res.json = jest.fn(() => res);
+        res.end = jest.fn(() => null);
 
         middleware(req, res, (error) => {
             expect(error).not.toBeDefined();
+            expect(res.status).toHaveBeenCalledTimes(0);
             expect(req.locals.jwt.aud).toEqual(audience);
             expect(req.locals.jwt.email).toEqual(email);
         });
     });
 
+    it('validates a token with multiple audiences as string', async () => {
+        console.log("multi audience string test");
+        const email = 'first.last@example.com';
+        const audience = 'test-poop-audience';
+        const audiences = [`${audience},purple-audience`];
+        const secret = 'secret';
+        await Nodule.testing().fromObject({
+            middleware: {
+                jwt: {
+                    audiences,
+                    secret,
+                },
+            },
+        }).load();
+
+        const token = signSymmetric({ email }, secret, 'test-audience');
+        const req = {
+            headers: {
+                authorization: `Bearer ${token}`,
+            },
+        };
+        const res = {};
+        res.status = jest.fn(() => res);
+        res.json = jest.fn(() => res);
+        res.end = jest.fn(() => null);
+
+        console.log("start middleware");
+        middleware(req, res, (error) => {
+            expect(error).not.toBeDefined();
+            expect(res.status).toHaveBeenCalledTimes(0);
+            console.log("locals");
+            console.log(req.locals);
+            expect(req.locals.jwt.aud).toEqual('test-audience');
+            expect(req.locals.jwt.email).toEqual(email);
+        });
+    });
+
+
     it('returns an error on an invalid signature', async () => {
+        console.log("error test");
         const email = 'first.last@example.com';
         const audience = 'audience';
         const secret = 'secret';

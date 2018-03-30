@@ -58,5 +58,8 @@ describe('Health API', () => {
                 ok: true,
             },
         });
+
+        delete process.env.TEST__BUILD_INFO_CONVENTION__BUILD_NUM;
+        delete process.env.TEST__BUILD_INFO_CONVENTION__SHA1;
     });
 });

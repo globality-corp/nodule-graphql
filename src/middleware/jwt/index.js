@@ -10,9 +10,15 @@ setDefaults('middleware.jwt', {
      */
     algorithms: 'HS256,RS256',
 
-    /* The intended audience (recipient) of the JWT. Required.
+    /* The intended audience (recipient) of the JWT. At least one of
+     * audience or audiences is required.
      */
     audience: null,
+
+    /* The intended audiences of the JWT. At least one of audience or audiences
+       is required.
+    */
+    audiences: null,
 
     /* Destination address to store the validated JWT in the input request.
      */
