@@ -5,6 +5,8 @@ import { createOpenAPIClient, mockError, mockResponse } from 'index';
 
 
 describe('createOpenAPIClient', () => {
+    const req = {};
+
     const REX = {
         id: '1',
         name: 'Rex',
@@ -25,11 +27,31 @@ describe('createOpenAPIClient', () => {
 
         const client = createOpenAPIClient('petstore', spec);
 
-        const result = await client.pet.search();
+        const result = await client.pet.search(req);
         expect(result).toEqual({
             items: [
                 REX,
             ],
+        });
+
+        expect(config.clients.mock.petstore.pet.search).toHaveBeenCalledTimes(1);
+        expect(config.clients.mock.petstore.pet.search.mock.calls[0][0].headers).toMatchObject({
+            Accept: 'application/json, text/plain, */*',
+            'Content-Type': 'application/json; charset=utf-8',
+            'X-Request-Service': 'test',
+        });
+    });
+
+    it('supports mocking a response with a function', async () => {
+        const config = await Nodule.testing().fromObject(
+            mockResponse('petstore', 'pet.search', () => ({ items: [] })),
+        ).load();
+
+        const client = createOpenAPIClient('petstore', spec);
+
+        const result = await client.pet.search(req);
+        expect(result).toEqual({
+            items: [],
         });
 
         expect(config.clients.mock.petstore.pet.search).toHaveBeenCalledTimes(1);
@@ -47,7 +69,7 @@ describe('createOpenAPIClient', () => {
 
         const client = createOpenAPIClient('petstore', spec);
 
-        await expect(client.pet.search()).rejects.toThrow(
+        await expect(client.pet.search(req)).rejects.toThrow(
             'Not Found',
         );
 
@@ -57,8 +79,26 @@ describe('createOpenAPIClient', () => {
     it('raises an error if not mocked', async () => {
         const client = createOpenAPIClient('petstore', spec);
 
-        await expect(client.pet.search()).rejects.toThrow(
+        await expect(client.pet.search(req)).rejects.toThrow(
             'OpenAPI operation petstore.pet.search is not mocked',
         );
+    });
+
+    it('raises an error if invalid argument is passed', async () => {
+        const config = await Nodule.testing().fromObject(
+            mockResponse('petstore', 'pet.search', {
+                items: [
+                    REX,
+                ],
+            }),
+        ).load();
+
+        const client = createOpenAPIClient('petstore', spec);
+
+        await expect(client.pet.search(req, { foo: 'bar' })).rejects.toThrow(
+            'Unsupported argument: "foo" passed to: "pet.search"',
+        );
+
+        expect(config.clients.mock.petstore.pet.search).toHaveBeenCalledTimes(0);
     });
 });
