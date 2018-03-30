@@ -1,6 +1,27 @@
+import { get, merge, pickBy } from 'lodash';
 import { graphqlExpress } from 'apollo-server-express';
 
 import { bind, getContainer, setDefaults } from '@globality/nodule-config';
+
+
+/* Inject custom extensions in the graphql response.
+ *
+ * Includes extension data from `req.locals.extensions.foo` if requested.
+ */
+function injectExtensions(req) {
+    // ensure that req.locals.extensions exists
+    merge(req, { locals: { extensions: {} } });
+
+    return (result) => {
+        const requested = get(req, 'body.extensions', {});
+        // merge in all local extensions that were requested
+        const extensions = pickBy(
+            req.locals.extensions,
+            (value, key) => key in requested,
+        );
+        return Object.keys(extensions).length ? merge(result, { extensions }) : result;
+    };
+}
 
 
 function makeGraphqlOptions(config, graphql) {
@@ -14,6 +35,8 @@ function makeGraphqlOptions(config, graphql) {
         return {
             cacheControl: config.routes.graphql.cacheControl,
             context: req,
+            // merge in response extensions
+            formatResponse: injectExtensions(req),
             rootValue: null,
             schema,
             tracing: config.routes.graphql.cacheControl || req.headers['x-request-trace'],
