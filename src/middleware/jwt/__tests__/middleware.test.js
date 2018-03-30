@@ -56,7 +56,7 @@ describe('JWT middleware', () => {
             },
         }).load();
 
-        const token = signSymmetric('audience', secret, { email });
+        const token = signSymmetric({ email }, secret, 'audience');
         const req = {
             headers: {
                 authorization: `Bearer ${token}`,
@@ -84,7 +84,7 @@ describe('JWT middleware', () => {
             },
         }).load();
 
-        const token = signSymmetric('audience', 'wrong', { email });
+        const token = signSymmetric({ email }, 'wrong', 'audience');
         const req = {
             headers: {
                 authorization: `Bearer ${token}`,

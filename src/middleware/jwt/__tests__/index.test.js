@@ -42,7 +42,7 @@ describe('Configuring the middleware', () => {
 
     it('handles HS256 authorization', async () => {
         const email = 'first.last@example.com';
-        const token = signSymmetric('audience', secret, { email });
+        const token = signSymmetric({ email }, secret, audience);
 
         const response = await request(app).get('/').set(
             'Authorization', `Bearer ${token}`,
@@ -54,7 +54,7 @@ describe('Configuring the middleware', () => {
     it('handles RS256 authorization', async () => {
         const email = 'first.last@example.com';
         const key = readFileSync(`${__dirname}/example.key`, 'ascii');
-        const token = signPrivate('audience', key, { email });
+        const token = signPrivate({ email }, key, audience);
 
         const response = await request(app).get('/').set(
             'Authorization', `Bearer ${token}`,
