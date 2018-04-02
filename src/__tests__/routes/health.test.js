@@ -6,13 +6,13 @@ import 'index';
 
 
 describe('Health API', () => {
-    let nodule;
 
     beforeEach(() => {
-        nodule = Nodule.testing();
+        clearBinding('config');
     });
 
     it('returns basic information', async () => {
+        const nodule = Nodule.testing();
         await nodule.load();
 
         const { express, health } = getContainer('routes');
@@ -31,11 +31,13 @@ describe('Health API', () => {
     });
 
     it('may return build information', async () => {
-        clearBinding('config');
-
-        process.env.TEST__BUILD_INFO_CONVENTION__BUILD_NUM = '42';
-        process.env.TEST__BUILD_INFO_CONVENTION__SHA1 = 'SHA1';
-        await nodule.fromEnvironment().load();
+        const nodule = Nodule.testing();
+        await nodule.fromObject({
+            buildInfoConvention: {
+                buildNum: '42',
+                sha1: 'SHA1',
+            },
+        }).load();
 
         const { express, health } = getContainer('routes');
         express.get('/api/health', health);
