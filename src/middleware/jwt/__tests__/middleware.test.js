@@ -43,7 +43,7 @@ describe('JWT middleware', () => {
         );
     });
 
-    it('validates a token', async () => {
+    it('validates a token', async (done) => {
         const email = 'first.last@example.com';
         const secret = 'secret';
         const audience = 'audience';
@@ -69,10 +69,11 @@ describe('JWT middleware', () => {
             expect(error).not.toBeDefined();
             expect(req.locals.jwt.aud).toEqual(audience);
             expect(req.locals.jwt.email).toEqual(email);
+            done();
         });
     });
 
-    it('validates a token with multiple audiences', async () => {
+    it('validates a token with multiple audiences', async (done) => {
         const email = 'first.last@example.com';
         const audience = 'test-audience';
         const audiences = [audience, 'other-audience'];
@@ -80,7 +81,7 @@ describe('JWT middleware', () => {
         await Nodule.testing().fromObject({
             middleware: {
                 jwt: {
-                    audiences,
+                    audience: audiences,
                     secret,
                 },
             },
@@ -98,18 +99,19 @@ describe('JWT middleware', () => {
             expect(error).not.toBeDefined();
             expect(req.locals.jwt.aud).toEqual(audience);
             expect(req.locals.jwt.email).toEqual(email);
+            done();
         });
     });
 
-    it('validates a token with multiple audiences as string', async () => {
+    it('validates a token with multiple audiences as string', async (done) => {
         const email = 'first.last@example.com';
         const audience = 'test-audience';
-        const audiences = [`${audience},purple-audience`];
+        const audiences = `${audience},purple-audience`;
         const secret = 'test-secret';
         await Nodule.testing().fromObject({
             middleware: {
                 jwt: {
-                    audiences,
+                    audience: audiences,
                     secret,
                 },
             },
@@ -127,11 +129,12 @@ describe('JWT middleware', () => {
             expect(error).not.toBeDefined();
             expect(req.locals.jwt.aud).toEqual('test-audience');
             expect(req.locals.jwt.email).toEqual(email);
+            done();
         });
     });
 
 
-    it('returns an error on an invalid signature', async () => {
+    it('returns an error on an invalid signature', async (done) => {
         const email = 'first.last@example.com';
         const audience = 'test-audience';
         const secret = 'test-secret';
@@ -156,15 +159,14 @@ describe('JWT middleware', () => {
         res.json = jest.fn(() => res);
         res.end = jest.fn(() => null);
 
-        middleware(req, res, (error) => {
-            expect(error).not.toBeDefined();
-
+        middleware(req, res, () => {
             expect(res.status).toHaveBeenCalledTimes(1);
             expect(res.status).toHaveBeenCalledWith(401);
             expect(res.json).toHaveBeenCalledTimes(1);
             expect(res.json).toHaveBeenCalledWith({ message: 'Unauthorized' });
             expect(res.end).toHaveBeenCalledTimes(1);
             expect(res.end).toHaveBeenCalledWith();
+            done();
         });
     });
 });

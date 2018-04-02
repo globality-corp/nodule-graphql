@@ -48,10 +48,10 @@ export default function middleware(req, res, next) {
     return validator(req, res, (error) => {
         if (error) {
             // XXX log a warning here
-            return res.status(UNAUTHORIZED).json({
+            res.status(UNAUTHORIZED).json({
                 message: 'Unauthorized',
             }).end();
         }
-        return next();
+        return next(error);
     });
 }
