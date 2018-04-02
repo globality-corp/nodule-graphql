@@ -5,8 +5,8 @@ import { getConfig, getMetadata } from '@globality/nodule-config';
 
 import negotiateKey from './negotiate';
 
-function chooseAudience(audience, audiences) {
-    if (!audience && !audiences) {
+function chooseAudience(audience) {
+    if (!audience) {
         const metadata = getMetadata();
         if (!metadata || !metadata.testing) {
             throw new Error('JWT middleware requires `middleware.jwt.audience` to be configured');
@@ -16,14 +16,14 @@ function chooseAudience(audience, audiences) {
         return 'audience';
     }
 
-    if (typeof audiences === 'string') {
-        return audience || audiences.split(',');
+    if (!Array.isArray(audience)) {
+        return audience.split(',');
     }
 
     // the audience option of jwt.verify is a list or a string. If you pass a
     // list, jwt will automatically try to find at least one client id that
     // matches the audience in the token being verified
-    return audience || audiences;
+    return audience;
 }
 
 
