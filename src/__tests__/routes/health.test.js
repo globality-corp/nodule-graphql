@@ -36,7 +36,7 @@ describe('Health API', () => {
             buildInfoConvention: {
                 buildNum: '42',
                 sha1: 'SHA1',
-            }
+            },
         }).load();
 
         const { express, health } = getContainer('routes');
