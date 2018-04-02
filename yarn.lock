@@ -86,9 +86,9 @@
     credstash "https://github.com/KensoDev/node-credstash.git#hotfix/credstash"
     lodash "^4.17.5"
 
-"@globality/nodule-openapi@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@globality/nodule-openapi/-/nodule-openapi-0.5.0.tgz#0515eba24ae389e350a02e074675896d72efe1d9"
+"@globality/nodule-openapi@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@globality/nodule-openapi/-/nodule-openapi-0.6.0.tgz#9d3037c7d8bdcd0a3063a33f5cc56a9b85579b46"
   dependencies:
     axios "^0.18.0"
     lodash "^4.17.5"
@@ -4181,11 +4181,11 @@ sane@^2.0.0:
   optionalDependencies:
     fsevents "^1.1.1"
 
-sax@1.1.5:
+sax@1.1.5, sax@>=0.6.0:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.1.5.tgz#1da50a8d00cdecd59405659f5ff85349fe773743"
 
-sax@>=0.6.0, sax@^1.2.4:
+sax@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
 
@@ -4740,11 +4740,11 @@ utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
 
-uuid@3.0.0:
+uuid@3.0.0, uuid@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.0.tgz#6728fc0459c450d796a99c31837569bdf672d728"
 
-uuid@^3.0.0, uuid@^3.1.0:
+uuid@^3.1.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.2.1.tgz#12c528bb9d58d0b9265d9a2f6f0fe8be17ff1f14"
 
