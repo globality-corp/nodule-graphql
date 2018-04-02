@@ -45,8 +45,9 @@ describe('JWT middleware', () => {
 
     it('validates a token', async () => {
         const email = 'first.last@example.com';
-        const audience = 'audience';
         const secret = 'secret';
+        const audience = 'audience';
+
         await Nodule.testing().fromObject({
             middleware: {
                 jwt: {
@@ -74,8 +75,8 @@ describe('JWT middleware', () => {
     it('validates a token with multiple audiences', async () => {
         const email = 'first.last@example.com';
         const audience = 'test-audience';
-        const audiences = [audience, 'purple-audience'];
-        const secret = 'secret';
+        const audiences = [audience, 'other-audience'];
+        const secret = 'test-secret';
         await Nodule.testing().fromObject({
             middleware: {
                 jwt: {
@@ -102,9 +103,9 @@ describe('JWT middleware', () => {
 
     it('validates a token with multiple audiences as string', async () => {
         const email = 'first.last@example.com';
-        const audience = 'test-poop-audience';
+        const audience = 'test-audience';
         const audiences = [`${audience},purple-audience`];
-        const secret = 'secret';
+        const secret = 'test-secret';
         await Nodule.testing().fromObject({
             middleware: {
                 jwt: {
@@ -132,8 +133,8 @@ describe('JWT middleware', () => {
 
     it('returns an error on an invalid signature', async () => {
         const email = 'first.last@example.com';
-        const audience = 'audience';
-        const secret = 'secret';
+        const audience = 'test-audience';
+        const secret = 'test-secret';
         await Nodule.testing().fromObject({
             middleware: {
                 jwt: {
