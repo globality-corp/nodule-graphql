@@ -10,7 +10,7 @@ describe('JWT middleware', () => {
         clearBinding('config');
     });
 
-    it('requires an authorization header', () => {
+    it('requires an authorization header', (done) => {
         const req = {
             headers: {
             },
@@ -21,14 +21,16 @@ describe('JWT middleware', () => {
         res.json = jest.fn(() => res);
         res.end = jest.fn(() => null);
 
-        middleware(req, res);
-
-        expect(res.status).toHaveBeenCalledTimes(1);
-        expect(res.status).toHaveBeenCalledWith(401);
-        expect(res.json).toHaveBeenCalledTimes(1);
-        expect(res.json).toHaveBeenCalledWith({ message: 'Unauthorized' });
-        expect(res.end).toHaveBeenCalledTimes(1);
-        expect(res.end).toHaveBeenCalledWith();
+        middleware(req, res, (nextHandler) => {
+            expect(nextHandler).toBe(false);
+            expect(res.status).toHaveBeenCalledTimes(1);
+            expect(res.status).toHaveBeenCalledWith(401);
+            expect(res.json).toHaveBeenCalledTimes(1);
+            expect(res.json).toHaveBeenCalledWith({ message: 'Unauthorized' });
+            expect(res.end).toHaveBeenCalledTimes(1);
+            expect(res.end).toHaveBeenCalledWith();
+            done();
+        });
     });
 
     it('requires an audience', () => {
