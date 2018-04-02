@@ -156,7 +156,7 @@ describe('JWT middleware', () => {
 
         const res = {};
         res.status = jest.fn((code) => {
-            res.status = code;
+            res.code = code;
             return res;
         });
         res.json = jest.fn(() => res);
