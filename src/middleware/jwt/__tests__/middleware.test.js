@@ -155,18 +155,19 @@ describe('JWT middleware', () => {
         };
 
         const res = {};
-        res.status = jest.fn(() => res);
+        res.status = jest.fn((code) => {
+            res.status = code;
+            return res;
+        });
         res.json = jest.fn(() => res);
         res.end = jest.fn(() => null);
 
-        middleware(req, res, () => {
-            expect(res.status).toHaveBeenCalledTimes(1);
-            expect(res.status).toHaveBeenCalledWith(401);
-            expect(res.json).toHaveBeenCalledTimes(1);
-            expect(res.json).toHaveBeenCalledWith({ message: 'Unauthorized' });
-            expect(res.end).toHaveBeenCalledTimes(1);
-            expect(res.end).toHaveBeenCalledWith();
-            done();
-        });
+        middleware(req, res, () => res);
+        expect(res.status).toHaveBeenCalledTimes(1);
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.json).toHaveBeenCalledTimes(1);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Unauthorized' });
+        expect(res.end).toHaveBeenCalledTimes(1);
+        expect(res.end).toHaveBeenCalledWith();
     });
 });
