@@ -10,7 +10,7 @@ setDefaults('middleware.jwt', {
      */
     algorithms: 'HS256,RS256',
 
-    /* The intended audience (recipient) of the JWT. Required.
+    /* The intended audience(s) (recipient) of the JWT. Required
      */
     audience: null,
 
@@ -21,6 +21,10 @@ setDefaults('middleware.jwt', {
     /* Root path for storing public keys (locally).
      */
     publicKeyRootPath: 'assets',
+
+    /* A basic auth realm to generate WWW-Authenticate headers for.
+     */
+    realm: null,
 });
 
 bind('middleware.jwt', () => middleware);
