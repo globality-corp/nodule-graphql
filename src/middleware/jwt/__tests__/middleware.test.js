@@ -5,9 +5,19 @@ import middleware from '../middleware';
 
 
 describe('JWT middleware', () => {
+    let res;
 
     beforeEach(() => {
         clearBinding('config');
+
+        res = {};
+        res.status = jest.fn((code) => {
+            res.code = code;
+            return res;
+        });
+        res.json = jest.fn(() => res);
+        res.set = jest.fn(() => res);
+        res.end = jest.fn(() => null);
     });
 
     it('requires an authorization header', (done) => {
@@ -15,11 +25,6 @@ describe('JWT middleware', () => {
             headers: {
             },
         };
-
-        const res = {};
-        res.status = jest.fn(() => res);
-        res.json = jest.fn(() => res);
-        res.end = jest.fn(() => null);
 
         middleware(req, res, (nextHandler) => {
             expect(nextHandler).toBe(false);
@@ -65,7 +70,6 @@ describe('JWT middleware', () => {
                 authorization: `Bearer ${token}`,
             },
         };
-        const res = {};
 
         middleware(req, res, (error) => {
             expect(error).not.toBeDefined();
@@ -95,7 +99,6 @@ describe('JWT middleware', () => {
                 authorization: `Bearer ${token}`,
             },
         };
-        const res = {};
 
         middleware(req, res, (error) => {
             expect(error).not.toBeDefined();
@@ -125,7 +128,6 @@ describe('JWT middleware', () => {
                 authorization: `Bearer ${token}`,
             },
         };
-        const res = {};
 
         middleware(req, res, (error) => {
             expect(error).not.toBeDefined();
@@ -155,14 +157,6 @@ describe('JWT middleware', () => {
                 authorization: `Bearer ${token}`,
             },
         };
-
-        const res = {};
-        res.status = jest.fn((code) => {
-            res.code = code;
-            return res;
-        });
-        res.json = jest.fn(() => res);
-        res.end = jest.fn(() => null);
 
         middleware(req, res, (nextMiddleware) => {
             expect(nextMiddleware).toBe(false);

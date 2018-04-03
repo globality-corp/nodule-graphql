@@ -21,6 +21,10 @@ setDefaults('middleware.jwt', {
     /* Root path for storing public keys (locally).
      */
     publicKeyRootPath: 'assets',
+
+    /* A basic auth realm to generate WWW-Authenticate headers for.
+     */
+    realm: null,
 });
 
 bind('middleware.jwt', () => middleware);

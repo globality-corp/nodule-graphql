@@ -1,9 +1,10 @@
-import { UNAUTHORIZED } from 'http-status-codes';
 import jwt from 'express-jwt';
 
 import { getConfig, getMetadata } from '@globality/nodule-config';
 
+import sendUnauthorized from './errors';
 import negotiateKey from './negotiate';
+
 
 function chooseAudience(audience) {
     if (!audience) {
@@ -28,16 +29,15 @@ function chooseAudience(audience) {
 
 
 export default function middleware(req, res, next) {
+    const config = getConfig('middleware.jwt') || {};
+    const { audience, realm } = config;
+
     if (!req.headers.authorization) {
-        res.status(UNAUTHORIZED).json({
-            message: 'Unauthorized',
-        }).end();
+        sendUnauthorized(req, res, realm);
         return next(false);
     }
 
-    const config = getConfig('middleware.jwt') || {};
-    const { audience, audiences } = config;
-    const matchingAudience = chooseAudience(audience, audiences);
+    const matchingAudience = chooseAudience(audience);
 
     const validator = jwt({
         secret: negotiateKey,
@@ -48,9 +48,7 @@ export default function middleware(req, res, next) {
     return validator(req, res, (error) => {
         if (error) {
             // XXX log a warning here
-            res.status(UNAUTHORIZED).json({
-                message: 'Unauthorized',
-            }).end();
+            sendUnauthorized(req, res, realm);
             return next(false);
         }
         return next();
