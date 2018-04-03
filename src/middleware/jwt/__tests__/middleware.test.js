@@ -20,22 +20,20 @@ describe('JWT middleware', () => {
         res.end = jest.fn(() => null);
     });
 
-    it('requires an authorization header', (done) => {
+    it('requires an authorization header', () => {
         const req = {
             headers: {
             },
         };
 
-        middleware(req, res, (nextHandler) => {
-            expect(nextHandler).toBe(false);
-            expect(res.status).toHaveBeenCalledTimes(1);
-            expect(res.status).toHaveBeenCalledWith(401);
-            expect(res.json).toHaveBeenCalledTimes(1);
-            expect(res.json).toHaveBeenCalledWith({ message: 'Unauthorized' });
-            expect(res.end).toHaveBeenCalledTimes(1);
-            expect(res.end).toHaveBeenCalledWith();
-            done();
-        });
+        middleware(req, res);
+
+        expect(res.status).toHaveBeenCalledTimes(1);
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.json).toHaveBeenCalledTimes(1);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Unauthorized' });
+        expect(res.end).toHaveBeenCalledTimes(1);
+        expect(res.end).toHaveBeenCalledWith();
     });
 
     it('requires an audience', () => {
@@ -158,15 +156,15 @@ describe('JWT middleware', () => {
             },
         };
 
-        middleware(req, res, (nextMiddleware) => {
-            expect(nextMiddleware).toBe(false);
+        res.end = () => {
             expect(res.status).toHaveBeenCalledTimes(1);
             expect(res.status).toHaveBeenCalledWith(401);
             expect(res.json).toHaveBeenCalledTimes(1);
             expect(res.json).toHaveBeenCalledWith({ message: 'Unauthorized' });
-            expect(res.end).toHaveBeenCalledTimes(1);
-            expect(res.end).toHaveBeenCalledWith();
-            done();
-        });
+
+            return done();
+        };
+
+        middleware(req, res);
     });
 });

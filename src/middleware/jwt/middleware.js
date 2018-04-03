@@ -33,8 +33,7 @@ export default function middleware(req, res, next) {
     const { audience, realm } = config;
 
     if (!req.headers.authorization) {
-        sendUnauthorized(req, res, realm);
-        return next(false);
+        return sendUnauthorized(req, res, realm);
     }
 
     const matchingAudience = chooseAudience(audience);
@@ -48,8 +47,7 @@ export default function middleware(req, res, next) {
     return validator(req, res, (error) => {
         if (error) {
             // XXX log a warning here
-            sendUnauthorized(req, res, realm);
-            return next(false);
+            return sendUnauthorized(req, res, realm);
         }
         return next();
     });
