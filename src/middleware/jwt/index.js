@@ -1,5 +1,6 @@
 import { bind, setDefaults } from '@globality/nodule-config';
 
+import passBasicAuth from './passBasicAuth';
 import middleware from './middleware';
 
 
@@ -27,4 +28,6 @@ setDefaults('middleware.jwt', {
     realm: null,
 });
 
+
+bind('middleware.passBasicAuth', () => passBasicAuth);
 bind('middleware.jwt', () => middleware);
