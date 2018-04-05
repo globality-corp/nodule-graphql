@@ -13,12 +13,11 @@ export default function passBasicAuth(req, res, next) {
     const realm = getConfig('middleware.jwt.realm');
 
     if (!credentials) {
-        res.setHeader('WWW-Authenticate', `Basic realm="${realm}"`);
-        // XXX good log
         return sendUnauthorized(req, res, realm);
     }
 
-    req.headers.authorization = `${credentials.name.trim()} ${credentials.pass.trim()}`; // eslint-disable-line
+    const password = credentials.pass.trim();
+    req.headers.authorization = `Bearer ${password}`;
 
     return next();
 }

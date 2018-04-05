@@ -50,7 +50,7 @@ describe('Configuring the middleware', () => {
         delete jwt.realm;
 
         expect(response.statusCode).toBe(401);
-        expect(response.headers['www-authenticate']).toEqual('Basic realm=test');
+        expect(response.headers['www-authenticate']).toEqual('Basic realm="test"');
 
         return done();
     });

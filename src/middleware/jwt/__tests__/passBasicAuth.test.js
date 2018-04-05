@@ -15,7 +15,6 @@ describe('passBasicAuth middleware', () => {
             return res;
         });
         res.json = jest.fn(() => res);
-        res.setHeader = jest.fn(() => res);
         res.set = jest.fn(() => res);
         res.end = jest.fn(() => null);
     });
@@ -38,8 +37,8 @@ describe('passBasicAuth middleware', () => {
 
         passBasicAuth(req, res);
 
-        expect(res.setHeader).toHaveBeenCalledTimes(1);
-        expect(res.setHeader).toHaveBeenCalledWith('WWW-Authenticate', `Basic realm="${realm}"`);
+        expect(res.set).toHaveBeenCalledTimes(1);
+        expect(res.set).toHaveBeenCalledWith('WWW-Authenticate', `Basic realm="${realm}"`);
         expect(res.status).toHaveBeenCalledWith(401);
         expect(res.json).toHaveBeenCalledTimes(1);
         expect(res.json).toHaveBeenCalledWith({ message: 'Unauthorized' });
