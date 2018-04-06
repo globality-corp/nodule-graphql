@@ -54,7 +54,7 @@ describe('passBasicAuth middleware', () => {
         };
 
         passBasicAuth(req, res, () => {
-            expect(req.headers.authorization).toEqual('Bearer OmFzZGY=');
+            expect(req.headers.authorization).toEqual('Bearer asdf');
             done();
         });
     });
