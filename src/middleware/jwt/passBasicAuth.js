@@ -17,7 +17,8 @@ export default function passBasicAuth(req, res, next) {
     }
 
     const password = credentials.pass.trim();
-    req.headers.authorization = `Bearer ${password}`;
+    const payload = Buffer.from(`:${password}`).toString('base64');
+    req.headers.authorization = `Bearer ${payload}`;
 
     return next();
 }
