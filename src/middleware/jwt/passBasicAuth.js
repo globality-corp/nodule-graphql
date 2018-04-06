@@ -2,23 +2,32 @@
  *
  * Enabling basic auth pass through greatly simplifies graphiql usage.
  */
-import basicAuth from 'basic-auth';
 import { getConfig } from '@globality/nodule-config';
 
 import sendUnauthorized from './errors';
 
 
 export default function passBasicAuth(req, res, next) {
-    const credentials = basicAuth(req);
     const realm = getConfig('middleware.jwt.realm');
 
-    if (!credentials) {
+    const { authorization } = req.headers;
+
+    if (!authorization) {
+        return sendUnauthorized(req, res, realm);
+    }
+    const [prefix, payload] = authorization.split(' ');
+
+    if (!payload || prefix.toLowerCase() !== 'basic') {
         return sendUnauthorized(req, res, realm);
     }
 
-    const password = credentials.pass.trim();
-    const payload = Buffer.from(`:${password}`).toString('base64');
-    req.headers.authorization = `Bearer ${payload}`;
+    const credentials = Buffer.from(payload, 'base64').toString('utf-8').split(':');
+
+    if (!credentials || credentials.length !== 2) {
+        return sendUnauthorized(req, res, realm);
+    }
+
+    req.headers.authorization = `Bearer ${credentials[1]}`;
 
     return next();
 }
