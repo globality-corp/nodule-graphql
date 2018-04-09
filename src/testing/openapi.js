@@ -8,8 +8,8 @@ import { OpenAPIError } from '@globality/nodule-openapi';
 export function mockResponse(name, operationId, data) {
     const obj = {};
 
-    set(obj, `clients.mock.${name}.${operationId}`, jest.fn(async (req, args) => ({
-        data: isFunction(data) ? data(args) : data,
+    set(obj, `clients.mock.${name}.${operationId}`, jest.fn(async req => ({
+        data: isFunction(data) ? data(req.params) : data,
     })));
 
     return obj;
