@@ -7,7 +7,7 @@ function makeGraphiqlOptions(config) {
     return req => ({
         /* Connect GraphiQL to GraphQL.
          */
-        endpoint: config.routes.graphiql.endpoint,
+        endpointURL: config.routes.graphiql.endpointURL,
         /* Pass authorization from GraphiQL to GraphQL.
          *
          * This convention enables authenticated requests to GraphiQL to identify
