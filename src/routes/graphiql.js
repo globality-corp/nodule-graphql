@@ -7,7 +7,7 @@ function makeGraphiqlOptions(config) {
     return req => ({
         /* Connect GraphiQL to GraphQL.
          */
-        endpointURL: config.routes.graphiql.endpointURL,
+        endpointURL: config.routes.graphiql.endpointUrl,
         /* Pass authorization from GraphiQL to GraphQL.
          *
          * This convention enables authenticated requests to GraphiQL to identify
@@ -19,7 +19,7 @@ function makeGraphiqlOptions(config) {
 
 
 setDefaults('routes.graphiql', {
-    endpointURL: '/graphql',
+    endpointUrl: '/content/graphql',
     enabled: false,
 });
 
