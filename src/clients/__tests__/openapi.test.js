@@ -44,14 +44,14 @@ describe('createOpenAPIClient', () => {
 
     it('supports mocking a response with a function', async () => {
         const config = await Nodule.testing().fromObject(
-            mockResponse('petstore', 'pet.search', () => ({ items: [] })),
+            mockResponse('petstore', 'pet.search', ({ name }) => ({ items: [name] })),
         ).load();
 
         const client = createOpenAPIClient('petstore', spec);
 
-        const result = await client.pet.search(req);
+        const result = await client.pet.search(req, { name: 'abc' });
         expect(result).toEqual({
-            items: [],
+            items: ['abc'],
         });
 
         expect(config.clients.mock.petstore.pet.search).toHaveBeenCalledTimes(1);
@@ -60,6 +60,21 @@ describe('createOpenAPIClient', () => {
             'Content-Type': 'application/json; charset=utf-8',
             'X-Request-Service': 'test',
         });
+    });
+
+    it('supports mocking a post response with a function', async () => {
+        const config = await Nodule.testing().fromObject(
+            mockResponse('petstore', 'pet.create', body => ({ items: [body.name] })),
+        ).load();
+
+        const client = createOpenAPIClient('petstore', spec);
+
+        const result = await client.pet.create(req, { body: { name: 'abc' } });
+        expect(result).toEqual({
+            items: ['abc'],
+        });
+
+        expect(config.clients.mock.petstore.pet.create).toHaveBeenCalledTimes(1);
     });
 
     it('supports mocking errors', async () => {
