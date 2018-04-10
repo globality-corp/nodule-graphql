@@ -62,6 +62,21 @@ describe('createOpenAPIClient', () => {
         });
     });
 
+    it('supports mocking a post response with a function', async () => {
+        const config = await Nodule.testing().fromObject(
+            mockResponse('petstore', 'pet.create', body => ({ items: [JSON.parse(body).name] })),
+        ).load();
+
+        const client = createOpenAPIClient('petstore', spec);
+
+        const result = await client.pet.create(req, { body: { name: 'abc' } });
+        expect(result).toEqual({
+            items: ['abc'],
+        });
+
+        expect(config.clients.mock.petstore.pet.create).toHaveBeenCalledTimes(1);
+    });
+
     it('supports mocking errors', async () => {
         const config = await Nodule.testing().fromObject(
             mockError('petstore', 'pet.search', 'Not Found', 404),
