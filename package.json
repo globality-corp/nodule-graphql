@@ -25,11 +25,13 @@
     },
     "peerDependencies": {
         "@globality/nodule-config": ">= 2.3.0 < 3",
+        "@globality/nodule-logging": ">= 1.1.1 < 2",
         "@globality/nodule-openapi": ">= 0.6.0 < 1",
         "graphql": ">= 0.13.2 < 1"
     },
     "devDependencies": {
         "@globality/nodule-config": "^2.4.1",
+        "@globality/nodule-logging": "file:../nodule-logging/",
         "@globality/nodule-openapi": "^0.6.0",
         "babel-cli": "^6.26.0",
         "babel-eslint": "^8.2.2",
