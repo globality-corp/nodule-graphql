@@ -64,7 +64,7 @@ describe('createOpenAPIClient', () => {
 
     it('supports mocking a post response with a function', async () => {
         const config = await Nodule.testing().fromObject(
-            mockResponse('petstore', 'pet.create', body => ({ items: [JSON.parse(body).name] })),
+            mockResponse('petstore', 'pet.create', body => ({ items: [body.name] })),
         ).load();
 
         const client = createOpenAPIClient('petstore', spec);

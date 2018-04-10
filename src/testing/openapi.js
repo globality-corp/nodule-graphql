@@ -9,7 +9,7 @@ export function mockResponse(name, operationId, data) {
     const obj = {};
 
     set(obj, `clients.mock.${name}.${operationId}`, jest.fn(async req => ({
-        data: isFunction(data) ? data(req.params || req.data) : data,
+        data: isFunction(data) ? data(req.params || JSON.parse(req.data || null)) : data,
     })));
 
     return obj;
