@@ -31,6 +31,14 @@
         "produces": [
           "application/json"
         ],
+        "parameters": [
+          {
+            "in": "query", 
+            "name": "name", 
+            "required": false, 
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "A list of pets.",
@@ -44,6 +52,36 @@
         },
         "tags": [
             "pet"
+        ]
+      },
+      "post": {
+        "description": "Creates a new pet in the system",
+        "operationId": "create",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/NewPet"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Create a new pet",
+            "schema": {
+              "$ref": "#/definitions/Pet"
+            }
+          },
+          "default": {
+            "description": "An error occcurred",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "tags": [
+          "pet"
         ]
       }
     }
@@ -67,6 +105,38 @@
           "type": "string"
         }
       }
+    },
+    "NewPet": {
+      "properties": {
+        "tag": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "type": "object"
+    },
+    "Error": {
+      "properties": {
+        "code": {
+          "default": 500,
+          "format": "int32",
+          "type": "integer"
+        },
+        "message": {
+          "default": "Unknown Error",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "type": "object"
     }
   }
 }
