@@ -1,6 +1,7 @@
 import jwt from 'express-jwt';
 
-import { getConfig, getMetadata, getContainer } from '@globality/nodule-config';
+import { getConfig, getMetadata } from '@globality/nodule-config';
+import { getLogger } from '@globality/nodule-logging';
 
 import sendUnauthorized from './errors';
 import negotiateKey from './negotiate';
@@ -46,8 +47,8 @@ export default function middleware(req, res, next) {
 
     return validator(req, res, (error) => {
         if (error) {
-            const { logger } = getContainer();
-            logger.info('Unauthorized', error);
+            const logger = getLogger();
+            logger.info('Unauthorized:  jwt validation', error);
             return sendUnauthorized(req, res, realm);
         }
         return next();
