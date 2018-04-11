@@ -1,5 +1,4 @@
 import { clearBinding, Nodule } from '@globality/nodule-config';
-import { getLogger } from '@globality/nodule-logging';
 
 import { signSymmetric } from 'index';
 import middleware from '../middleware';
