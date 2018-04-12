@@ -1,6 +1,5 @@
 /* Client request logging.
  */
-import { GraphQLError } from 'graphql';
 import { assign, get } from 'lodash';
 import {
     getLogger,
@@ -14,7 +13,6 @@ export function calculateExecuteTime(executeStartTime) {
 }
 
 export function getElapsedTime(req) {
-    // XXX - test safe
     if (!req._startAt) { // eslint-disable-line no-underscore-dangle
         return 0;
     }
@@ -29,10 +27,10 @@ export function buildRequestLogs(req, serviceName, operationName, request) {
     return {
         serviceName,
         serviceRequestName: operationName,
-        ...(params ? { serviceRequestArgs: Object.keys(args) } : {}),
+        ...(args ? { serviceRequestArgs: Object.keys(args) } : {}),
         ...extractLoggingProperties(
             { params: args },
-            get(config, 'logging.backendServiceRequestRules', []),
+            get(config, 'logging.serviceRequestRules', []),
         ),
     };
 }
@@ -48,11 +46,11 @@ export function logSuccess(req, request, response, requestLogs, executeStartTime
         ...requestLogs,
         ...extractLoggingProperties(
             { url: url.split('?')[0], method },
-            get(config, 'logging.backendServiceRequestRules', []),
+            get(config, 'logging.serviceRequestRules', []),
         ),
         ...extractLoggingProperties(
             response,
-            get(config, 'logging.backendServiceResponseRules', []),
+            get(config, 'logging.serviceResponseRules', []),
         ),
     };
     if (get(config, 'logging.slownessWarning.enabled', false) &&
@@ -61,11 +59,6 @@ export function logSuccess(req, request, response, requestLogs, executeStartTime
     }
     if (get(config, 'logging.serviceRequestSucceeded.enabled', false)) {
         logger.info(req, 'ServiceRequestSucceeded', logs);
-    }
-    // XXX - move this code
-    if (getElapsedTime(req) > get(config, 'perfomance.maxExecutionTimeMs')) {
-        logger.warning(req, 'MaxExecutionTimePassed', logs);
-        throw new GraphQLError('MaxExecutionTimePassed');
     }
 }
 
@@ -117,7 +110,7 @@ export function logFailure(req, request, error, requestLogs) {
         ...requestLogs,
         ...extractLoggingProperties(
             { url, method },
-            get(config, 'logging.backendServiceRequestRules', []),
+            get(config, 'logging.serviceRequestRules', []),
         ),
     };
 
