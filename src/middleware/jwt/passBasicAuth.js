@@ -16,20 +16,20 @@ export default function passBasicAuth(req, res, next) {
     const { authorization } = req.headers;
 
     if (!authorization) {
-        logger.info(req, 'Unauthorized: missing auth');
+        logger.info('Unauthorized: missing auth');
         return sendUnauthorized(req, res, realm);
     }
     const [prefix, payload] = authorization.split(' ');
 
     if (!payload || prefix.toLowerCase() !== 'basic') {
-        logger.info(req, 'Unauthorized: wrong scheme');
+        logger.info('Unauthorized: wrong scheme');
         return sendUnauthorized(req, res, realm);
     }
 
     const credentials = Buffer.from(payload, 'base64').toString('utf-8').split(':');
 
     if (!credentials || credentials.length !== 2) {
-        logger.info(req, 'Unauthorized: wrong format');
+        logger.info('Unauthorized: wrong format');
         return sendUnauthorized(req, res, realm);
     }
 
