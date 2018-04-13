@@ -1397,9 +1397,9 @@ cors@^2.8.4:
     object-assign "^4"
     vary "^1"
 
-"credstash@git+https://github.com/KensoDev/node-credstash.git#hotfix/credstash":
+"credstash@https://github.com/KensoDev/node-credstash.git#hotfix/credstash":
   version "1.0.1"
-  resolved "git+https://github.com/KensoDev/node-credstash.git#750a137777e64dc798d4ac398f9d991840ca7289"
+  resolved "https://github.com/KensoDev/node-credstash.git#750a137777e64dc798d4ac398f9d991840ca7289"
   dependencies:
     aes-js "0.2.2"
     async "1.5.2"
@@ -5221,3 +5221,7 @@ yargs@~3.10.0:
     cliui "^2.1.0"
     decamelize "^1.0.0"
     window-size "0.1.0"
+
+yarn@^1.5.1:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.6.0.tgz#9cec6f7986dc237d39ec705ce74d95155fe55d4b"
