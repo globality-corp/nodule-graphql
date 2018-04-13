@@ -48,7 +48,7 @@ export default function middleware(req, res, next) {
     return validator(req, res, (error) => {
         if (error) {
             const logger = getLogger();
-            logger.info('Unauthorized:  jwt validation', error);
+            logger.info(req, 'Unauthorized:  jwt validation', error);
             return sendUnauthorized(req, res, realm);
         }
         return next();
