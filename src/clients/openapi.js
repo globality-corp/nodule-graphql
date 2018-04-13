@@ -2,7 +2,12 @@ import { get } from 'lodash';
 
 import { getConfig, getMetadata } from '@globality/nodule-config';
 import OpenAPI from '@globality/nodule-openapi';
-
+import axios from 'axios';
+import {
+    buildRequestLogs,
+    logFailure,
+    logSuccess,
+} from './logging';
 
 /* Inject mock and testing adapters.
  */
@@ -56,6 +61,30 @@ export function buildHeaders(context, req) {
     return headers;
 }
 
+export function http(req, serviceName, operationName) {
+    return (request) => {
+        const metadata = getMetadata();
+        if (metadata.testing) {
+            return axios(
+                request,
+            );
+        }
+        const executeStartTime = process.hrtime();
+        const requestLogs = buildRequestLogs(req, serviceName, operationName, request);
+
+        return axios(
+            request,
+        ).then((response) => {
+            logSuccess(req, request, response, requestLogs, executeStartTime);
+            return response;
+        }).catch((error) => {
+            logFailure(req, request, error, requestLogs);
+
+            // re-raise
+            throw error;
+        });
+    };
+}
 
 /* Create a new OpenAPI client using standard conventions:
  *
@@ -76,6 +105,7 @@ export function createOpenAPIClient(name, spec) {
         baseUrl,
         buildAdapter,
         buildHeaders,
+        http,
     };
     return OpenAPI(spec, name, options);
 }
