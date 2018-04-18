@@ -118,6 +118,6 @@ export function logFailure(req, request, error, requestLogs) {
         // HTTP statuses in the 4XX range expected and not warnings
         logger.info(req, 'ServiceRequestFailed', logs);
     } else {
-        logger.warn(req, 'ServiceRequestFailed', logs);
+        logger.warning(req, 'ServiceRequestFailed', logs);
     }
 }
