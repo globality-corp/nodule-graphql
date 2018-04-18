@@ -86,9 +86,9 @@
     credstash "https://github.com/KensoDev/node-credstash.git#hotfix/credstash"
     lodash "^4.17.5"
 
-"@globality/nodule-logging@~1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@globality/nodule-logging/-/nodule-logging-1.2.0.tgz#dd10f5460a86192e710333f979d7ebcc8639c025"
+"@globality/nodule-logging@~1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@globality/nodule-logging/-/nodule-logging-1.2.2.tgz#ec13a78349f0f37a3d09ae2b5ac90a104001569b"
   dependencies:
     is-uuid "^1.0.2"
     lodash "^4.17.4"
