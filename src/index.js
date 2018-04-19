@@ -12,6 +12,7 @@ export {
     UnprocessableEntity,
 } from './errors';
 export { createResolver, getResolver } from './resolver';
+export * from './modules';
 export {
     mockError,
     mockResponse,
