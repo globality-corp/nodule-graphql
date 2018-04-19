@@ -1,4 +1,4 @@
-/* Client request logging.
+/* Client request logger.
  */
 import { assign, get } from 'lodash';
 import {
@@ -30,7 +30,7 @@ export function buildRequestLogs(req, serviceName, operationName, request) {
         ...(args ? { serviceRequestArgs: Object.keys(args) } : {}),
         ...extractLoggingProperties(
             { params: args },
-            get(config, 'logging.serviceRequestRules', []),
+            get(config, 'logger.serviceRequestRules', []),
         ),
     };
 }
@@ -46,18 +46,18 @@ export function logSuccess(req, request, response, requestLogs, executeStartTime
         ...requestLogs,
         ...extractLoggingProperties(
             { url: url.split('?')[0], method },
-            get(config, 'logging.serviceRequestRules', []),
+            get(config, 'logger.serviceRequestRules', []),
         ),
         ...extractLoggingProperties(
             response,
-            get(config, 'logging.serviceResponseRules', []),
+            get(config, 'logger.serviceResponseRules', []),
         ),
     };
-    if (get(config, 'logging.slownessWarning.enabled', false) &&
-        executeTime > get(config, 'logging.slownessWarning.warnForServiceResponseTimeMs', 1000)) {
+    if (get(config, 'logger.slownessWarning.enabled', false) &&
+        executeTime > get(config, 'logger.slownessWarning.warnForServiceResponseTimeMs', 1000)) {
         logger.warning(req, 'ServiceSlownessWarning', logs);
     }
-    if (get(config, 'logging.serviceRequestSucceeded.enabled', false)) {
+    if (get(config, 'logger.serviceRequestSucceeded.enabled', false)) {
         logger.info(req, 'ServiceRequestSucceeded', logs);
     }
 }
@@ -110,7 +110,7 @@ export function logFailure(req, request, error, requestLogs) {
         ...requestLogs,
         ...extractLoggingProperties(
             { url, method },
-            get(config, 'logging.serviceRequestRules', []),
+            get(config, 'logger.serviceRequestRules', []),
         ),
     };
 
