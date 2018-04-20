@@ -2,14 +2,13 @@
  *
  * Enabling basic auth pass through greatly simplifies graphiql usage.
  */
-import { getConfig } from '@globality/nodule-config';
-import { getLogger } from '@globality/nodule-logging';
+import { getConfig, getContainer } from '@globality/nodule-config';
 
 import sendUnauthorized from './errors';
 
 
 export default function passBasicAuth(req, res, next) {
-    const logger = getLogger();
+    const { logger } = getContainer();
 
     const realm = getConfig('middleware.jwt.realm');
 
