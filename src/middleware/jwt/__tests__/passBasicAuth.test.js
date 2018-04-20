@@ -1,4 +1,5 @@
 import { clearBinding, Nodule } from '@globality/nodule-config';
+import '@globality/nodule-logging'; // factory import
 
 import passBasicAuth from '../passBasicAuth';
 
