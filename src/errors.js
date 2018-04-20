@@ -6,6 +6,7 @@ import {
     INTERNAL_SERVER_ERROR,
     NOT_FOUND,
     UNPROCESSABLE_ENTITY,
+    GATEWAY_TIMEOUT,
 } from 'http-status-codes';
 
 
@@ -48,5 +49,26 @@ export class NotFound extends ResolverError {
 export class UnprocessableEntity extends ResolverError {
     constructor(message = 'Unprocessable Entity') {
         super(message, UNPROCESSABLE_ENTITY);
+    }
+}
+
+
+export class TooManyResults extends ResolverError {
+    constructor(message = 'Too Many Results') {
+        super(message, INTERNAL_SERVER_ERROR);
+    }
+}
+
+
+export class NoResults extends ResolverError {
+    constructor(message = 'No Results') {
+        super(message, NOT_FOUND);
+    }
+}
+
+
+export class MaxLimitReached extends ResolverError {
+    constructor(message = 'Max Limit Reached') {
+        super(message, GATEWAY_TIMEOUT);
     }
 }

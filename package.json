@@ -1,6 +1,6 @@
 {
     "name": "@globality/nodule-graphql",
-    "version": "0.12.4",
+    "version": "0.12.6",
     "description": "Node GraphQL Conventions",
     "main": "lib/",
     "repository": "git@github.com:globality-corp/nodule-graphql",
@@ -23,6 +23,7 @@
         "http-status-codes": "^1.3.0",
         "jsonwebtoken": "^8.2.0",
         "lodash": "^4.17.5",
+        "throat": "^4.1.0",
         "yarn": "^1.5.1"
     },
     "peerDependencies": {
