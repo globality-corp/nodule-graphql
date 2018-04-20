@@ -2,7 +2,6 @@
  */
 import { assign, get } from 'lodash';
 import {
-    getLogger,
     extractLoggingProperties,
 } from '@globality/nodule-logging';
 import { getContainer } from '@globality/nodule-config';
@@ -38,8 +37,7 @@ export function buildRequestLogs(req, serviceName, operationName, request) {
 
 export function logSuccess(req, request, response, requestLogs, executeStartTime) {
     const { method, url } = request;
-    const { config } = getContainer();
-    const logger = getLogger();
+    const { config, logger } = getContainer();
     const executeTime = calculateExecuteTime(executeStartTime);
     const logs = {
         serviceResponseTimeMs: executeTime,
@@ -97,8 +95,7 @@ export function extractErrorStatus(error) {
 
 export function logFailure(req, request, error, requestLogs) {
     const { method, url } = request;
-    const logger = getLogger();
-    const { config } = getContainer();
+    const { config, logger } = getContainer();
     const errorData = extractErrorData(error);
     const errorMessage = extractErrorMessage(error);
     const errorStatus = extractErrorStatus(error);
