@@ -18,6 +18,7 @@ export {
     first,
     none,
     one,
+    concurrentPaginate,
 } from './modules';
 export {
     mockError,
