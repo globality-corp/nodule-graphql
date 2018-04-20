@@ -3,6 +3,7 @@
  * Enabling basic auth pass through greatly simplifies graphiql usage.
  */
 import { getConfig, getContainer } from '@globality/nodule-config';
+import '@globality/nodule-logging';
 
 import sendUnauthorized from './errors';
 
