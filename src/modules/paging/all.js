@@ -1,8 +1,8 @@
 import { flatten, range } from 'lodash';
 import { MaxLimitReached } from '../../errors';
-import concurrentPaginate from './concurrency';
+import concurrentPaginate from '../concurrency';
 
-export default async function allItems(
+export default async function all(
     req,
     { searchRequest, args = {}, maxLimit = null, concurrencyLimit = 1 },
 ) {

@@ -1,5 +1,5 @@
 import { range } from 'lodash';
-import { allItems, any, one, none, first } from 'index';
+import { all, any, one, none, first } from 'index';
 
 const items = range(100).map(id => ({ id }));
 const req = {};
@@ -32,7 +32,7 @@ describe('Pagination', () => {
     });
 
     it('test search all items', async () => {
-        const res = await allItems(req, { searchRequest, args: { limit: 40 } });
+        const res = await all(req, { searchRequest, args: { limit: 40 } });
         expect(res).toEqual(items);
 
         expect(searchRequest).toHaveBeenCalledTimes(3);
@@ -51,7 +51,7 @@ describe('Pagination', () => {
     });
 
     it('test search items passes params', async () => {
-        const res = await allItems(req, { searchRequest, args: { limit: 200, param: 'eter' } });
+        const res = await all(req, { searchRequest, args: { limit: 200, param: 'eter' } });
         expect(res).toEqual(items);
 
         expect(searchRequest).toHaveBeenCalledTimes(1);

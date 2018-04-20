@@ -1,1 +1,7 @@
-export * from './paging';
+export {
+    all,
+    any,
+    first,
+    none,
+    one,
+} from './paging';
