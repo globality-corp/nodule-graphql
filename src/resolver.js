@@ -1,4 +1,5 @@
-import { getContainer } from '@globality/nodule-config';
+import { isFunction } from 'lodash';
+import { bind, getContainer } from '@globality/nodule-config';
 
 
 /* Default mask function: just passes args.
@@ -49,8 +50,27 @@ export function createResolver(options) {
 }
 
 
-export function getResolver(name) {
+/* Register a default 'null' resolver.
+ */
+bind('graphql.resolvers.null', () => createResolver({
+    aggregate: async () => null,
+    transform: () => null,
+}));
+
+
+/* Look up a resolver by key.
+ *
+ * Returns a resolver function that dynamically selects the resolver on invocation,
+ * allow the resolver to definition to be injected (via bottle/@nodule-config).
+ *
+ * In the majority of cases, `key` will be a string that maps to the resolver name.
+ *
+ * For more complex uses cases, `key` may be a function; the keys return value will
+ * be used as the resolver name.
+ */
+export function getResolver(key) {
     return (obj, args, context, info) => {
+        const name = isFunction(key) ? key(obj, args, context, info) : key;
         const resolver = getContainer(`graphql.resolvers.${name}`);
         return resolver.resolve(obj, args, context, info);
     };
