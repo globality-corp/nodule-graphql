@@ -11,7 +11,7 @@ export {
     NotFound,
     UnprocessableEntity,
 } from './errors';
-export { createResolver, getResolver } from './resolver';
+export { createResolver, getResolver, cloneResolver } from './resolver';
 export {
     all,
     any,

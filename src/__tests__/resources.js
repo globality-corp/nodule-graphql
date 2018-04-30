@@ -66,4 +66,13 @@ export const User = {
         },
         resolve: getResolver('user.retrieve'),
     },
+    userClone: {
+        type: UserListType,
+        args: {
+            id: {
+                type: GraphQLID,
+            },
+        },
+        resolve: getResolver('user.retrieveClone'),
+    },
 };

@@ -113,4 +113,38 @@ describe('routes', () => {
             'user',
         ]);
     });
+
+    it('handles cloned resolvers', async () => {
+        const app = createApp();
+
+        const query = `
+          query example {
+            userClone(id: "34") {
+              items {
+                companyId
+                companyName
+                firstName
+                id
+                lastName
+              }
+            }
+          }`;
+        const response = await request(app).post(
+            '/graphql',
+        ).send({
+            query,
+        });
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body.data).toEqual({
+            userClone: null,
+        });
+        expect(response.body.errors).toHaveLength(1);
+        expect(response.body.errors[0].code).toEqual('HTTP-403');
+        expect(response.body.errors[0].locations).toBeDefined();
+        expect(response.body.errors[0].message).toEqual('Not Authorized');
+        expect(response.body.errors[0].path).toEqual([
+            'userClone',
+        ]);
+    });
 });

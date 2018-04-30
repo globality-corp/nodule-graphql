@@ -24,6 +24,13 @@ export class Resolver {
         this.mask = mask || defaultMask;
     }
 
+    clone(resolver) {
+        this.aggregate = this.aggregate || resolver.aggregate;
+        this.authorize = this.authorize || resolver.authorize;
+        this.transform = this.transform || resolver.transform;
+        this.mask = this.mask || resolver.mask;
+    }
+
     // NB: async class methods were added to node in v8.x
     async resolve(obj, args, context, info) {
         const masked = this.mask(obj, args, context, info);
@@ -49,6 +56,9 @@ export function createResolver(options) {
     return new Resolver(options);
 }
 
+export function cloneResolver(resolver, options) {
+    return new Resolver(Object.assign({}, resolver, options));
+}
 
 /* Register a default 'null' resolver.
  */
