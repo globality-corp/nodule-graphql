@@ -25,15 +25,4 @@ describe('a strict resolver', () => {
             'Strict resolver must define an `authorize` option',
         );
     });
-
-    it('requires a transform function', async () => {
-        expect(
-            () => createStrictResolver({
-                aggregate: async () => null,
-                authorize: () => true,
-            }),
-        ).toThrow(
-            'Strict resolver must define a `transform` option',
-        );
-    });
 });
