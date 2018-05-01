@@ -1,4 +1,5 @@
 // activate component bindings
+import './authorizers';
 import './middleware';
 import './routes';
 import './terminal';
@@ -15,7 +16,7 @@ export {
     createResolver,
     createStrictResolver,
     getResolver,
-} from './resolver';
+} from './resolvers';
 export {
     all,
     any,
