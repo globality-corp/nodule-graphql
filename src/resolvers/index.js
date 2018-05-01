@@ -44,10 +44,15 @@ export class Resolver {
         const masked = this.mask(obj, args, context, info);
 
         if (this.authorize) {
+            // allow authorizer to be looked up by name
+            const authorize = isFunction(this.authorize)
+                ? this.authorize
+                : getContainer(`graphql.authorizers.${this.authorize}`);
+
             if (isNil(this.authorizeData)) {
-                await this.authorize(...masked);
+                await authorize(...masked);
             } else {
-                await this.authorize(this.authorizeData, ...masked);
+                await authorize(this.authorizeData, ...masked);
             }
         }
 
