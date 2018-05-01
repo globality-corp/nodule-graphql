@@ -86,9 +86,6 @@ export function createStrictResolver(options) {
     if (!options.authorize) {
         throw new Error('Strict resolver must define an `authorize` option');
     }
-    if (!options.transform) {
-        throw new Error('Strict resolver must define a `transform` option');
-    }
     return createResolver(options);
 }
 
