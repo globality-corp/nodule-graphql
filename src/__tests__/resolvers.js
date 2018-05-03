@@ -17,8 +17,8 @@ const retrieveUser = createResolver({
         const { services } = getContainer();
         return services.user.retrieve(userId);
     },
-    authorize: ({ userId }) => {
-        if (userId === '23') {
+    authorize: (obj, { id }) => {
+        if (id === '23') {
             throw new Forbidden('Not Authorized');
         }
         return true;
