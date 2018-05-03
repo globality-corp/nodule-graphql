@@ -16,6 +16,7 @@ export {
     createResolver,
     createStrictResolver,
     getResolver,
+    getResolverPipeline,
 } from './resolvers';
 export {
     all,
