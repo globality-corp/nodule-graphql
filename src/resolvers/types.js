@@ -41,20 +41,22 @@ export class Resolver {
 
     // NB: async class methods were added to node in v8.x
     async resolve(obj, args, context, info) {
-        const masked = this.mask(obj, args, context, info);
-
         if (this.authorize) {
             // allow authorizer to be looked up by name
             const authorize = isFunction(this.authorize)
                 ? this.authorize
                 : getContainer(`graphql.authorizers.${this.authorize}`);
 
+            // always invoke authorizers with standard resolver arguments
             if (isNil(this.authorizeData)) {
-                await authorize(...masked);
+                await authorize(obj, args, context, info);
             } else {
-                await authorize(this.authorizeData, ...masked);
+                await authorize(this.authorizeData, obj, args, context, info);
             }
         }
+
+        // apply mask function
+        const masked = this.mask(obj, args, context, info);
 
         // aggregate asynchronous requests over services.
         const aggregated = await this.aggregate(...masked);
