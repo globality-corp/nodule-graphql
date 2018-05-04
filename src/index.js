@@ -21,10 +21,11 @@ export {
 export {
     all,
     any,
+    concurrentPaginate,
     first,
     none,
     one,
-    concurrentPaginate,
+    withArgs,
 } from './modules';
 export {
     mockError,
