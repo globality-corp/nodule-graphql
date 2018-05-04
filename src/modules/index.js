@@ -6,3 +6,4 @@ export {
     one,
 } from './paging';
 export { default as concurrentPaginate } from './concurrency';
+export { default as withArgs } from './masking';
