@@ -1,10 +1,13 @@
 # Services
 
-`nodule-graphql` allows you to wrap your OpenAPI client implementations to add modifications to all defined endpoints.
+`nodule-graphql` allows you to wrap your OpenAPI client implementations to add modifications to all
+defined endpoints.
 
 ## Usage
 
-1. OpenAPI Clients Container Name
+All usage details can be found below.
+
+### OpenAPI Clients Container Name
     All of OpenAPI clients that are to be converted into wrapped services need to be bound to a container.
     The default name of `clients` can be used for the container or can be overridden by binding to `clientsName`:
 
@@ -13,7 +16,7 @@
         });
         bind('clientsName', 'fooClients');
 
-2. Specifying Configs
+### Specifying Configs
 
     There are 2 base wrappers included in `nodule-graphql`: batching and deduplication.
     In order to utilize these wrappers, configuration variables need to be bound.
@@ -26,14 +29,14 @@
     The paths specified in the configurations should be retrievable from:
         getContainer(`{clientsName}.{path}`)
 
-    dedup:
+    `dedup`:
         const dedupConfig = {
             'path.to.foo.endpoint': {},
             'path.to.bar.endpoint': {},
         }
         bind('dedupConfig', dedupConfig);
 
-    batch:
+    `batch`:
         For a given path the `accumulateBy` and `accumulateInto` should include a field that can be grouped
         into a different parameter to be passed into the same endpoint. In addition the returned response
         must include the `accumulateBy` field as one of the properties. If it doesnt, specify a `splitResponseBy`
@@ -60,10 +63,10 @@
         }
         bind('batchConfig', batchConfig);
 
-3. Additional wrappers
+### Additional wrappers
 
-    `nodule-graphql` also supports including additional wrappers. All wrappers should be written in a way to expect (req, args)
-    parameters, and only operate on endpoints specified in an associated config.
+    `nodule-graphql` also supports including additional wrappers. All wrappers should be written in a way 
+    to expect (req, args) parameters, and only operate on endpoints specified in an associated config.
 
     These wrappers can be included by binding to the `serviceWrappers` container:
         const serviceWrappers = [
@@ -72,10 +75,10 @@
         ];
         bind('serviceWrappers', serviceWrappers);
 
-4. Import `bindServices`
+### Import `bindServices`
 
-    In the application defintion import 'bindServices' from `nodule-graphql` and call it once all of the clients and config
-    bindings have been bound.
+    In the application defintion import 'bindServices' from `nodule-graphql` and call it once all of the 
+    clients and config bindings have been bound.
 
         import { bindServices } from '@globality/nodule-graphql';
 
@@ -84,15 +87,15 @@
 
         bindServices();
 
-5. Using services
+### Using services
 
-    The wrapped services will be bound to the `services` field. In order to use the wrapped clients, simply replace the client
-    getContainer call with a `services` get container call:
+    The wrapped services will be bound to the `services` field. In order to use the wrapped clients, 
+    simply replace the client getContainer call with a `services` get container call:
 
         const { foo, bar } = getContainer('services');
 
-    The original `clients` are still bound so if for a specific endpoint, the services are not desired, the client version
-    of the call is still accessiable:
+    The original `clients` are still bound so if for a specific endpoint, the services are not desired, 
+    the client version of the call is still accessiable:
 
         const { foo, bar } = getContainer('services');
         const { baz } = getContainer('services');
