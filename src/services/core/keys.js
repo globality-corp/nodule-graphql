@@ -1,8 +1,11 @@
-import { isObject, toPairs } from 'lodash';
+import { isObject, toPairs, get } from 'lodash';
 import { getContainer } from '@globality/nodule-config';
 import uuidv5 from 'uuid/v5';
 
-const uniqueId = getContainer('uniqueId') || '00000000-0000-0000-0000-000000000000';
+const DEFAULT_UNIQUE_ID = '00000000-0000-0000-0000-000000000000';
+const { serviceConfig } = getContainer();
+const uniqueId = get(serviceConfig, 'uniqueId') || DEFAULT_UNIQUE_ID;
+
 
 function valueToString(value) {
     if (Array.isArray(value)) {

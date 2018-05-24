@@ -1,6 +1,6 @@
 import { get, set, cloneDeepWith } from 'lodash';
 import { bind, getContainer } from '@globality/nodule-config';
-import servicesWrappers from './wrapper';
+import getServiceWrappers from './wrapper';
 
 export function cloneClients(obj) {
     return cloneDeepWith(obj, node => (
@@ -14,6 +14,7 @@ export function cloneClients(obj) {
 }
 
 function optimizeServices(services) {
+    const servicesWrappers = getServiceWrappers();
     Object.keys(servicesWrappers).forEach((requestName) => {
         const serviceRequest = servicesWrappers[requestName];
         if (get(services, requestName)) {
@@ -22,8 +23,8 @@ function optimizeServices(services) {
     });
 }
 
-export function bindServices() {
-    const clientsName = getContainer('clientsName');
+export default function bindServices() {
+    const { clientsName } = getContainer();
     const clients = getContainer(clientsName || 'clients');
     const services = cloneClients(clients);
     optimizeServices(services);

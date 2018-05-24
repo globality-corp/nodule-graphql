@@ -11,35 +11,24 @@ import named from './core/named';
 
 function buildWrappers() {
     const wrappers = [];
+    const { serviceConfig } = getContainer();
+    if (serviceConfig) {
+        const { dedup, batch, additionalWrappers } = serviceConfig;
+        // NB: order matters here
+        if (dedup) {
+            wrappers.push([dedup, deduped]);
+        }
 
-    const dedupConfig = getContainer('dedupConfig');
-    if (dedupConfig) {
-        wrappers.append([dedupConfig, deduped]);
-    }
+        if (batch) {
+            wrappers.push([batch, batched]);
+        }
 
-    const batchConfig = getContainer('batchConfig');
-    if (batchConfig) {
-        wrappers.append([batchConfig, batched]);
-    }
-
-    const servicesWrappers = getContainer('serviceWrappers');
-    if (servicesWrappers) {
-        wrappers.extend(servicesWrappers);
+        if (additionalWrappers) {
+            wrappers.push(...additionalWrappers);
+        }
     }
     return wrappers;
 }
-
-// NB: order matters here
-export const WRAPPERS = buildWrappers();
-
-
-// calculate the full list of service names that are wrapped
-export const WRAPPED_SERVICE_NAMES = Array.from(new Set(
-    flatten(
-        WRAPPERS.map(value => Object.keys(value[0])),
-    ),
-));
-
 
 /* Wrap a service call if args are defined.
  */
@@ -50,18 +39,28 @@ export function wrapIf(service, wrapper, args) {
 
 /* Wrap a single service call.
  */
-export function wrap(name) {
-    return WRAPPERS.reduce(
+function wrap(wrappers, name) {
+    return wrappers.reduce(
         (service, [config, wrapper]) => wrapIf(service, wrapper, config[name]),
         named(name),
     );
 }
 
 
-const servicesWrappers = Object.assign(
-    {},
-    ...WRAPPED_SERVICE_NAMES.map(name => ({ [name]: wrap(name) })),
-);
+function getServiceWrappers() {
+    const wrappers = buildWrappers();
 
+    // calculate the full list of service names that are wrapped
+    const WRAPPED_SERVICE_NAMES = Array.from(new Set(
+        flatten(
+            wrappers.map(value => Object.keys(value[0])),
+        ),
+    ));
 
-export default servicesWrappers;
+    return Object.assign(
+        {},
+        ...WRAPPED_SERVICE_NAMES.map(name => ({ [name]: wrap(wrappers, name) })),
+    );
+}
+
+export default getServiceWrappers;

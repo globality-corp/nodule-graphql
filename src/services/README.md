@@ -13,15 +13,19 @@ The default name of `clients` can be used for the container or can be overridden
     });
     bind('clientsName', 'fooClients');
 
-## Specifying Configs
-
-There are 2 base wrappers included in `nodule-graphql`: batching and deduplication.
-In order to utilize these wrappers, configuration variables need to be bound.
+## Unique Key
 
 In order to generate a unique hashable key for a specific service request, a unique ID is used. To use any
 of the services, bind a specific UUID to `uniqueId`.
 
-    bind('uniqueId', '5dfe05f8-59e3-4b07-ab21-7f221d75a83d');
+    bind('serviceConfig.uniqueId', '5dfe05f8-59e3-4b07-ab21-7f221d75a83d');
+
+Alternatively the default uniqueId of '00000000-0000-0000-0000-000000000000' will be used.
+
+## Specifying Configs
+
+There are 2 base wrappers included in `nodule-graphql`: batching and deduplication.
+In order to utilize these wrappers, configuration variables need to be bound.
 
 The paths specified in the configurations should be retrievable from:
 
@@ -33,7 +37,7 @@ The paths specified in the configurations should be retrievable from:
         'path.to.foo.endpoint': {},
         'path.to.bar.endpoint': {},
     }
-    bind('dedupConfig', dedupConfig);
+    bind('serviceConfig.dedup', dedupConfig);
 
 ### batch
 
@@ -61,7 +65,7 @@ to be included during batched requests, the `assignArgs` parameter can be used.
             batchSearchRequest: named('path.to.bars.endpoint'),
         },
     }
-    bind('batchConfig', batchConfig);
+    bind('serviceConfig.batch', batchConfig);
 
 ## Additional wrappers
 
@@ -73,7 +77,7 @@ These wrappers can be included by binding to the `serviceWrappers` container:
         [fooWrapperConfig, fooWrapper],
         [barWrapperConfig, barWrapper],
     ];
-    bind('serviceWrappers', serviceWrappers);
+    bind('serviceConfig.additionalWrappers', serviceWrappers);
 
 ## Import `bindServices`
 
