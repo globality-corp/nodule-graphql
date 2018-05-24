@@ -2,7 +2,7 @@ import { isObject, toPairs } from 'lodash';
 import { getContainer } from '@globality/nodule-config';
 import uuidv5 from 'uuid/v5';
 
-const uniqueId = getContainer('uniqueId');
+const uniqueId = getContainer('uniqueId') || '00000000-0000-0000-0000-000000000000';
 
 function valueToString(value) {
     if (Array.isArray(value)) {

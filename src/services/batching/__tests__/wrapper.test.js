@@ -2,13 +2,18 @@ import { get as mockGet } from 'lodash';
 import batched from '../wrapper';
 
 jest.mock('@globality/nodule-config', () => ({
-    getContainer: () => ({
-        config: {
-            performance: {
-                batchLimit: 3,
+    getContainer: (lookup) => {
+        if (lookup) {
+            return '00000000-0000-0000-0000-000000000000';
+        }
+        return {
+            config: {
+                performance: {
+                    batchLimit: 3,
+                },
             },
-        },
-    }),
+        };
+    },
     getConfig: (lookup) => {
         const config = {
             concurrency: {

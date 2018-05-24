@@ -2,35 +2,34 @@ import createKey from '../keys';
 
 describe('cacheKey', () => {
     it('generates expected values', async () => {
-
         expect(
             createKey('foo'),
         ).toEqual(
-            '8eadcea4-e7dc-5418-a8de-975fe703bfd4',
+            '9bf8a9db-8d02-5252-ab10-bb36d2cdd8b4',
         );
 
         expect(
             createKey('foo', 'bar'),
         ).toEqual(
-            '7729fb23-462f-5cdf-a8a3-ec9989b7dfb3',
+            '5a662f98-e6c6-57b5-bc34-a4130357ba35',
         );
 
         expect(
             createKey(['foo'], 'bar'),
         ).toEqual(
-            '8bcdfb19-8de4-5706-b724-8e0ea6acc028',
+            '958f1ae7-eb22-52a4-9a39-0d36a451f2b6',
         );
 
         expect(
             createKey({ foo: 'bar' }, 'bar'),
         ).toEqual(
-            '19f12efd-29dd-5395-992f-c5398ba5fe5e',
+            '63ac6f0b-fec8-57de-8133-f9e822af60b5',
         );
 
         expect(
             createKey({ foo: { bar: 'baz', qux: 'foo' } }),
         ).toEqual(
-            'cddeab82-584a-5ab4-b6c7-2e49de94d9b0',
+            '675e80b2-74d5-52b1-8523-05a0fa13c1d1',
         );
     });
 });
