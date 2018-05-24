@@ -12,7 +12,6 @@ function getConcurrency(concurrencyLimit) {
     if (!isNil(concurrencyLimit)) {
         return concurrencyLimit;
     }
-
     return parseInt(getConfig('concurrency.limit') || DEFAULT_CONCURRENCY, 10);
 }
 
