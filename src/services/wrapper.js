@@ -51,7 +51,7 @@ function getServiceWrappers() {
     const wrappers = buildWrappers();
 
     // calculate the full list of service names that are wrapped
-    const WRAPPED_SERVICE_NAMES = Array.from(new Set(
+    const wrappedServiceNames = Array.from(new Set(
         flatten(
             wrappers.map(value => Object.keys(value[0])),
         ),
@@ -59,7 +59,7 @@ function getServiceWrappers() {
 
     return Object.assign(
         {},
-        ...WRAPPED_SERVICE_NAMES.map(name => ({ [name]: wrap(wrappers, name) })),
+        ...wrappedServiceNames.map(name => ({ [name]: wrap(wrappers, name) })),
     );
 }
 

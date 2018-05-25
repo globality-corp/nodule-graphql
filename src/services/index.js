@@ -1,4 +1,4 @@
-import { get, set, cloneDeepWith } from 'lodash';
+import { cloneDeepWith } from 'lodash';
 import { bind, getContainer } from '@globality/nodule-config';
 import getServiceWrappers from './wrapper';
 
@@ -13,21 +13,22 @@ export function cloneClients(obj) {
     ));
 }
 
-function optimizeServices(services) {
+/* Wraps clients with the configured services (batching, dedup, etc.)
+ * We clone the clients to avoid modifying to the original clients
+ */
+function wrapClients(clients) {
     const servicesWrappers = getServiceWrappers();
+    const services = cloneClients(clients);
     Object.keys(servicesWrappers).forEach((requestName) => {
-        const serviceRequest = servicesWrappers[requestName];
-        if (get(services, requestName)) {
-            set(services, requestName, serviceRequest);
-        }
+        services[requestName] = servicesWrappers[requestName];
     });
+    return services;
 }
 
 export default function bindServices() {
     const { clientsName } = getContainer();
     const clients = getContainer(clientsName || 'clients');
-    const services = cloneClients(clients);
-    optimizeServices(services);
+    const services = wrapClients(clients);
     Object.keys(services).forEach((clientName) => {
         bind(`services.${clientName}`, () => services[clientName]);
     });

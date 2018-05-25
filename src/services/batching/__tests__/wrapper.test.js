@@ -1,14 +1,19 @@
 import { get as mockGet } from 'lodash';
 import batched from '../wrapper';
 
-jest.mock('@globality/nodule-config', () => ({
-    getContainer: () => ({
-        config: {
-            performance: {
-                batchLimit: 3,
-            },
+const mockConfig = {
+    config: {
+        performance: {
+            batchLimit: 3,
         },
-    }),
+    },
+};
+jest.mock('@globality/nodule-config', () => ({
+    bind: (key, value) => {
+        mockConfig[key] = value;
+        return mockConfig;
+    },
+    getContainer: () => (mockConfig),
     getConfig: (lookup) => {
         const config = {
             concurrency: {
@@ -36,13 +41,7 @@ describe('dataLoader requestWrapper', () => {
             limit: 20,
         }));
         req = {
-            app: {
-                config: {
-                    performance: {
-                        batchLimit: 3,
-                    },
-                },
-            },
+            app: {},
         };
         requestWrapper = batched(companyRetrieve, {
             accumulateBy: 'id',
@@ -212,7 +211,7 @@ describe('dataLoader requestWrapper', () => {
         } catch (thrownError) {
             caughtError = thrownError;
         }
-        expect(caughtError.message.message).toBe('Batching failed: expected to get one item but got too many results');
+        expect(caughtError.message).toBe('Batching failed: expected to get one item but got too many results');
         expect(companyRetrieve).toHaveBeenCalledTimes(0);
         expect(companySearch).toHaveBeenCalledTimes(1);
         expect(companySearch).toHaveBeenLastCalledWith(req, {
@@ -243,7 +242,7 @@ describe('dataLoader requestWrapper', () => {
         } catch (thrownError) {
             caughtError = thrownError;
         }
-        expect(caughtError.message.message).toBe('Batching failed: expected to get one item but got none');
+        expect(caughtError.message).toBe('Batching failed: expected to get one item but got none');
         expect(companyRetrieve).toHaveBeenCalledTimes(0);
         expect(companySearch).toHaveBeenCalledTimes(1);
         expect(companySearch).toHaveBeenLastCalledWith(req, {

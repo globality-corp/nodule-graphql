@@ -1,6 +1,6 @@
 import { get } from 'lodash';
 import { getContainer } from '@globality/nodule-config';
-
+import { InternalServerError } from '../../errors';
 
 /* Invoke a service via a named client.
  */
@@ -10,6 +10,6 @@ export default function named(serviceRequestName) {
     return (req, args) => get(
         clients,
         `${serviceRequestName}`,
-        (() => { throw Error(`${serviceRequestName} not implemented`); }),
+        (() => { throw InternalServerError(`${serviceRequestName} not implemented`); }),
     )(req, args);
 }

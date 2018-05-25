@@ -1,17 +1,17 @@
 import { dedupMany } from '../dedup/wrapper';
 import batchRequests from './batchRequests';
 
-
-// In-request caching and batching wrapper
-// accumulateBy: the request arg that can be batch (example: userId)
-// accumulateInto: the request arg that accumulateBy arg can be merged into (example: userIds)
-// splitResponseBy: how to split the response for the batched request (default: accumulateBy)
-// batchSearchRequest: another serviceRequest that is used for batching
-//                     used when batching retrieve requests
-//                     for example (serviceRequest: userRetrieve, batchSearchRequest: userSearch)
-// assignArgs: additional args that will be included in the search request
-//             (example: [{ addFoo: true }])
-// loaderName: allows to access the DataLoader loader object with req.loaders.{loaderName}
+/* In-request caching and batching wrapper
+ * accumulateBy: the request arg that can be batch (example: userId)
+ * accumulateInto: the request arg that accumulateBy arg can be merged into (example: userIds)
+ * splitResponseBy: how to split the response for the batched request (default: accumulateBy)
+ * batchSearchRequest: another serviceRequest that is used for batching
+ *                     used when batching retrieve requests
+ *                     for example (serviceRequest: userRetrieve, batchSearchRequest: userSearch)
+ * assignArgs: additional args that will be included in the search request
+ *             (example: [{ addFoo: true }])
+ * loaderName: allows to access the DataLoader loader object with req.loaders.{loaderName}
+ */
 export default function batched(serviceRequest, {
     accumulateBy,
     accumulateInto,

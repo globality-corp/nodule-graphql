@@ -9,7 +9,8 @@
  */
 import DataLoader from 'dataloader';
 import uuidv4 from 'uuid/v4';
-import { get, set } from 'lodash';
+import { get } from 'lodash';
+import { bind, getContainer } from '@globality/nodule-config';
 import { concurrentPaginate } from '../../modules';
 import createKey from '../core/keys';
 
@@ -21,7 +22,8 @@ import createKey from '../core/keys';
  * between concurrent users.
  */
 function getLoader(req, loaderId, loadMany, allowBatch) {
-    let loader = get(req, `loaders.${loaderId}`);
+    const base = getContainer();
+    let loader = get(base, `loaders.${loaderId}`);
     if (!loader) {
         loader = new DataLoader(
             argsList => loadMany(req, argsList),
@@ -32,7 +34,7 @@ function getLoader(req, loaderId, loadMany, allowBatch) {
                 batch: allowBatch,
             },
         );
-        set(req, `loaders.${loaderId}`, loader);
+        bind(`loaders.${loaderId}`, loader);
     }
     return loader;
 }

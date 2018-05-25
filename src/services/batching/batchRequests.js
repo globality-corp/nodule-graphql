@@ -1,19 +1,18 @@
 /*
-Optimization for calling similar microcosm requests at the same time
-This utility will reduce the amount of queries that styx creates by batching similar queries
-
-*/
+ *  Optimization for calling similar microcosm requests at the same time
+ *  This utility will reduce the amount of queries that styx creates by batching similar queries
+ */
 import { assign, chunk, chain, flatten, get, groupBy, omit, uniq } from 'lodash';
-import { NOT_FOUND, INTERNAL_SERVER_ERROR } from 'http-status-codes';
 import { getContainer } from '@globality/nodule-config';
-import { GraphQLError } from 'graphql';
+import { NotFound, InternalServerError } from '../../errors';
 import { concurrentPaginate, all } from '../../modules';
 import createKey from '../core/keys';
 
-// Checks that a service request can be batched:
-// 1. Contains an accumulateBy value (such as userId)
-// 2. Does not contain offset parameter
-// 3. Does not contain limit>1 parameter
+/* Checks that a service request can be batched:
+ * 1. Contains an accumulateBy value (such as userId)
+ * 2. Does not contain offset parameter
+ * 3. Does not contain limit>1 parameter
+ */
 function canArgsBeBatched(args, accumulateBy) {
     return (
         args[accumulateBy] !== undefined &&
@@ -22,9 +21,10 @@ function canArgsBeBatched(args, accumulateBy) {
     );
 }
 
-// Split argsList to two argsLists:
-// List of args that can be batched (based on canArgsBeBatched)
-// List of args that cannot be batched
+/* Split argsList to two argsLists:
+ * List of args that can be batched (based on canArgsBeBatched)
+ * List of args that cannot be batched
+ */
 function filterArgsToBatch(argsList, accumulateBy) {
     const batchableArgsList = [];
     const unBatchableArgsList = [];
@@ -38,31 +38,32 @@ function filterArgsToBatch(argsList, accumulateBy) {
     return { batchableArgsList, unBatchableArgsList };
 }
 
-// Separate argsList to chunks of argsList that can be batched.
-// Every group must:
-// 1. Contain no more than groupSize requests to batch
-// 2. Contain the same request args (except the batchArg arg)
-// Assumption: dont get the exact same args in the argsList
-// Example:
-// Input:
-//        argsList: [
-//           { userId: 1, event: FooEvent },
-//           { userId: 2, event: FooEvent },
-//           { userId: 2, event: BarEvent },
-//           { userId: 3, event: BarEvent },
-//        ]
-//        accumulateBy:   userId
-// Output:
-//  [
-//      [
-//          { userId: 1, event: FooEvent },
-//          { userId: 2, event: FooEvent },
-//      ],
-//      [
-//          { userId: 2, event: BarEvent },
-//          { userId: 3, event: BarEvent },
-//      ],
-//  ]
+/* Separate argsList to chunks of argsList that can be batched.
+ * Every group must:
+ *     1. Contain no more than groupSize requests to batch
+ *     2. Contain the same request args (except the batchArg arg)
+ * Assumption: dont get the exact same args in the argsList
+ * Example:
+ * Input:
+ *     argsList: [
+ *         { userId: 1, event: FooEvent },
+ *         { userId: 2, event: FooEvent },
+ *         { userId: 2, event: BarEvent },
+ *         { userId: 3, event: BarEvent },
+ *     ]
+ *     accumulateBy:   userId
+ * Output:
+ * [
+ *     [
+ *         { userId: 1, event: FooEvent },
+ *         { userId: 2, event: FooEvent },
+ *     ],
+ *     [
+ *         { userId: 2, event: BarEvent },
+ *         { userId: 3, event: BarEvent },
+ *     ],
+ * ]
+ */
 function getArgsChunksList(req, argsList, accumulateBy) {
     const argsGroups = groupBy(argsList, args => createKey(omit(args, accumulateBy)));
     const { config } = getContainer();
@@ -70,40 +71,41 @@ function getArgsChunksList(req, argsList, accumulateBy) {
     return flatten(Object.keys(argsGroups).map(key => chunk(argsGroups[key], batchLimit)));
 }
 
-// Returns a (key(args): response) object (with one key) based on serviceRequest call and args
-// Example:
-// Input:
-//        args: { userId: 1, event: FooEvent }
-// Output:
-//        Promise() => {
-//            "{ userId: 1, event: FooEvent }": { count: 1, items: [...] }
-//         }
+/*  Returns a (key(args): response) object (with one key) based on serviceRequest call and args
+ *  Example:
+ *  Input:
+ *      args: { userId: 1, event: FooEvent }
+ *  Output:
+ *      Promise() => {
+ *          "{ userId: 1, event: FooEvent }": { count: 1, items: [...] }
+ *          }
+ */
 async function resolveSimpleRequest(req, serviceRequest, args) {
     const key = createKey(args);
     const res = await serviceRequest(req, args).catch(error => ({ error }));
     return { [key]: res };
 }
 
-// Batch argsLists
-// The input args must have the same request args (except the batchArg arg)
-//
-// Example:
-// Input:
-//        argsList: [
-//           { userId: 1, event: FooEvent },
-//           { userId: 1, event: BarEvent },
-//           { userId: 2, event: FooEvent },
-//           { userId: [3], event: FooEvent },
-//           { userId: [1, 4], event: FooEvent },
-//        ]
-//        accumulateBy:   userId
-//        accumulateInto: userIds
-//        assignArgs: [{ sourceType: unknown }]
-// Output:
-//        [
-//            { userIds: [1. 2, 3, 4], event: FooEvent, sourceType: unknown },
-//            { userIds: [1], event: BarEvent, sourceType: unknown },
-//        ]
+/*  Batch argsLists
+ *  The input args must have the same request args (except the batchArg arg)
+ *  Example:
+ *  Input:
+ *      argsList: [
+ *          { userId: 1, event: FooEvent },
+ *          { userId: 1, event: BarEvent },
+ *          { userId: 2, event: FooEvent },
+ *          { userId: [3], event: FooEvent },
+ *          { userId: [1, 4], event: FooEvent },
+ *      ]
+ *      accumulateBy:   userId
+ *      accumulateInto: userIds
+ *      assignArgs: [{ sourceType: unknown }]
+ *  Output:
+ *      [
+ *          { userIds: [1. 2, 3, 4], event: FooEvent, sourceType: unknown },
+ *          { userIds: [1], event: BarEvent, sourceType: unknown },
+ *      ]
+ */
 function batchRequestsArgs(argsList, { accumulateBy, accumulateInto, assignArgs = [{}] }) {
     const batchedArgs = {
         [accumulateInto]: uniq(flatten(argsList.map(args => args[accumulateBy]))),
@@ -131,39 +133,37 @@ function fakeResponse(items, fakeSearchResponse) {
     }
     if (items.length === 0) {
         return {
-            error: new GraphQLError({
-                message: 'Batching failed: expected to get one item but got none',
-                status: NOT_FOUND,
-            }),
+            error: new NotFound(
+                'Batching failed: expected to get one item but got none',
+            ),
         };
     }
     if (items.length > 1) {
         return {
-            error: new GraphQLError({
-                message: 'Batching failed: expected to get one item but got too many results',
-                status: INTERNAL_SERVER_ERROR,
-            }),
+            error: new InternalServerError(
+                'Batching failed: expected to get one item but got too many results',
+            ),
         };
     }
     return items[0];
 }
 
-// Returns a (key(args): response) object (with more then key) based on batched searchRequest call
-//
-// Example:
-// Input:
-//        argsList: [
-//           { userId: 1, event: FooEvent },
-//           { userId: 2, event: FooEvent },
-//        ]
-//        accumulateBy:   userId
-//        accumulateInto: userIds
-//        splitResponseBy: groupId
-// Output:
-//        Promise() => {
-//            "{ userId: 1, event: FooEvent }": { count: 1, items: [...] }
-//            "{ userId: 2, event: FooEvent }": { count: 3, items: [...] }
-//         }
+/* Returns a (key(args): response) object (with more then key) based on batched searchRequest call
+ * Example:
+ * Input:
+ *     argsList: [
+ *         { userId: 1, event: FooEvent },
+ *         { userId: 2, event: FooEvent },
+ *     ]
+ *     accumulateBy:   userId
+ *     accumulateInto: userIds
+ *     splitResponseBy: groupId
+ * Output:
+ *     Promise() => {
+ *         "{ userId: 1, event: FooEvent }": { count: 1, items: [...] }
+ *         "{ userId: 2, event: FooEvent }": { count: 3, items: [...] }
+ *         }
+ */
 async function resolveBatchRequest(
     req,
     {
@@ -176,15 +176,17 @@ async function resolveBatchRequest(
         fakeSearchResponse,
     },
 ) {
-    // Batch many requests to a single search request
+    /* Batch many requests to a single search request
+     */
     const batchedArgs = batchRequestsArgs(requestsArgs, {
         accumulateBy,
         accumulateInto,
         assignArgs,
     });
 
-    // Resolve it
-    // If error is raised, create many { error, id } items
+    /* Resolve it
+     * If error is raised, create many { error, id } items
+     */
     const allResults = await all(req, { searchRequest, args: batchedArgs })
         .catch(error => batchedArgs[accumulateInto].map(id => ({
             error,
@@ -216,16 +218,17 @@ async function resolveBatchRequest(
     );
 }
 
-// Resolve number of search requests at the same time
-// can batch some search requests into one.
-// argsList: list of search requests args (see caching.js)
-// searchRequest: async function that can resolve search requests (see caching.js)
-//  accumulateBy: the request arg that can be batch (for example: userId)
-//  accumulateInto: the request arg that accumulateBy arg can be merged into (for example: userIds)
-//  splitResponseBy: how to split the response for the batched request (should be same accumulateBy)
-// Return value: list of service responses ordered the same way as the args in argsList
-// Responses that should raise a service error (such as 404) - replaced by and object with
-// error key and value that should be thrown.
+
+/* Resolve number of search requests at the same time can batch some search requests into one.
+ *     argsList: list of search requests args (see caching.js)
+ *     searchRequest: async function that can resolve search requests (see caching.js)
+ *     accumulateBy: the request arg that can be batch (for example: userId)
+ *     accumulateInto: the request arg that accumulateBy can be merged into (eg: userIds)
+ *     splitResponseBy: split the response for the batched request (should be same accumulateBy)
+ * Return value: list of service responses ordered the same way as the args in argsList
+ * Responses that should raise a service error (such as 404) - replaced by and object with
+ * error key and value that should be thrown.
+ */
 export default async function batchRequests(
     req,
     {
@@ -255,12 +258,13 @@ export default async function batchRequests(
     // Batch
     const argsListToBatch = argsChunksList.filter(argsChunks => argsChunks.length > 1);
 
-    // Create a search request promises based on argsList.
-    // Every promise will return an object with (str(args): response) items
-    // Use two different promises:
-    // * simple search requests
-    // * batch search requests
-    // (objects can have more then one keys if the requsts are batched)
+    /* Create a search request promises based on argsList.
+     * Every promise will return an object with (str(args): response) items
+     * Use two different promises:
+     *  * simple search requests
+     *  * batch search requests
+     * (objects can have more then one key if the requsts are batched)
+     */
     const requestPromises = [
         ...argsListNotToBatch.map(args => resolveSimpleRequest(req, serviceRequest, args)),
         ...argsListToBatch.map(

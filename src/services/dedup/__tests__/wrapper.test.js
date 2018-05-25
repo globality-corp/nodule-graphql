@@ -1,5 +1,18 @@
 import dedup from '../wrapper';
 
+let mockConfig = {};
+jest.mock('@globality/nodule-config', () => ({
+    bind: (key, value) => {
+        mockConfig[key] = value;
+        return mockConfig;
+    },
+    getContainer: () => mockConfig,
+    clearBinding: () => {
+        mockConfig = {};
+    },
+    getConfig: () => 10,
+}));
+
 let req;
 let companyRetrieve;
 
@@ -45,7 +58,7 @@ describe('dataLoader wrapper', () => {
         });
 
         // DataLoader api
-        req.loaders.companyLoader.clearAll();
+        mockConfig = {};
 
         company = await wrapper(req, { id: 1 });
         expect(companyRetrieve).toHaveBeenCalledTimes(2);

@@ -13,14 +13,30 @@ The default name of `clients` can be used for the container or can be overridden
     });
     bind('clientsName', 'fooClients');
 
-## Unique Key
+## Import `bindServices`
 
-In order to generate a unique hashable key for a specific service request, a unique ID is used. To use any
-of the services, bind a specific UUID to `uniqueId`.
+In the application defintion import 'bindServices' from `nodule-graphql` and call it once all of the 
+clients and config bindings have been bound.
 
-    bind('serviceConfig.uniqueId', '5dfe05f8-59e3-4b07-ab21-7f221d75a83d');
+    import { bindServices } from '@globality/nodule-graphql';
 
-Alternatively the default uniqueId of '00000000-0000-0000-0000-000000000000' will be used.
+    import fooClients;
+    import barServiceConfig;
+
+    bindServices();
+
+## Using services
+
+The wrapped services will be bound to the `services` field. In order to use the wrapped clients, 
+simply replace the client getContainer call with a `services` get container call:
+
+    const { foo, bar } = getContainer('services');
+
+The original `clients` are still bound so if for a specific endpoint, the services are not desired, 
+the client version of the call is still accessiable:
+
+    const { foo, bar } = getContainer('services');
+    const { baz } = getContainer('services');
 
 ## Specifying Configs
 
@@ -78,28 +94,3 @@ These wrappers can be included by binding to the `serviceWrappers` container:
         [barWrapperConfig, barWrapper],
     ];
     bind('serviceConfig.additionalWrappers', serviceWrappers);
-
-## Import `bindServices`
-
-In the application defintion import 'bindServices' from `nodule-graphql` and call it once all of the 
-clients and config bindings have been bound.
-
-    import { bindServices } from '@globality/nodule-graphql';
-
-    import fooClients;
-    import barServiceConfig;
-
-    bindServices();
-
-## Using services
-
-The wrapped services will be bound to the `services` field. In order to use the wrapped clients, 
-simply replace the client getContainer call with a `services` get container call:
-
-    const { foo, bar } = getContainer('services');
-
-The original `clients` are still bound so if for a specific endpoint, the services are not desired, 
-the client version of the call is still accessiable:
-
-    const { foo, bar } = getContainer('services');
-    const { baz } = getContainer('services');
