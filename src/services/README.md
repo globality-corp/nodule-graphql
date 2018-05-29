@@ -94,3 +94,11 @@ These wrappers can be included by binding to the `serviceWrappers` container:
         [barWrapperConfig, barWrapper],
     ];
     bind('serviceConfig.additionalWrappers', serviceWrappers);
+
+## Override createKey
+
+`nodule-graphql` generates a unique key to be used for batching/deduplication. The library allows
+the ability to override this function. The function should be able to generate a unique key given
+a list of arguments.
+
+    bind('createKey', createKey);

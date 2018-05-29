@@ -1,6 +1,7 @@
 import { cloneDeepWith } from 'lodash';
 import { bind, getContainer } from '@globality/nodule-config';
 import getServiceWrappers from './wrapper';
+import createKeyFunc from './core/keys';
 
 export function cloneClients(obj) {
     return cloneDeepWith(obj, node => (
@@ -26,6 +27,10 @@ function wrapClients(clients) {
 }
 
 export default function bindServices() {
+    const { createKey } = getContainer();
+    if (!createKey) {
+        bind('createKey', () => createKeyFunc);
+    }
     const { clientsName } = getContainer();
     const clients = getContainer(clientsName || 'clients');
     const services = wrapClients(clients);

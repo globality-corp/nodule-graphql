@@ -1,15 +1,15 @@
 import dedup from '../wrapper';
+import mockCreateKey from '../../core/keys';
 
-let mockConfig = {};
+let mockConfig = {
+    createKey: mockCreateKey,
+};
 jest.mock('@globality/nodule-config', () => ({
     bind: (key, value) => {
         mockConfig[key] = value;
         return mockConfig;
     },
     getContainer: () => mockConfig,
-    clearBinding: () => {
-        mockConfig = {};
-    },
     getConfig: () => 10,
 }));
 
@@ -58,7 +58,9 @@ describe('dataLoader wrapper', () => {
         });
 
         // DataLoader api
-        mockConfig = {};
+        mockConfig = {
+            createKey: mockCreateKey,
+        };
 
         company = await wrapper(req, { id: 1 });
         expect(companyRetrieve).toHaveBeenCalledTimes(2);

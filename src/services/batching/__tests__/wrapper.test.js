@@ -1,4 +1,5 @@
 import { get as mockGet } from 'lodash';
+import mockCreateKey from '../../core/keys';
 import batched from '../wrapper';
 
 const mockConfig = {
@@ -7,6 +8,7 @@ const mockConfig = {
             batchLimit: 3,
         },
     },
+    createKey: mockCreateKey,
 };
 jest.mock('@globality/nodule-config', () => ({
     bind: (key, value) => {

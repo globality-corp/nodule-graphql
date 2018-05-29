@@ -6,7 +6,6 @@ import { assign, chunk, chain, flatten, get, groupBy, omit, uniq } from 'lodash'
 import { getContainer } from '@globality/nodule-config';
 import { NotFound, InternalServerError } from '../../errors';
 import { concurrentPaginate, all } from '../../modules';
-import createKey from '../core/keys';
 
 /* Checks that a service request can be batched:
  * 1. Contains an accumulateBy value (such as userId)
@@ -65,8 +64,8 @@ function filterArgsToBatch(argsList, accumulateBy) {
  * ]
  */
 function getArgsChunksList(req, argsList, accumulateBy) {
+    const { createKey, config } = getContainer();
     const argsGroups = groupBy(argsList, args => createKey(omit(args, accumulateBy)));
-    const { config } = getContainer();
     const batchLimit = get(config, 'performance.batchLimit', 30);
     return flatten(Object.keys(argsGroups).map(key => chunk(argsGroups[key], batchLimit)));
 }
@@ -81,6 +80,7 @@ function getArgsChunksList(req, argsList, accumulateBy) {
  *          }
  */
 async function resolveSimpleRequest(req, serviceRequest, args) {
+    const { createKey } = getContainer();
     const key = createKey(args);
     const res = await serviceRequest(req, args).catch(error => ({ error }));
     return { [key]: res };
@@ -194,6 +194,7 @@ async function resolveBatchRequest(
         })));
     // Split the response by 'splitResponseBy'
     const groupedResults = groupBy(allResults, splitResponseBy);
+    const { createKey } = getContainer();
     // Match the response items to the requests
     const resultsBuckets = requestsArgs.reduce(
         (acc, requestArgs) => ({
@@ -281,7 +282,7 @@ export default async function batchRequests(
     ];
 
     const resonseObjects = await concurrentPaginate(requestPromises);
-
+    const { createKey } = getContainer();
     // Merge all responses to one (str(args) => response) object and arrange the response
     const responsesObject = Object.assign(...resonseObjects);
     return argsList.map(args => responsesObject[createKey(args)]);

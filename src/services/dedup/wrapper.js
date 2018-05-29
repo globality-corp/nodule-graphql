@@ -12,7 +12,6 @@ import uuidv4 from 'uuid/v4';
 import { get } from 'lodash';
 import { bind, getContainer } from '@globality/nodule-config';
 import { concurrentPaginate } from '../../modules';
-import createKey from '../core/keys';
 
 
 /* Fetch (and lazy-create) loaders by name.
@@ -23,6 +22,8 @@ import createKey from '../core/keys';
  */
 function getLoader(req, loaderId, loadMany, allowBatch) {
     const base = getContainer();
+    const { createKey } = getContainer();
+
     let loader = get(base, `loaders.${loaderId}`);
     if (!loader) {
         loader = new DataLoader(
