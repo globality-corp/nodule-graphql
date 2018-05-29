@@ -100,6 +100,12 @@ Resolvers should throw errors when something fails. Within `nodule-graphql`, it 
  -  Most errors will borrow from HTTP error codes (because they have well-known, useful semantics)
  -  Error codes should be visible to API consumers via `error.extensions`
 
+## Services
+
+`nodule-graphql` allows you to wrap your OpenAPI client implementations to add modifications to all
+defined endpoints.
+
+For usage see the README in the services folder.
 
 ## Local Development
 
