@@ -1,4 +1,4 @@
-import { cloneDeepWith } from 'lodash';
+import { cloneDeepWith, set } from 'lodash';
 import { bind, getContainer } from '@globality/nodule-config';
 import getServiceWrappers from './wrapper';
 import createKeyFunc from './core/keys';
@@ -21,7 +21,7 @@ function wrapClients(clients) {
     const servicesWrappers = getServiceWrappers();
     const services = cloneClients(clients);
     Object.keys(servicesWrappers).forEach((requestName) => {
-        services[requestName] = servicesWrappers[requestName];
+        set(services, requestName, servicesWrappers[requestName]);
     });
     return services;
 }
