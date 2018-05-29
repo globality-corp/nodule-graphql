@@ -5,31 +5,31 @@ describe('cacheKey', () => {
         expect(
             createKey('foo'),
         ).toEqual(
-            '9eb7791d-8309-59c6-8372-e5b9622dbbd8',
+            '1b942da9-3261-5084-a4cf-d80e559d5725',
         );
 
         expect(
             createKey('foo', 'bar'),
         ).toEqual(
-            'd4d7b595-10bb-57f0-ad65-8e7fc9cea49b',
+            'd74933fb-4f19-5a8d-9942-fd40364fb867',
         );
 
         expect(
             createKey(['foo'], 'bar'),
         ).toEqual(
-            'f8dab53c-ec03-5b1c-8bac-4925883069a2',
+            '5cc43b5a-1786-5981-b43a-93471a491f71',
         );
 
         expect(
             createKey({ foo: 'bar' }, 'bar'),
         ).toEqual(
-            '4c71c7bb-5c2b-5fab-9c73-571f1d07fc1d',
+            '2ee8d61c-b1d3-5b17-915b-4a8554a134ff',
         );
 
         expect(
             createKey({ foo: { bar: 'baz', qux: 'foo' } }),
         ).toEqual(
-            '2f81ca75-3eeb-5544-b806-6662a02ebf76',
+            '859609d5-0bf2-5960-a2b1-13b16111c21e',
         );
     });
 });

@@ -26,7 +26,7 @@ const createKey = (args, keyName = '') => {
         key => `${key}=${valueToString(args[key])}`,
     ).join('&');
     const keyString = `${keyName}?${argsString}`;
-    return uuidv5(keyString, '694e1e91-283e-40d7-bf79-a91133627201');
+    return uuidv5(keyString, uuidv5.URL);
 };
 
 export default createKey;
