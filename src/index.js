@@ -34,3 +34,4 @@ export {
     signPrivate,
 } from './testing';
 export { wrapResolvers } from './wrapper';
+export { default as bindServices } from './services';
