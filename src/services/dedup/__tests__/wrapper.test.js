@@ -1,12 +1,14 @@
+import { set as mockSet } from 'lodash';
 import dedup from '../wrapper';
 import mockCreateKey from '../../core/keys';
 
 let mockConfig = {
     createKey: mockCreateKey,
+    loaders: {},
 };
 jest.mock('@globality/nodule-config', () => ({
     bind: (key, value) => {
-        mockConfig[key] = value;
+        mockSet(mockConfig, key, value());
         return mockConfig;
     },
     getContainer: () => mockConfig,

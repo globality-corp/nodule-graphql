@@ -21,10 +21,10 @@ import { concurrentPaginate } from '../../modules';
  * between concurrent users.
  */
 function getLoader(req, loaderId, loadMany, allowBatch) {
-    const base = getContainer();
+    const { loaders } = getContainer();
     const { createKey } = getContainer();
 
-    let loader = get(base, `loaders.${loaderId}`);
+    let loader = get(loaders, loaderId);
     if (!loader) {
         loader = new DataLoader(
             argsList => loadMany(req, argsList),
@@ -35,7 +35,7 @@ function getLoader(req, loaderId, loadMany, allowBatch) {
                 batch: allowBatch,
             },
         );
-        bind(`loaders.${loaderId}`, loader);
+        bind(`loaders.${loaderId}`, () => loader);
     }
     return loader;
 }
