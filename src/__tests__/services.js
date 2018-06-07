@@ -1,6 +1,6 @@
 import { bind } from '@globality/nodule-config';
 
-import { NotFound } from 'index';
+import { NotFound } from '@globality/nodule-express';
 
 
 async function retrieveCompany(companyId) {
