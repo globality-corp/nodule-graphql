@@ -1,6 +1,6 @@
+import { Forbidden } from '@globality/nodule-express';
 import {
     createResolver,
-    Forbidden,
 } from 'index';
 
 

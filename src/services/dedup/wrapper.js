@@ -11,7 +11,7 @@ import DataLoader from 'dataloader';
 import uuidv4 from 'uuid/v4';
 import { get } from 'lodash';
 import { bind, getContainer } from '@globality/nodule-config';
-import { concurrentPaginate } from '../../modules';
+import { concurrentPaginate } from '@globality/nodule-openapi';
 
 
 /* Fetch (and lazy-create) loaders by name.
