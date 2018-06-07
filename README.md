@@ -26,11 +26,8 @@ By importing `nodule-graphql`, the following bindings are made available.
 
 ### Routes
 
- -  `routes.express` returns an Express instance
  -  `routes.graphql` returns a configured GraphQL endpoint
  -  `routes.graphiql` returns a configured GraphiQL endpoint
- -  `routes.health` returns a microcosm-compatible health check endpoint
- -  `routes.notFound` return a 404-generating endpoint
 
 ### Utilities
 

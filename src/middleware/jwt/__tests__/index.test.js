@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import request from 'supertest';
-
+import '@globality/nodule-express';
 import { getConfig, getContainer, Nodule } from '@globality/nodule-config';
 
 import { signSymmetric, signPrivate } from 'index';

@@ -1,5 +1,5 @@
 import bodyParser from 'body-parser';
-
+import '@globality/nodule-express';
 import { getContainer } from '@globality/nodule-config';
 
 import 'index';
