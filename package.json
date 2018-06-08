@@ -1,8 +1,11 @@
 {
     "name": "@globality/nodule-graphql",
-    "version": "0.23.0",
+    "version": "0.23.1",
     "description": "Node GraphQL Conventions",
     "main": "lib/",
+    "publishConfig": {
+        "registry": "https://globality.jfrog.io/globality/api/npm/npm/"
+    },
     "repository": "git@github.com:globality-corp/nodule-graphql",
     "author": "Globality Engineering",
     "license": "MIT",
