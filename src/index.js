@@ -1,10 +1,10 @@
 // activate component bindings
 import './authorizers';
 import './middleware';
+import './logging';
 import './routes';
 import './terminal';
 
-export { createOpenAPIClient } from './clients';
 export {
     createResolver,
     createStrictResolver,
@@ -15,8 +15,6 @@ export {
     withArgs,
 } from './modules';
 export {
-    mockError,
-    mockResponse,
     signSymmetric,
     signPrivate,
 } from './testing';
