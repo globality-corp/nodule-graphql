@@ -1,10 +1,8 @@
 /* Client request logger.
  */
 import { assign, get } from 'lodash';
-import {
-    extractLoggingProperties,
-} from '@globality/nodule-logging';
-import { getContainer } from '@globality/nodule-config';
+import { extractLoggingProperties } from '@globality/nodule-logging';
+import { bind, getContainer } from '@globality/nodule-config';
 
 export function calculateExecuteTime(executeStartTime) {
     const executeTime = process.hrtime(executeStartTime);
@@ -118,3 +116,7 @@ export function logFailure(req, request, error, requestLogs) {
         logger.warning(req, 'ServiceRequestFailed', logs);
     }
 }
+
+bind('logging.buildRequestLogs', () => buildRequestLogs);
+bind('logging.logSuccess', () => logSuccess);
+bind('logging.logFailure', () => logFailure);
