@@ -2,9 +2,8 @@ import { set as mockSet } from 'lodash';
 import dedup from '../wrapper';
 import mockCreateKey from '../../core/keys';
 
-let mockConfig = {
+const mockConfig = {
     createKey: mockCreateKey,
-    loaders: {},
 };
 jest.mock('@globality/nodule-config', () => ({
     bind: (key, value) => {
@@ -60,9 +59,7 @@ describe('dataLoader wrapper', () => {
         });
 
         // DataLoader api
-        mockConfig = {
-            createKey: mockCreateKey,
-        };
+        req.loaders.companyLoader.clearAll();
 
         company = await wrapper(req, { id: 1 });
         expect(companyRetrieve).toHaveBeenCalledTimes(2);
