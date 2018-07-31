@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/repo
   docker:
-    - image: circleci/node:8.9.1
+    - image: circleci/node:8.11.3
 
 whitelist: &whitelist
   paths:
@@ -19,8 +19,8 @@ jobs:
           name: Authenticate NPM
           command: |
             touch .npmrc
-            echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
-
+            curl -u$JFROG_AUTH https://globality.jfrog.io/globality/api/npm/auth > .npmrc
+            echo "registry=https://globality.jfrog.io/globality/api/npm/npm" >> .npmrc
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "yarn.lock" }}
@@ -39,6 +39,17 @@ jobs:
           root: ~/repo
           <<: *whitelist
 
+  lint:
+    <<: *defaults
+
+    steps:
+      - attach_workspace:
+          at: ~/repo
+
+      - run:
+          name: Lint
+          command: yarn lint
+
   test:
     <<: *defaults
 
@@ -48,7 +59,7 @@ jobs:
 
       - run:
           name: Test
-          command: yarn verify
+          command: yarn test
 
       - persist_to_workspace:
           root: ~/repo
@@ -78,7 +89,7 @@ jobs:
 
       - run:
           name: Publish to NPM
-          command: npm publish --access public
+          command: npm publish
 
 workflows:
   version: 2
@@ -86,11 +97,15 @@ workflows:
   build:
     jobs:
       - checkout
+      - lint:
+          requires:
+            - checkout
       - test:
           requires:
             - checkout
       - build:
           requires:
+            - lint
             - test
 
   release:
@@ -101,6 +116,14 @@ workflows:
               only: /[0-9]+(\.[0-9]+)*/
             branches:
               ignore: /.*/
+      - lint:
+          filters:
+            tags:
+              only: /[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
+          requires:
+            - checkout
       - test:
           filters:
             tags:
