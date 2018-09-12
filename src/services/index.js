@@ -3,6 +3,8 @@ import { bind, getContainer } from '@globality/nodule-config';
 import getServiceWrappers from './wrapper';
 import createKeyFunc from './core/keys';
 
+export { default as named } from './core/named';
+
 export function cloneClients(obj) {
     return cloneDeepWith(obj, node => (
         typeof node === 'function' ?
