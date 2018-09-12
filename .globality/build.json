@@ -1,0 +1,7 @@
+{
+  "type": "node-module",
+  "params": {
+    "name": "nodule-graphql",
+    "open_source": true
+  }
+}

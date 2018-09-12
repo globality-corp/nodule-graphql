@@ -1,5 +1,6 @@
 import cors from 'cors';
 
+import { merge } from 'lodash';
 import { bind, getConfig, setDefaults } from '@globality/nodule-config';
 
 
@@ -15,6 +16,6 @@ setDefaults(
 );
 
 bind('middleware.cors', () => {
-    const config = getConfig('cors');
+    const config = merge(getConfig('cors'), { maxAge: 86400 });
     return cors(config);
 });
