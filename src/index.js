@@ -20,3 +20,4 @@ export {
 } from './testing';
 export { wrapResolvers } from './wrapper';
 export { default as bindServices, named } from './services';
+export { default as dedup } from './services/dedup/wrapper';
