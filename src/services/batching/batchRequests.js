@@ -2,10 +2,43 @@
  *  Optimization for calling similar microcosm requests at the same time
  *  This utility will reduce the amount of queries that styx creates by batching similar queries
  */
-import { assign, chunk, chain, flatten, get, groupBy, omit, uniq } from 'lodash';
+import { assign, chain, flatten, get, groupBy, omit, slice, uniq } from 'lodash';
 import { getContainer } from '@globality/nodule-config';
 import { NotFound, InternalServerError } from '@globality/nodule-express';
 import { concurrentPaginate, all } from '@globality/nodule-openapi';
+
+
+/* Based on lodash/chunk
+   Creates an array of elements split into groups the length of size.
+   If array can't be split evenly, the final chunk will be the remaining elements.
+   shouldSplitChunk - will split chunks that returns two for this function
+*/
+
+function chunk(array, maxSize, shouldSplitChunk) {
+    const size = Math.max(maxSize, 0);
+    const length = array == null ? 0 : array.length;
+    if (!length || size < 1) {
+        return [];
+    }
+    let index = 0;
+    let resIndex = 0;
+    const result = [];
+    let nextSize = size;
+
+    while (index < length) {
+        const potentialChunk = slice(array, index, (index += nextSize));
+        if (potentialChunk.length > 1 && nextSize > 1 && shouldSplitChunk(potentialChunk)) {
+            index -= nextSize;
+            nextSize = Math.floor(nextSize / 2);
+        } else {
+            result[resIndex] = potentialChunk;
+            resIndex += 1;
+            nextSize = size;
+        }
+    }
+    return result;
+}
+
 
 /* Checks that a service request can be batched:
  * 1. Contains an accumulateBy value (such as userId)
@@ -67,7 +100,16 @@ function getArgsChunksList(req, argsList, accumulateBy) {
     const { createKey, config } = getContainer();
     const argsGroups = groupBy(argsList, args => createKey(omit(args, accumulateBy)));
     const batchLimit = get(config, 'performance.batchLimit', 30);
-    return flatten(Object.keys(argsGroups).map(key => chunk(argsGroups[key], batchLimit)));
+    const enableBatchArgLengthLimit = get(config, 'performance.enableBatchArgLengthLimit', true);
+    const batchArgLengthLimit = get(config, 'performance.batchArgLengthLimit', 1000);
+    return flatten(Object.keys(argsGroups).map(key => chunk(
+        argsGroups[key],
+        batchLimit,
+        argsChunk => (
+            enableBatchArgLengthLimit &&
+            flatten(argsChunk.map(args => args[accumulateBy])).join(',').length > batchArgLengthLimit
+        ),
+    )));
 }
 
 /*  Returns a (key(args): response) object (with one key) based on serviceRequest call and args

@@ -6,6 +6,7 @@ const mockConfig = {
     config: {
         performance: {
             batchLimit: 3,
+            batchArgLengthLimit: 9,
         },
     },
     createKey: mockCreateKey,
@@ -396,4 +397,47 @@ describe('dataLoader requestWrapper', () => {
             offset: 0,
         });
     });
+
+    it('should batch split batch long args', async () => {
+        await Promise.all([
+            requestWrapper(req, { id: 100000 }),
+            requestWrapper(req, { id: 200 }),
+            requestWrapper(req, { id: 300 }),
+            requestWrapper(req, { id: 4 }),
+            requestWrapper(req, { id: 5 }),
+            requestWrapper(req, { id: 6 }),
+        ]);
+        expect(companyRetrieve).toHaveBeenCalledTimes(1);
+        expect(companySearch).toHaveBeenCalledTimes(2);
+        expect(companyRetrieve).toHaveBeenCalledWith(req, {
+            id: 100000,
+        });
+        expect(companySearch).toHaveBeenCalledWith(req, {
+            companyIds: [200, 300, 4],
+            limit: 20,
+            offset: 0,
+        });
+        expect(companySearch).toHaveBeenCalledWith(req, {
+            companyIds: [5, 6],
+            limit: 20,
+            offset: 0,
+        });
+    });
+
+    it('should batch split batch long args - arrays', async () => {
+        await Promise.all([
+            searchWrapper(req, { companyIds: [1] }),
+            searchWrapper(req, { companyIds: [200000] }),
+            searchWrapper(req, { companyIds: [3] }),
+            searchWrapper(req, { companyIds: [4, 5] }),
+        ]);
+        expect(companySearch).toHaveBeenCalledTimes(3);
+        expect(companySearch).toHaveBeenLastCalledWith(req, {
+            companyIds: [3, 4, 5],
+            limit: 20,
+            offset: 0,
+        });
+
+    });
+
 });
