@@ -4,6 +4,8 @@ import getServiceWrappers from './wrapper';
 import createKeyFunc from './core/keys';
 
 export { default as named } from './core/named';
+export * from './caching/types';
+export { default as setCache } from './caching';
 
 export function cloneClients(obj) {
     return cloneDeepWith(obj, node => (

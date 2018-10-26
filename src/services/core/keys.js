@@ -1,6 +1,8 @@
 import { isObject, toPairs } from 'lodash';
 import uuidv5 from 'uuid/v5';
 
+const GLOBALITY_ID = '0cffbd9f-d9bd-4dbb-88fa-327ebaec1a4b';
+
 function valueToString(value) {
     if (Array.isArray(value)) {
         return value.sort().join(',');
@@ -26,7 +28,7 @@ const createKey = (args, keyName = '') => {
         key => `${key}=${valueToString(args[key])}`,
     ).join('&');
     const keyString = `${keyName}?${argsString}`;
-    return uuidv5(keyString, uuidv5.URL);
+    return uuidv5(keyString, GLOBALITY_ID);
 };
 
 export default createKey;

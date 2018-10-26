@@ -83,6 +83,59 @@ to be included during batched requests, the `assignArgs` parameter can be used.
     }
     bind('serviceConfig.batch', batchConfig);
 
+### Cache
+
+First, we need to set up a cache client - usually memcached, adding `memcached-promisify` as a dependency to package.json. a function creating the cache client needs to be bound to the graph:
+
+    import Cache from 'memcached-promisify';
+    import { bind } from '@globality/nodule-config';
+
+    function createCacheClient(cacheHost, memcachedConfig) {
+        const client = new Cache(
+            { cacheHost },
+            memcachedConfig,
+        );
+        client.add = (key, data, lifetime) => cachePromise(
+            client,
+            'add',
+            `${client.config.keyPrefix}${key}`,
+            data,
+            lifetime,
+        );
+        return client;
+    }
+    bind('createCacheClient', () => createCacheClient);
+
+app.js:
+
+    import { bindServices, setCache } from '@globality/nodule-graphql';
+    // under bindServices();
+    setCache();
+
+Second, define the cache config:
+
+    import { PAGINATION } from '../../constants';
+    import {
+        ANY_NOT_NULL,
+        ANY_PARAMETER,
+        ANY_UUID,
+        CachingSpec,
+    } from '@globality/nodule-graphql';
+
+    const CachedObjectType = new Enum([
+        'resourceName',
+    ]);
+
+    const cacheConfig = {
+        'path.to.foo.endpoint': new CachingSpec({
+            resourceName: CachedObjectType.resourceName.key,
+            requireArgs: {
+                fooId: ANY_UUID,
+            },
+        }),
+    }
+    bind('serviceConfig.cache', cacheConfig);
+
 ## Additional wrappers
 
 `nodule-graphql` also supports including additional wrappers. All wrappers should be written in a way 
