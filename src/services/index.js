@@ -4,6 +4,13 @@ import getServiceWrappers from './wrapper';
 import createKeyFunc from './core/keys';
 
 export { default as named } from './core/named';
+export {
+    ANY_NOT_NULL,
+    ANY_PARAMETER,
+    ANY_SINGLE_ITEM_LIST,
+    ANY_UUID,
+    CachingSpec,
+} from './caching/types';
 
 export function cloneClients(obj) {
     return cloneDeepWith(obj, node => (
