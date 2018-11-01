@@ -6,6 +6,7 @@ import { flatten } from 'lodash';
 import { getContainer } from '@globality/nodule-config';
 
 import batched from './batching/wrapper';
+import cached from './caching/wrapper';
 import deduped from './dedup/wrapper';
 import named from './core/named';
 
@@ -13,7 +14,7 @@ function buildWrappers() {
     const wrappers = [];
     const { serviceConfig } = getContainer();
     if (serviceConfig) {
-        const { dedup, batch, additionalWrappers } = serviceConfig;
+        const { batch, cache, dedup, additionalWrappers } = serviceConfig;
         // NB: order matters here
         if (dedup) {
             wrappers.push([dedup, deduped]);
@@ -21,6 +22,10 @@ function buildWrappers() {
 
         if (batch) {
             wrappers.push([batch, batched]);
+        }
+
+        if (cache) {
+            wrappers.push([cache, cached]);
         }
 
         if (additionalWrappers) {
