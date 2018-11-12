@@ -3,7 +3,7 @@
 import { GraphQLEnumType } from 'graphql';
 
 // converts an Enum type created using the 'enum' package to a GraphQLEnumType
-export const createGraphQLEnumType = (standardEnum, name, description = '') =>
+const createGraphQLEnumType = (standardEnum, name, description = '') =>
     new GraphQLEnumType({
         name,
         description,
@@ -12,3 +12,7 @@ export const createGraphQLEnumType = (standardEnum, name, description = '') =>
             return acc;
         }, {}),
     });
+
+export {
+    createGraphQLEnumType,
+};
