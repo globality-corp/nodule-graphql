@@ -4,6 +4,7 @@ import getServiceWrappers from './wrapper';
 import createKeyFunc from './core/keys';
 
 export { default as named } from './core/named';
+
 export {
     ANY_NOT_NULL,
     ANY_PARAMETER,
