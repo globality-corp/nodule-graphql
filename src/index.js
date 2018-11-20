@@ -6,6 +6,9 @@ import './routes';
 import './terminal';
 
 export {
+    createGraphQLEnumType,
+} from './enums';
+export {
     createResolver,
     createStrictResolver,
     getResolver,
