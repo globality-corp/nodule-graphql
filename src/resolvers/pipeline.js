@@ -97,6 +97,18 @@ function validatePipeline(pipeline) {
     );
 }
 
+async function executeResolverMiddlewares(resolverKeys, args) {
+    const middlewares = getContainer('graphql.resolverMiddlewares');
+    if (middlewares) {
+        // Middlewares are chained
+        return middlewares.reduce(
+            async (args, middleware) => await middleware.run(resolverKeys, ...args),
+            args,
+        )
+    }
+    return args;
+}
+
 
 /* Define a pipeline of functions that make up a single logical resolver.
  *
@@ -131,8 +143,10 @@ export function getResolverPipeline(...keys) {
         // Then, ensure we have a valid pipeline
         validatePipeline(pipeline);
 
+        // Run resolver middlewares
+        const postMiddlewareArgs = await executeResolverMiddlewares(pipeline.keys, args);
         // Finally, execute the pipeline
-        return executePipeline(pipeline, args);
+        return executePipeline(pipeline, postMiddlewareArgs);
     };
 }
 

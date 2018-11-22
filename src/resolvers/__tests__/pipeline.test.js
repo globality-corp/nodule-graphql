@@ -1,18 +1,21 @@
-import { bind } from '@globality/nodule-config';
+import { bind, clearBinding } from '@globality/nodule-config';
 
 import { getResolverPipeline } from '../pipeline';
 import { createResolver } from '../types';
+import { createResolverMiddleware, setupResolverMiddlewares } from '../middleware';
 import '../null';
 
 
 describe('Resolver pipeline', () => {
 
     beforeEach(() => {
+        clearBinding('graphql.resolverMiddlewares');
         bind('graphql.masks.foo', () => (obj, args, context, info) => [obj, obj.foo, context, info]);
         bind('graphql.masks.bar', () => (obj, args, context, info) => [obj, obj.bar, context, info]);
         bind('graphql.masks.baz', () => (obj, args, context, info) => [obj, 2 * args, context, info]);
 
         bind('graphql.transforms.foo', () => value => value / 2);
+        bind('graphql.transforms.plusOne', () => value => value + 1);
 
         bind('graphql.resolvers.identity', () => createResolver({
             aggregate: (obj, args) => args,
@@ -99,5 +102,34 @@ describe('Resolver pipeline', () => {
         expect(
             await getResolverPipeline('foo', () => ['identity', 'foo'], () => [])(obj),
         ).toEqual(1);
+    });
+
+    it('runs middlewares before resolvers', async() => {
+        const input = { foo: 2 };
+
+        const tripleFooMiddleware = createResolverMiddleware({
+            execute: (obj, args, context, info) => ([{ foo: 3 * obj.foo }, args, context, info]),
+        });
+        setupResolverMiddlewares([tripleFooMiddleware]);
+
+        // The middleware multiplies the value by 3 before everything else
+        expect(
+            await getResolverPipeline('foo', 'identity', 'plusOne')(input),
+        ).toEqual(7);
+    });
+
+    it('does not run middlewares for ignored resolvers', async() => {
+        const input = { foo: 2 };
+
+        const tripleFooMiddleware = createResolverMiddleware({
+            execute: (obj, args, context, info) => ([{ foo: 3 * obj.foo }, args, context, info]),
+            excludedResolvers: ['identity'],
+        });
+        setupResolverMiddlewares([tripleFooMiddleware]);
+
+        // The middleware is ignored, because 'identity' is an excluded resolver
+        expect(
+            await getResolverPipeline('foo', 'identity', 'plusOne')(input),
+        ).toEqual(3);
     });
 });
