@@ -1,15 +1,14 @@
-import { bind, clearBinding } from '@globality/nodule-config';
+import { bind, clearBinding, Nodule } from '@globality/nodule-config';
 
 import { getResolverPipeline } from '../pipeline';
 import { createResolver } from '../types';
 import { createResolverMiddleware, setupResolverMiddlewares } from '../middleware';
-import '../null';
 
 
 describe('Resolver pipeline', () => {
 
-    beforeEach(() => {
-        clearBinding('graphql.resolverMiddlewares');
+    beforeEach(async () => {
+        await Nodule.testing().load();
         bind('graphql.masks.foo', () => (obj, args, context, info) => [obj, obj.foo, context, info]);
         bind('graphql.masks.bar', () => (obj, args, context, info) => [obj, obj.bar, context, info]);
         bind('graphql.masks.baz', () => (obj, args, context, info) => [obj, 2 * args, context, info]);
@@ -20,6 +19,10 @@ describe('Resolver pipeline', () => {
         bind('graphql.resolvers.identity', () => createResolver({
             aggregate: (obj, args) => args,
         }));
+    });
+
+    afterEach(() => {
+        clearBinding('graphql.resolverMiddlewares');
     });
 
     it('supports simple resolvers', async () => {
@@ -131,5 +134,21 @@ describe('Resolver pipeline', () => {
         expect(
             await getResolverPipeline('foo', 'identity', 'plusOne')(input),
         ).toEqual(3);
+    });
+
+    it('run middlewares sequentially in order', async() => {
+        const input = { foo: 2 };
+
+        const tripleFooMiddleware = createResolverMiddleware({
+            execute: (obj, args, context, info) => ([{ foo: 3 * obj.foo }, args, context, info]),
+        });
+        const plusTwoFooMiddleware = createResolverMiddleware({
+            execute: (obj, args, context, info) => ([{ foo: 2 + obj.foo }, args, context, info]),
+        });
+        setupResolverMiddlewares([plusTwoFooMiddleware, tripleFooMiddleware]);
+
+        expect(
+            await getResolverPipeline('foo', 'identity', 'plusOne')(input),
+        ).toEqual(13);
     });
 });

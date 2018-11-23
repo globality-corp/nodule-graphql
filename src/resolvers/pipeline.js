@@ -102,9 +102,12 @@ async function executeResolverMiddlewares(resolverKeys, args) {
     if (middlewares) {
         // Middlewares are chained
         return middlewares.reduce(
-            async (args, middleware) => await middleware.run(resolverKeys, ...args),
+            async (previousPromise, middleware) => {
+                const updatedArgs = await previousPromise;
+                return middleware.run(resolverKeys, ...updatedArgs);
+            },
             args,
-        )
+        );
     }
     return args;
 }
