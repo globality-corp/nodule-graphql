@@ -115,14 +115,18 @@ The cache service' configuration is similar to the batching/dedup configurations
     const spec = new CachingSpec({
         cacheTTL: noOfSeconds, // defaults to config.cache.ttl
         resourceName: 'string', // required, recommend using enum here
-        requireArgs: {
-            argName: ANY_NOT_NULL, // cache only when argName is non null
-            specificValueArg: 'foo', // cache only when specificValueArg === 'foo'
-            specificArrayValue: [1,2], // cache only when specificArrayValue == [1,2]
-        }
+        requireArgs: [
+            {
+                argName: ANY_NOT_NULL, // cache only when argName is non null
+                specificValueArg: 'foo', // cache only when specificValueArg === 'foo'
+                specificArrayValue: [1,2], // cache only when specificArrayValue == [1,2]
+            },
+        ],
     });
 
 CachingSpec is also responsible for the key creation, and follows the same key creation algorithm as we do in microcosm, but that's configurable - see Override createKey
+
+The `requireArgs` param can accept either an object or an array of objects representing different cache arg permutations which the service can cache.
 
 #### Turning caching on
 
