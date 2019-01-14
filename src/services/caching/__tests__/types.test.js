@@ -3,6 +3,16 @@
 import Enum from 'enum';
 import { CachingSpec, ANY_UUID } from '../types';
 
+jest.mock('@globality/nodule-config', () => ({
+    getContainer: () => ({
+        config: {
+            cache: {
+                enabled: true,
+            },
+        },
+    }),
+}));
+
 const CachedObjectType = new Enum([
     'grumbo',
 ]);
@@ -19,11 +29,29 @@ const CachingConfig = {
             ],
         },
     }),
+    'fleeb.grumbo.retrieve': new CachingSpec({
+        resourceName: CachedObjectType.grumbo.key,
+        requireArgs: [
+            {
+                blamfId: ANY_UUID,
+                plumbusTypes: [
+                    'BlamfInvited',
+                    'BlamfActivated',
+                    'BlamfDeactivated',
+                ],
+            },
+            {
+                blamfId: ANY_UUID,
+                plumbusId: ANY_UUID,
+            },
+        ],
+    }),
 };
 
 
 describe('CachingSpec', () => {
     const spec = CachingConfig['fleeb.grumbo.search'];
+    const doubleSpec = CachingConfig['fleeb.grumbo.retrieve'];
 
     it('creates keys', () => {
         expect(
@@ -85,6 +113,26 @@ describe('CachingSpec', () => {
             true,
         );
 
+    });
+
+    it('allows for multiple arg versions', () => {
+        expect(doubleSpec.shouldSkipCache({}, {
+            blamfId: '857b3f0a-a777-11e5-bf7f-feff819cdc9f',
+            plumbusTypes: [
+                'BlamfInvited',
+                'BlamfActivated',
+                'BlamfDeactivated',
+            ],
+        })).toEqual(
+            false,
+        );
+
+        expect(doubleSpec.shouldSkipCache({}, {
+            blamfId: '857b3f0a-a777-11e5-bf7f-feff819cdc9f',
+            plumbusId: '857b3f0a-a777-11e5-bf7f-feff819cdc9f',
+        })).toEqual(
+            false,
+        );
     });
 
 });
