@@ -26,7 +26,13 @@ export class CachingSpec {
         }
         this.cacheTTL = cacheTTL;
         this.resourceName = resourceName;
-        this.requireArgs = requireArgs || {};
+
+        if (requireArgs) {
+            this.requireArgs = isArray(requireArgs) ? requireArgs : [requireArgs];
+        } else {
+            this.requireArgs = [];
+        }
+
         this.supportNoCache = supportNoCache;
         this.loaderName = loaderName;
     }
@@ -51,11 +57,10 @@ export class CachingSpec {
             return true;
         }
 
-        if (Object.keys(this.requireArgs).length === 0) {
-            return false;
+        if (this.requireArgs.length) {
+            return !this.requireArgs.some(reqArgs => this.validateArgs(args, reqArgs));
         }
-
-        return !this.validateArgs(args);
+        return false;
     }
 
     /* validate that the returned etag matches the requested one
@@ -104,18 +109,24 @@ export class CachingSpec {
         return createKey(args, this.resourceName);
     }
 
-    validateArgs(args = {}) {
+    validateArgs(args = {}, reqArgs = null) {
+        const requireArgs = reqArgs || this.requireArgs[0];
+
         // every arg must in the required args
-        if (!Object.keys(args).every(arg => this.requireArgs[arg] !== undefined)) {
+        if (!Object.keys(args).every(arg => requireArgs[arg] !== undefined)) {
             return false;
         }
 
         // no required arg can be missing
-        return Object.keys(this.requireArgs).every(key => this.validateArg(key, args[key]));
+        return Object.keys(requireArgs).every(key => CachingSpec.validateArg(
+            requireArgs,
+            key,
+            args[key],
+        ));
     }
 
-    validateArg(key, value) {
-        const requiredValue = this.requireArgs[key];
+    static validateArg(arg, key, value) {
+        const requiredValue = arg[key];
 
         if (isFunction(requiredValue) && requiredValue(value)) {
             return true;
