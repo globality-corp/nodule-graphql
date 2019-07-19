@@ -16,6 +16,15 @@ async function retrieveCompany(companyId) {
 
 
 async function retrieveUser(userId) {
+    if (userId && userId === '999') {
+        const error = new Error('Custom error');
+        error.code = 503;
+        error.headers = {
+            'x-request-id': '1234',
+        };
+        throw error;
+    }
+
     if (userId && userId !== '30') {
         throw new NotFound('No such user');
     }

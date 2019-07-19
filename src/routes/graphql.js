@@ -23,6 +23,53 @@ function injectExtensions(req) {
     };
 }
 
+/**
+ * Format the given error before it is serialized and sent to the client
+ */
+function formatError(error) {
+    const extensions = error.extensions || {};
+    const originalError = error.originalError || {};
+    const code = extensions.code || originalError.code;
+    const headers = originalError.headers || {};
+    const traceId = (
+        extensions.traceId ||
+        originalError.traceId ||
+        headers['x-trace-id'] ||
+        headers['x-request-id']
+    );
+
+    // Include the HTTP status code and trace ID if they exist. These can come from the underlying
+    // HTTP library such as axios. Including this information in the error for the benefit of the
+    // client that made the request.
+    //
+    // The `extensions` field conforms with the GraphQL format error specification, section 7.1.2
+    // @see https://graphql.github.io/graphql-spec/June2018/#sec-Errors
+
+    // N.B. Need to create a new error in order to avoid any potential read-only issue trying to
+    // modify the given error
+    const newError = new Error();
+
+    // According to section 7.1.2 of the GraphQL specification, fields `message`, and `path` are
+    // required. The `locations` field may be included.
+    newError.message = error.message;
+    newError.path = error.path;
+
+    if (error.locations) {
+        newError.locations = error.locations;
+    }
+
+    const exts = newError.extensions = {};
+
+    if (code) {
+        exts.code = code;
+    }
+
+    if (traceId) {
+        exts.traceId = traceId;
+    }
+
+    return newError;
+}
 
 function makeGraphqlOptions(config, graphql) {
     const { schema } = graphql;
@@ -40,6 +87,7 @@ function makeGraphqlOptions(config, graphql) {
             rootValue: null,
             schema,
             tracing: config.routes.graphql.cacheControl || req.headers['x-request-trace'],
+            formatError,
         };
     };
 }
