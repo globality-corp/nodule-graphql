@@ -115,9 +115,9 @@ describe('routes', () => {
     });
 
     it('handles custom errors with x-request-id header', async () => {
-      const app = createApp();
+        const app = createApp();
 
-      const query = `
+        const query = `
         query example {
           user(id: "999") {
             items {
@@ -129,23 +129,23 @@ describe('routes', () => {
             }
           }
         }`;
-      const response = await request(app).post(
-          '/graphql',
-      ).send({
-          query,
-      });
+        const response = await request(app).post(
+            '/graphql',
+        ).send({
+            query,
+        });
 
-      expect(response.statusCode).toBe(200);
-      expect(response.body.data).toEqual({
-          user: null,
-      });
-      expect(response.body.errors).toHaveLength(1);
-      expect(response.body.errors[0].extensions.code).toEqual(503);
-      expect(response.body.errors[0].extensions.traceId).toEqual('1234');
-      expect(response.body.errors[0].locations).toBeDefined();
-      expect(response.body.errors[0].message).toEqual('Custom error');
-      expect(response.body.errors[0].path).toEqual([
-          'user',
-      ]);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.data).toEqual({
+            user: null,
+        });
+        expect(response.body.errors).toHaveLength(1);
+        expect(response.body.errors[0].extensions.code).toEqual(503);
+        expect(response.body.errors[0].extensions.traceId).toEqual('1234');
+        expect(response.body.errors[0].locations).toBeDefined();
+        expect(response.body.errors[0].message).toEqual('Custom error');
+        expect(response.body.errors[0].path).toEqual([
+            'user',
+        ]);
     });
 });

@@ -58,14 +58,15 @@ function formatError(error) {
         newError.locations = error.locations;
     }
 
-    const exts = newError.extensions = {};
+    const newExts = {};
+    newError.extensions = newExts;
 
     if (code) {
-        exts.code = code;
+        newExts.code = code;
     }
 
     if (traceId) {
-        exts.traceId = traceId;
+        newExts.traceId = traceId;
     }
 
     return newError;
