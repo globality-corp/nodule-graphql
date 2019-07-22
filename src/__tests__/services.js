@@ -21,6 +21,7 @@ async function retrieveUser(userId) {
         error.code = 503;
         error.headers = {
             'x-request-id': '1234',
+            'x-trace-id': '5432',
         };
         throw error;
     }

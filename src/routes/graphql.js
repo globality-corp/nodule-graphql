@@ -34,13 +34,17 @@ function formatError(error) {
     const traceId = (
         extensions.traceId ||
         originalError.traceId ||
-        headers['x-trace-id'] ||
+        headers['x-trace-id']
+    );
+    const requestId = (
+        extensions.requestId ||
+        originalError.requestId ||
         headers['x-request-id']
     );
 
-    // Include the HTTP status code and trace ID if they exist. These can come from the underlying
-    // HTTP library such as axios. Including this information in the error for the benefit of the
-    // client that made the request.
+    // Include the HTTP status code, trace ID and request ID if they exist. These can come from
+    // the underlying HTTP library such as axios. Including this information in the error for the
+    // benefit of the client that made the request.
     //
     // The `extensions` field conforms with the GraphQL format error specification, section 7.1.2
     // @see https://graphql.github.io/graphql-spec/June2018/#sec-Errors
@@ -69,6 +73,10 @@ function formatError(error) {
         newExts.traceId = traceId;
     }
 
+    if (requestId) {
+        newExts.requestId = requestId;
+    }
+
     return newError;
 }
 
@@ -76,7 +84,6 @@ function makeGraphqlOptions(config, graphql) {
     const { schema } = graphql;
 
     // XXX need to add:
-    //  - formatError
     //  - formatResponse/injectExtensions
 
     return function configure(req) {

@@ -72,7 +72,9 @@ describe('routes', () => {
             user: null,
         });
         expect(response.body.errors).toHaveLength(1);
-        expect(response.body.errors[0].extensions.code).toEqual('HTTP-404');
+        expect(response.body.errors[0].extensions).toEqual(expect.objectContaining({
+            code: 'HTTP-404',
+        }));
         expect(response.body.errors[0].locations).toBeDefined();
         expect(response.body.errors[0].message).toEqual('No such user');
         expect(response.body.errors[0].path).toEqual([
@@ -106,7 +108,9 @@ describe('routes', () => {
             user: null,
         });
         expect(response.body.errors).toHaveLength(1);
-        expect(response.body.errors[0].extensions.code).toEqual('HTTP-403');
+        expect(response.body.errors[0].extensions).toEqual(expect.objectContaining({
+            code: 'HTTP-404',
+        }));
         expect(response.body.errors[0].locations).toBeDefined();
         expect(response.body.errors[0].message).toEqual('Not Authorized');
         expect(response.body.errors[0].path).toEqual([
@@ -114,7 +118,7 @@ describe('routes', () => {
         ]);
     });
 
-    it('handles custom errors with x-request-id header', async () => {
+    it('handles custom errors with x-request-id and x-trace-id headers', async () => {
         const app = createApp();
 
         const query = `
@@ -140,8 +144,11 @@ describe('routes', () => {
             user: null,
         });
         expect(response.body.errors).toHaveLength(1);
-        expect(response.body.errors[0].extensions.code).toEqual(503);
-        expect(response.body.errors[0].extensions.traceId).toEqual('1234');
+        expect(response.body.errors[0].extensions).toEqual(expect.objectContaining({
+            code: 503,
+            requestId: '1234',
+            traceId: '5432',
+        }));
         expect(response.body.errors[0].locations).toBeDefined();
         expect(response.body.errors[0].message).toEqual('Custom error');
         expect(response.body.errors[0].path).toEqual([
