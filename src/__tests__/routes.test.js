@@ -109,7 +109,7 @@ describe('routes', () => {
         });
         expect(response.body.errors).toHaveLength(1);
         expect(response.body.errors[0].extensions).toEqual(expect.objectContaining({
-            code: 'HTTP-404',
+            code: 'HTTP-403',
         }));
         expect(response.body.errors[0].locations).toBeDefined();
         expect(response.body.errors[0].message).toEqual('Not Authorized');
