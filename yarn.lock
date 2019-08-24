@@ -116,10 +116,10 @@
     on-finished "~2.3.0"
     on-headers "~1.0.1"
 
-"@globality/nodule-openapi@~0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@globality/nodule-openapi/-/nodule-openapi-0.14.0.tgz#71a003d04bfdbe830727ea87a6befb4848a3949e"
-  integrity sha512-U1/M4/i7aZm8tgfFmnH9OulSaATrdT635oiQ5O2w2h1h7TQFksVzRlcq/4fIKlF7TwhDKnOt1hnSBiL9lX8NMA==
+"@globality/nodule-openapi@~0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@globality/nodule-openapi/-/nodule-openapi-0.15.0.tgz#61aabb5da95717f0a8b99d0e8820d24b92a8155d"
+  integrity sha512-TrsdjlJX+L7Kk/AQBtCRg1PXc9pCeMGQ8K/M8UTyR0VC5HSwWtkY6iqGxsroG7i+qH9sPzHrZz7s2g5OG+Bq5g==
   dependencies:
     "@globality/nodule-config" "^2.3.0"
     axios "^0.18.1"
