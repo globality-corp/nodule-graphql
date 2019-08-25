@@ -62,6 +62,7 @@
         "testRegex": "/__tests__/.*(test)\\.js",
         "modulePaths": [
             "<rootDir>/src"
-        ]
+        ],
+        "testURL": "http://localhost"
     }
 }
