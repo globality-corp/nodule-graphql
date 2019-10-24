@@ -15,7 +15,21 @@ jest.mock('@globality/nodule-config', () => ({
         mockSet(mockConfig, key, value());
         return mockConfig;
     },
-    getContainer: () => (mockConfig),
+    getContainer: () => ({
+        config: {
+            performance: {
+                batchLimit: 3,
+            },
+            logger: {
+                level: 'INFO',
+                loggly: {
+                    enabled: false,
+                },
+            },
+        },
+        createKey: mockCreateKey,
+        metadata: {},
+    }),
     getConfig: (lookup) => {
         const config = {
             concurrency: {
@@ -24,6 +38,7 @@ jest.mock('@globality/nodule-config', () => ({
         };
         return mockGet(config, lookup);
     },
+    setDefaults: () => {},
 }));
 
 let req;
