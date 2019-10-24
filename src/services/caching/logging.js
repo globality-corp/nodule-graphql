@@ -1,7 +1,8 @@
 import { get } from 'lodash';
 import { getContainer } from '@globality/nodule-config';
 import { extractLoggingProperties } from '@globality/nodule-logging';
-import { calculateExecuteTime } from '@globality/nodule-express';
+
+import { calculateExecuteTime } from '../../logging';
 
 export default function logCacheUsage(spec, req, key, result, executeStartTime) {
     const { config, logger } = getContainer();
