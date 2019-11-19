@@ -10,7 +10,7 @@ describe('routes', () => {
         await Nodule.testing().load();
     });
 
-    it.only('resolves requests', async () => {
+    it('resolves requests', async () => {
         const app = createApp();
 
         const query = `
