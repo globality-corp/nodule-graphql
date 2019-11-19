@@ -16,7 +16,7 @@ function createMiddleware(config) {
             endpoint: `${endpointUrl}?headers=${headers}`,
             settings: {
                 ...defaultPlaygroundOptions.settings,
-                'request.credentials.credentials': 'include',
+                'request.credentials': 'include',
             },
         })(req, res, next);
     };
