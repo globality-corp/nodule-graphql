@@ -24,7 +24,7 @@ function createMiddleware(config) {
 
 
 setDefaults('routes.graphiql', {
-    endpointUrl: '/gql/graphql',
+    endpointUrl: '/content/graphql',
     enabled: false,
 });
 
