@@ -1,5 +1,10 @@
 # Changelog
 
+### v1.0.1
+
+- Added a `factories.routes.grapql` binding. Gives more direct control over how the graphql route is created. This is optional use. Standard `routes.graphql` binding
+continues to work as normal. 
+
 ### v1.0.0
 
 - Major revision from v0.32.0 to v1.0.0. Addresses v0.32.0's semantic breaking change (upgraded to graphal@14.x)

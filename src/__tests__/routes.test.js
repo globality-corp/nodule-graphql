@@ -1,9 +1,9 @@
 import request from 'supertest';
+import express from 'express';
 
-import { Nodule } from '@globality/nodule-config';
+import { Nodule, getContainer } from '@globality/nodule-config';
 
 import createApp from './app';
-
 
 describe('routes', () => {
     beforeEach(async () => {
@@ -154,5 +154,44 @@ describe('routes', () => {
         expect(response.body.errors[0].path).toEqual([
             'user',
         ]);
+    });
+
+    describe('graphql route factory', () => {
+
+        it('will create a working graphql route', async () => {
+            const factories = getContainer('factories');
+            const createGraphQlRoute = factories.routes.graphql;
+
+            expect(createGraphQlRoute).toEqual(expect.any(Function));
+
+            const graphql = createGraphQlRoute();
+
+            expect(graphql).toEqual(expect.any(Function));
+
+            const app = express();
+            app.post('/graphql', graphql);
+
+            const query = `
+              query example {
+                user(id: "999") {
+                  items {
+                    companyId
+                    companyName
+                    firstName
+                    id
+                    lastName
+                  }
+                }
+              }`;
+            
+              const response = await request(app).post(
+                  '/graphql',
+              ).send({
+                  query,
+              });
+
+              expect(response.statusCode).toBe(200);
+        });
+
     });
 });

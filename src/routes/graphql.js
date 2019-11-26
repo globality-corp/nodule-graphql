@@ -78,8 +78,10 @@ function formatError(error) {
     return newError;
 }
 
+
 function makeGraphqlOptions(config, graphql) {
     const { schema } = graphql;
+    const { apolloEngine = {} } = config;
 
     return {
         context: ({ req }) => req,
@@ -88,33 +90,45 @@ function makeGraphqlOptions(config, graphql) {
         playground: false,
         rootValue: null,
         schema,
+        engine: apolloEngine ? apolloEngine : false,
     };
 }
 
 
-setDefaults('routes.graphql', {
-    /* Disable cache control.
-     *
-     * Apollo caching is resource-based, not service-based. Caching should occur as close
-     * as possible to the source of truth (e.g. at service calls).
-     */
-    cacheControl: false,
-    /* Disable tracing by default.
-     *
-     * Tracing is verbose and increases volume. Tracing should be enabled if apollo engine
-     * is enabled (which shared tracing over the local network).
-     */
-    tracing: false,
-});
-
-
-bind('routes.graphql', () => {
-    const { config, graphql, terminal } = getContainer();
-
+function createGraphQLRoute (config = {}) {
+    const { graphql, terminal } = getContainer();
     const options = makeGraphqlOptions(config, graphql);
     const server = new ApolloServer(options);
 
     terminal.enabled('graphql');
 
     return server.getMiddleware();
+}
+
+
+bind('routes.graphql', () => {
+    return createGraphQLRoute();
+});
+
+/**
+ * GraphQL route factory
+ * 
+ * Use this when you want to have direct control over the creation
+ * of the graphql route.
+ * 
+ * Factory takes an optional config object with the following interface:
+ * 
+ *   interface GraphQLRouteOptions {
+ *       apolloEngine: {
+ *           ...
+ *       }
+ *   }
+ * 
+ * where `apolloEngine` is the configuration passed to the underlying
+ * apollo server.
+ * 
+ * see https://www.apollographql.com/docs/apollo-server/api/apollo-server/#enginereportingoptions
+ */
+bind('factories.routes.graphql', () => {
+    return createGraphQLRoute;
 });
