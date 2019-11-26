@@ -95,8 +95,8 @@ function redactGQLVariables (vars) {
 
 function makeGraphqlOptions(config, graphql) {
     const { schema } = graphql;
-    var apolloEngineConfig = config.routes.graphql.apolloEngine;
-    var engine = {
+    const apolloEngineConfig = config.routes.graphql.apolloEngine;
+    const engine = {
         apiKey: apolloEngineConfig.apiKey,
         schemaTag: apolloEngineConfig.schemaTag,
         sendVariableValues: {
@@ -137,9 +137,9 @@ setDefaults('routes.graphql.apolloEngine', {
      * for details
      */
     apiKey: null,
-    
+
     /** Tag for GQL schema used by Apollo Graph Manager.
-     * 
+     *
      * Refer to https://www.apollographql.com/docs/apollo-server/api/apollo-server/#enginereportingoptions
      * for details
      */
