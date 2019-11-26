@@ -4,7 +4,6 @@ import { Nodule } from '@globality/nodule-config';
 
 import createApp from './app';
 
-
 describe('routes', () => {
     beforeEach(async () => {
         await Nodule.testing().load();
@@ -118,7 +117,7 @@ describe('routes', () => {
         ]);
     });
 
-    it('handles custom errors with x-request-id and x-trace-id headers', async () => {
+    it.only('handles custom errors with x-request-id and x-trace-id headers', async () => {
         const app = createApp();
 
         const query = `
@@ -155,4 +154,5 @@ describe('routes', () => {
             'user',
         ]);
     });
+
 });
