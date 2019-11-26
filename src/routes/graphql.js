@@ -78,8 +78,38 @@ function formatError(error) {
     return newError;
 }
 
+const REDACTED_VALUE = '[REDACTED]';
+
+function redactGQLVariables (vars) {
+    return Object.keys(vars).reduce((acc, key) => {
+        if (key === 'input') {
+            acc[key] = redactGQLVariables(vars[key]);
+        } else if (/(Id|Type)$/.test(key) || /^id$/.test(key)) {
+            acc[key] = vars[key];
+        } else {
+            acc[key] = REDACTED_VALUE;
+        }
+        return acc;
+    }, {});
+}
+
 function makeGraphqlOptions(config, graphql) {
     const { schema } = graphql;
+    var apolloEngineConfig = config.routes.graphql.apolloEngine;
+    var engine = {
+        apiKey: apolloEngineConfig.apiKey,
+        schemaTag: apolloEngineConfig.schemaTag,
+        sendVariableValues: {
+            transform: ({ variables }) => redactGQLVariables(variables),
+        },
+        sendHeaders: {
+            onlyNames: [
+                'user-agent',
+                'X-Request-Id',
+                'X-Request-User',
+            ],
+        },
+    };
 
     return {
         context: ({ req }) => req,
@@ -88,23 +118,32 @@ function makeGraphqlOptions(config, graphql) {
         playground: false,
         rootValue: null,
         schema,
+        engine: apolloEngineConfig.enabled ? engine : false,
     };
 }
 
 
-setDefaults('routes.graphql', {
-    /* Disable cache control.
-     *
-     * Apollo caching is resource-based, not service-based. Caching should occur as close
-     * as possible to the source of truth (e.g. at service calls).
-     */
-    cacheControl: false,
+setDefaults('routes.graphql.apolloEngine', {
     /* Disable tracing by default.
      *
-     * Tracing is verbose and increases volume. Tracing should be enabled if apollo engine
-     * is enabled (which shared tracing over the local network).
+     * Send GQL traces to Apollo Graph Manager. If enabled, API key must also
+     * be provided.
      */
-    tracing: false,
+    enabled: false,
+
+    /* API Key used to send metrics to Apollo Graph Manager.
+     *
+     * Refer to https://www.apollographql.com/docs/apollo-server/api/apollo-server/#enginereportingoptions
+     * for details
+     */
+    apiKey: null,
+    
+    /** Tag for GQL schema used by Apollo Graph Manager.
+     * 
+     * Refer to https://www.apollographql.com/docs/apollo-server/api/apollo-server/#enginereportingoptions
+     * for details
+     */
+    schemaTag: null,
 });
 
 
