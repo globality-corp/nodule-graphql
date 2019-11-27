@@ -1,25 +1,20 @@
-import expressPlayground from 'graphql-playground-middleware-express';
-import { defaultPlaygroundOptions } from 'apollo-server-express';
+import { graphiqlExpress } from 'apollo-server-express';
+
 import { bind, getContainer, setDefaults } from '@globality/nodule-config';
 
 
-function createMiddleware(config) {
-    // Wrapping expressPlayground in order to inject the authorization header
-    // into the graphql playground app.
-    // This was taken from https://github.com/apollographql/apollo-server/issues/1982
-    return (req, res, next) => {
-        const headers = encodeURIComponent(JSON.stringify({
-            authorization: req.get('authorization'),
-        }));
-        const { endpointUrl } = config.routes.graphiql;
-        expressPlayground({
-            endpoint: `${endpointUrl}?headers=${headers}`,
-            settings: {
-                ...defaultPlaygroundOptions.settings,
-                'request.credentials': 'include',
-            },
-        })(req, res, next);
-    };
+function makeGraphiqlOptions(config) {
+    return req => ({
+        /* Connect GraphiQL to GraphQL.
+         */
+        endpointURL: config.routes.graphiql.endpointUrl,
+        /* Pass authorization from GraphiQL to GraphQL.
+         *
+         * This convention enables authenticated requests to GraphiQL to identify
+         * correctly to GraphQL.
+         */
+        passHeader: `'Authorization': '${req.headers.authorization}'`,
+    });
 }
 
 
@@ -37,7 +32,7 @@ bind('routes.graphiql', () => {
         return null;
     }
 
+    const options = makeGraphiqlOptions(config);
     terminal.enabled('graphiql');
-
-    return createMiddleware(config);
+    return graphiqlExpress(options);
 });
