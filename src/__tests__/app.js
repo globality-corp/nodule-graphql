@@ -19,14 +19,14 @@ export default function createApp() {
 
     express.get('/health', health);
 
-    express.post(
+    express.use(
         '/graphql',
         bodyParser.json(),
         graphql,
     );
 
     if (graphiql) {
-        express.get(
+        express.use(
             '/graphiql',
             bodyParser.json(),
             graphiql,
