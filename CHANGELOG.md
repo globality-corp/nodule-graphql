@@ -2,7 +2,7 @@
 
 ### v1.0.0
 
-- Major revision from v0.32.0 to v1.0.0. Addresses v0.32.0's semantic breaking (upgraded to graphal@14.x)
+- Major revision from v0.32.0 to v1.0.0. Addresses v0.32.0's semantic breaking change (upgraded to graphal@14.x)
 
 ### v0.32.0
 
