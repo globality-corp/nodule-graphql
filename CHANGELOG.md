@@ -1,5 +1,9 @@
 # Changelog
 
+### v1.0.0
+
+- Major revision from v0.32.0 to v1.0.0. Addresses v0.32.0's semantic breaking change (upgraded to graphal@14.x)
+
 ### v0.32.0
 
 [See complete versioning details.](https://github.com/globality-corp/nodule-graphql/commit/e8d251f39d0263e495cae8c99e86179808584019)
