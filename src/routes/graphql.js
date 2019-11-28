@@ -1,7 +1,7 @@
 import { get, merge, pickBy } from 'lodash';
 import { ApolloServer } from 'apollo-server-express';
 
-import { bind, getContainer, setDefaults } from '@globality/nodule-config';
+import { bind, getContainer } from '@globality/nodule-config';
 
 
 /* Inject custom extensions in the graphql response.
@@ -81,7 +81,7 @@ function formatError(error) {
 
 function makeGraphqlOptions(config, graphql) {
     const { schema } = graphql;
-    const { apolloEngine = {} } = config;
+    const { apolloEngine } = config;
 
     return {
         context: ({ req }) => req,
@@ -90,7 +90,7 @@ function makeGraphqlOptions(config, graphql) {
         playground: false,
         rootValue: null,
         schema,
-        engine: apolloEngine ? apolloEngine : false,
+        engine: apolloEngine || false,
     };
 }
 
@@ -106,29 +106,25 @@ function createGraphQLRoute (config = {}) {
 }
 
 
-bind('routes.graphql', () => {
-    return createGraphQLRoute();
-});
+bind('routes.graphql', () => createGraphQLRoute());
 
 /**
  * GraphQL route factory
- * 
+ *
  * Use this when you want to have direct control over the creation
  * of the graphql route.
- * 
+ *
  * Factory takes an optional config object with the following interface:
- * 
+ *
  *   interface GraphQLRouteOptions {
  *       apolloEngine: {
  *           ...
  *       }
  *   }
- * 
+ *
  * where `apolloEngine` is the configuration passed to the underlying
  * apollo server.
- * 
+ *
  * see https://www.apollographql.com/docs/apollo-server/api/apollo-server/#enginereportingoptions
  */
-bind('factories.routes.graphql', () => {
-    return createGraphQLRoute;
-});
+bind('factories.routes.graphql', () => createGraphQLRoute);

@@ -182,15 +182,16 @@ describe('routes', () => {
                     lastName
                   }
                 }
-              }`;
-            
-              const response = await request(app).post(
-                  '/graphql',
-              ).send({
-                  query,
-              });
+              }
+            `;
 
-              expect(response.statusCode).toBe(200);
+            const response = await request(app).post(
+                '/graphql',
+            ).send({
+                query,
+            });
+
+            expect(response.statusCode).toBe(200);
         });
 
     });
