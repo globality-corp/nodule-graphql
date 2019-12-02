@@ -4,7 +4,6 @@ import { Nodule } from '@globality/nodule-config';
 
 import createApp from './app';
 
-
 describe('routes', () => {
     beforeEach(async () => {
         await Nodule.testing().load();
@@ -155,4 +154,5 @@ describe('routes', () => {
             'user',
         ]);
     });
+
 });

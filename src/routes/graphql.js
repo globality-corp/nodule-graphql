@@ -78,8 +78,24 @@ function formatError(error) {
     return newError;
 }
 
-function makeGraphqlOptions(config, graphql) {
+function createApolloServerOptions() {
+    const { config, graphql } = getContainer();
     const { schema } = graphql;
+    const graphqlConfig = config.routes.graphql;
+
+    if (graphqlConfig.tracing) {
+        global.console.warn('DEPRACATED: config.routes.graphql.tracing. No longer used.');
+    }
+
+    if (graphqlConfig.cacheControl) {
+        global.console.warn('DEPRACATED: config.routes.graphql.tracing. No longer used');
+    }
+
+    const { apolloEngine } = config.routes.graphql;
+    const {
+        enabled: engineEnabled,
+        ...engineConfig
+    } = apolloEngine;
 
     return {
         context: ({ req }) => req,
@@ -88,6 +104,7 @@ function makeGraphqlOptions(config, graphql) {
         playground: false,
         rootValue: null,
         schema,
+        engine: engineEnabled ? engineConfig : false,
     };
 }
 
@@ -97,21 +114,62 @@ setDefaults('routes.graphql', {
      *
      * Apollo caching is resource-based, not service-based. Caching should occur as close
      * as possible to the source of truth (e.g. at service calls).
+     *
+     * @depracated
      */
     cacheControl: false,
     /* Disable tracing by default.
      *
      * Tracing is verbose and increases volume. Tracing should be enabled if apollo engine
      * is enabled (which shared tracing over the local network).
+     *
+     * @depracated
      */
     tracing: false,
 });
 
 
-bind('routes.graphql', () => {
-    const { config, graphql, terminal } = getContainer();
+/**
+ * Apollo engine configs are applied to the Apollo Server instance used by the
+ * graphql route.
+ *
+ * For details on various Apollo engine configuration options, please refer to
+ * https://www.apollographql.com/docs/apollo-server/api/apollo-server/#enginereportingoptions
+ */
+setDefaults('routes.graphql.apolloEngine', {
+    /**
+     * Disable tracing by default.
+     *
+     * Send GQL traces to Apollo Graph Manager. If enabled, API key must also
+     * be provided.
+     */
+    enabled: false,
 
-    const options = makeGraphqlOptions(config, graphql);
+    /**
+     * API Key used to send metrics to Apollo Graph Manager.
+     * */
+    apiKey: null,
+
+    /**
+     * Tag for GQL schema used by Apollo Graph Manager.
+     * */
+    schemaTag: null,
+
+    /**
+     * Adjust what GQL operation variables are sent to Apollo Graph Manager when tracing.
+     */
+    sendVariableValues: null,
+
+    /**
+     * Adjust what HTTP headers are sent to Apollo Graph Manger when tracing.
+     */
+    sendHeaders: null,
+});
+
+
+bind('routes.graphql', () => {
+    const { terminal } = getContainer();
+    const options = createApolloServerOptions();
     const server = new ApolloServer(options);
 
     terminal.enabled('graphql');
