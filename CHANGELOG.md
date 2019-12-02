@@ -2,6 +2,8 @@
 
 ### v1.1.0
 
+[See complete versioning details.](https://github.com/globality-corp/nodule-graphql/commit/349863d94834a12ab2b6df6c4b1a837560d6c00e)
+
 - Added `routes.graphql.apolloEngine` config. Used to configure Apollo engine used by the Apollo Server instances that drives the graphql route.
 - `tracing` and `cacheControl` graphql route config options are now deprecatd. They are only intended for the now deprecated Apollo engine proxy. Config options will eventually
 be removed.
