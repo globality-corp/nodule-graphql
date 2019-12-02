@@ -117,7 +117,7 @@ describe('routes', () => {
         ]);
     });
 
-    it.only('handles custom errors with x-request-id and x-trace-id headers', async () => {
+    it('handles custom errors with x-request-id and x-trace-id headers', async () => {
         const app = createApp();
 
         const query = `
