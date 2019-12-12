@@ -1,5 +1,5 @@
 import { get, merge, pickBy } from 'lodash';
-import { graphqlExpress } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 
 import { bind, getContainer, setDefaults } from '@globality/nodule-config';
 
@@ -8,19 +8,17 @@ import { bind, getContainer, setDefaults } from '@globality/nodule-config';
  *
  * Includes extension data from `req.locals.extensions.foo` if requested.
  */
-function injectExtensions(req) {
+function injectExtensions(response, req) {
     // ensure that req.locals.extensions exists
     merge(req, { locals: { extensions: {} } });
 
-    return (result) => {
-        const requested = get(req, 'body.extensions', {});
-        // merge in all local extensions that were requested
-        const extensions = pickBy(
-            req.locals.extensions,
-            (value, key) => key in requested,
-        );
-        return Object.keys(extensions).length ? merge(result, { extensions }) : result;
-    };
+    const requested = get(req, 'body.extensions', {});
+    // merge in all local extensions that were requested
+    const extensions = pickBy(
+        req.locals.extensions,
+        (value, key) => key in requested,
+    );
+    return Object.keys(extensions).length ? merge(response, { extensions }) : response;
 }
 
 /**
@@ -80,23 +78,33 @@ function formatError(error) {
     return newError;
 }
 
-function makeGraphqlOptions(config, graphql) {
+function createApolloServerOptions() {
+    const { config, graphql } = getContainer();
     const { schema } = graphql;
+    const graphqlConfig = config.routes.graphql;
 
-    // XXX need to add:
-    //  - formatResponse/injectExtensions
+    if (graphqlConfig.tracing) {
+        global.console.warn('DEPRACATED: config.routes.graphql.tracing. No longer used.');
+    }
 
-    return function configure(req) {
-        return {
-            cacheControl: config.routes.graphql.cacheControl,
-            context: req,
-            // merge in response extensions
-            formatResponse: injectExtensions(req),
-            rootValue: null,
-            schema,
-            tracing: config.routes.graphql.cacheControl || req.headers['x-request-trace'],
-            formatError,
-        };
+    if (graphqlConfig.cacheControl) {
+        global.console.warn('DEPRACATED: config.routes.graphql.tracing. No longer used');
+    }
+
+    const { apolloEngine } = config.routes.graphql;
+    const {
+        enabled: engineEnabled,
+        ...engineConfig
+    } = apolloEngine;
+
+    return {
+        context: ({ req }) => req,
+        formatError,
+        formatResponse: injectExtensions,
+        playground: false,
+        rootValue: null,
+        schema,
+        engine: engineEnabled ? engineConfig : false,
     };
 }
 
@@ -106,21 +114,65 @@ setDefaults('routes.graphql', {
      *
      * Apollo caching is resource-based, not service-based. Caching should occur as close
      * as possible to the source of truth (e.g. at service calls).
+     *
+     * @depracated
      */
     cacheControl: false,
     /* Disable tracing by default.
      *
      * Tracing is verbose and increases volume. Tracing should be enabled if apollo engine
      * is enabled (which shared tracing over the local network).
+     *
+     * @depracated
      */
     tracing: false,
 });
 
 
-bind('routes.graphql', () => {
-    const { config, graphql, terminal } = getContainer();
+/**
+ * Apollo engine configs are applied to the Apollo Server instance used by the
+ * graphql route.
+ *
+ * For details on various Apollo engine configuration options, please refer to
+ * https://www.apollographql.com/docs/apollo-server/api/apollo-server/#enginereportingoptions
+ */
+setDefaults('routes.graphql.apolloEngine', {
+    /**
+     * Disable tracing by default.
+     *
+     * Send GQL traces to Apollo Graph Manager. If enabled, API key must also
+     * be provided.
+     */
+    enabled: false,
 
-    const options = makeGraphqlOptions(config, graphql);
+    /**
+     * API Key used to send metrics to Apollo Graph Manager.
+     * */
+    apiKey: null,
+
+    /**
+     * Tag for GQL schema used by Apollo Graph Manager.
+     * */
+    schemaTag: null,
+
+    /**
+     * Adjust what GQL operation variables are sent to Apollo Graph Manager when tracing.
+     */
+    sendVariableValues: null,
+
+    /**
+     * Adjust what HTTP headers are sent to Apollo Graph Manger when tracing.
+     */
+    sendHeaders: null,
+});
+
+
+bind('routes.graphql', () => {
+    const { terminal } = getContainer();
+    const options = createApolloServerOptions();
+    const server = new ApolloServer(options);
+
     terminal.enabled('graphql');
-    return graphqlExpress(options);
+
+    return server.getMiddleware();
 });

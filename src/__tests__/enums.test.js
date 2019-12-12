@@ -10,29 +10,28 @@ const compareGraphQLAndGraphQL = (graphqlEnum1, graphqlEnum2) => {
         return false;
     }
 
-    // need to access "private" member
-    /* eslint-disable no-underscore-dangle */
-    const gqlEnums1 = graphqlEnum1._enumConfig.values;
-    const gqlEnums2 = graphqlEnum2._enumConfig.values;
-    /* eslint-enable no-underscore-dangle */
+    const gqlEnumValues1 = graphqlEnum1.getValues();
+    const gqlEnumValues2 = graphqlEnum2.getValues();
 
-    const gqlEnums1Keys = Object.keys(gqlEnums1);
-    const gqlEnums2Keys = Object.keys(gqlEnums2);
+    if (gqlEnumValues1.length !== gqlEnumValues2.length) {
+        return false;
+    }
 
-    if (gqlEnums1Keys.length !== gqlEnums2Keys.length) return false;
-
-    return gqlEnums1Keys.every(item => gqlEnums1[item].value === gqlEnums2[item].value);
+    return gqlEnumValues1.every(item => (
+        item.value === graphqlEnum2.getValue(item.name).value
+    ));
 };
 
 const compareStandardAndGraphQL = (standardEnum, graphqlEnum) => {
-    // need to access "private" member
-    // eslint-disable-next-line no-underscore-dangle
-    const gqlEnums = graphqlEnum._enumConfig.values;
-    const gqlEnumsKeys = Object.keys(gqlEnums);
+    const gqlEnumValues = graphqlEnum.getValues();
 
-    if (standardEnum.enums.length !== gqlEnumsKeys.length) return false;
+    if (standardEnum.enums.length !== gqlEnumValues.length) {
+        return false;
+    }
 
-    return gqlEnumsKeys.every(item => standardEnum[item].value === gqlEnums[item].value);
+    return gqlEnumValues.every(item => (
+        standardEnum[item.name].value === graphqlEnum.getValue(item.name).value
+    ));
 };
 
 describe('Enum utilities', () => {
