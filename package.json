@@ -60,10 +60,6 @@
         "graphql": "^14.5.8",
         "supertest": "^3.0.0"
     },
-    "resolutions": {
-        "mem": "^5.1.1",
-        "lodash": "^3.5.0"
-    },
     "jest": {
         "testRegex": "/__tests__/.*(test)\\.js",
         "modulePaths": [
