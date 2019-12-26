@@ -4,7 +4,6 @@ import { Nodule } from '@globality/nodule-config';
 
 import createApp from './app';
 
-
 describe('routes', () => {
     beforeEach(async () => {
         await Nodule.testing().load();
@@ -145,7 +144,7 @@ describe('routes', () => {
         });
         expect(response.body.errors).toHaveLength(1);
         expect(response.body.errors[0].extensions).toEqual(expect.objectContaining({
-            code: 503,
+            code: 'INTERNAL_SERVER_ERROR',
             requestId: '1234',
             traceId: '5432',
         }));
@@ -155,4 +154,5 @@ describe('routes', () => {
             'user',
         ]);
     });
+
 });
