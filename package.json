@@ -1,6 +1,6 @@
 {
     "name": "@globality/nodule-graphql",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "Node GraphQL Conventions",
     "main": "lib/",
     "repository": "git@github.com:globality-corp/nodule-graphql",
@@ -38,7 +38,7 @@
         "@globality/nodule-express": ">= 0.1.12 < 1",
         "@globality/nodule-logging": ">= 1.5.2 < 2",
         "@globality/nodule-openapi": ">= 0.17.2 < 1",
-        "graphql": ">= 0.13.2 < 1"
+        "graphql": ">= 14.5.8 < 15"
     },
     "devDependencies": {
         "@globality/nodule-config": "~2.13.2",
