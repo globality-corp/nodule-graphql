@@ -1,45 +1,53 @@
 import { get as mockGet, set as mockSet } from 'lodash';
-import mockCreateKey from '../../core/keys';
 import batched from '../wrapper';
 
-const mockConfig = {
-    config: {
-        performance: {
-            batchLimit: 3,
-        },
-    },
-    createKey: mockCreateKey,
-};
-jest.mock('@globality/nodule-config', () => ({
-    bind: (key, value) => {
-        mockSet(mockConfig, key, value());
-        return mockConfig;
-    },
-    getContainer: () => ({
+jest.mock('@globality/nodule-config', () => {
+    // NB: require here is necessary as scoping in jest 24 requires you to
+    // import mocked functions in the same context where the mock is defined
+    // and imports can only be used at the top level.
+    // eslint-disable-next-line
+    const { default: createKey } = require('../../core/keys');
+
+    const mockConfig = {
         config: {
             performance: {
                 batchLimit: 3,
             },
-            logger: {
-                level: 'INFO',
-                loggly: {
-                    enabled: false,
+        },
+        createKey,
+    };
+
+    return {
+        bind: (key, value) => {
+            mockSet(mockConfig, key, value());
+            return mockConfig;
+        },
+        getContainer: () => ({
+            config: {
+                performance: {
+                    batchLimit: 3,
+                },
+                logger: {
+                    level: 'INFO',
+                    loggly: {
+                        enabled: false,
+                    },
                 },
             },
+            createKey,
+            metadata: {},
+        }),
+        getConfig: (lookup) => {
+            const config = {
+                concurrency: {
+                    limit: 10,
+                },
+            };
+            return mockGet(config, lookup);
         },
-        createKey: mockCreateKey,
-        metadata: {},
-    }),
-    getConfig: (lookup) => {
-        const config = {
-            concurrency: {
-                limit: 10,
-            },
-        };
-        return mockGet(config, lookup);
-    },
-    setDefaults: () => {},
-}));
+        setDefaults: () => {},
+    };
+});
 
 let req;
 let companyRetrieve;
