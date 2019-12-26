@@ -1,11 +1,12 @@
 {
-  "presets": ["env"],
-  "plugins": [
-        "transform-object-rest-spread",
-        "transform-async-to-generator",
-        ["transform-runtime", {
-            "polyfill": false,
-            "regenerator": true
-        }]
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ]
   ]
 }
