@@ -5,6 +5,7 @@
 import { assign, chunk, chain, flatten, get, groupBy, omit, uniq } from 'lodash';
 import { getContainer } from '@globality/nodule-config';
 import { NotFound, InternalServerError } from '@globality/nodule-express';
+import { extractLoggingProperties } from '@globality/nodule-logging';
 import { concurrentPaginate, all } from '@globality/nodule-openapi';
 
 /* Checks that a service request can be batched:
@@ -114,7 +115,7 @@ function batchRequestsArgs(argsList, { accumulateBy, accumulateInto, assignArgs 
     return assign(batchedArgs, ...assignArgs);
 }
 
-function fakeResponse(items, fakeSearchResponse) {
+function fakeResponse(items, fakeSearchResponse, results, args) {
     if (fakeSearchResponse) {
         if (!items) {
             return {
@@ -131,17 +132,30 @@ function fakeResponse(items, fakeSearchResponse) {
             limit: items.length,
         };
     }
-    if (items.length === 0) {
+
+    const { config } = getContainer();
+    const requestRules = get(config, 'logger.serviceRequestRules', []);
+
+    const { length } = items;
+    if (length === 0) {
+        const sanitizedArgs = [];
+        args.forEach(arg => sanitizedArgs.push(extractLoggingProperties(arg, requestRules)));
         return {
             error: new NotFound(
-                'Batching failed: expected to get one item but got none',
+                `Batching failed: expected to get one item for args: ${JSON.stringify(sanitizedArgs)} but got none`,
             ),
         };
     }
-    if (items.length > 1) {
+    if (length > 1) {
+        const sanitizedResults = [];
+        results.forEach(result => sanitizedResults.push(
+            extractLoggingProperties(result, requestRules),
+        ));
+        const sanitizedArgs = [];
+        args.forEach(arg => sanitizedArgs.push(extractLoggingProperties(arg, requestRules)));
         return {
             error: new InternalServerError(
-                'Batching failed: expected to get one item but got too many results',
+                `Batching failed: expected to get one item for args: ${JSON.stringify(sanitizedArgs)} but got too many results: ${JSON.stringify(sanitizedResults)}`,
             ),
         };
     }
@@ -212,7 +226,7 @@ async function resolveBatchRequest(
     // Fake a microcosm response for every matched result.
     return Object.keys(resultsBuckets).reduce(
         (acc, key) => ({
-            [key]: fakeResponse(resultsBuckets[key], fakeSearchResponse),
+            [key]: fakeResponse(resultsBuckets[key], fakeSearchResponse, allResults, requestsArgs),
             ...acc,
         }),
         {},

@@ -8,14 +8,7 @@ jest.mock('@globality/nodule-config', () => {
     // eslint-disable-next-line
     const { default: createKey } = require('../../core/keys');
 
-    const mockConfig = {
-        config: {
-            performance: {
-                batchLimit: 3,
-            },
-        },
-        createKey,
-    };
+    const mockConfig = {};
 
     return {
         bind: (key, value) => {
@@ -32,6 +25,9 @@ jest.mock('@globality/nodule-config', () => {
                     loggly: {
                         enabled: false,
                     },
+                    serviceRequestRules: [
+                        { path: 'id', name: 'id', type: 'number' },
+                    ],
                 },
             },
             createKey,
@@ -236,7 +232,9 @@ describe('dataLoader requestWrapper', () => {
         } catch (thrownError) {
             caughtError = thrownError;
         }
-        expect(caughtError.message).toBe('Batching failed: expected to get one item but got too many results');
+        expect(caughtError.message).toBe(
+            'Batching failed: expected to get one item for args: [{"id":999},{"id":1}] but got too many results: [{"id":999},{"id":1},{"id":999}]',
+        );
         expect(companyRetrieve).toHaveBeenCalledTimes(0);
         expect(companySearch).toHaveBeenCalledTimes(1);
         expect(companySearch).toHaveBeenLastCalledWith(req, {
@@ -267,7 +265,9 @@ describe('dataLoader requestWrapper', () => {
         } catch (thrownError) {
             caughtError = thrownError;
         }
-        expect(caughtError.message).toBe('Batching failed: expected to get one item but got none');
+        expect(caughtError.message).toBe(
+            'Batching failed: expected to get one item for args: [{"id":-999},{"id":1}] but got none',
+        );
         expect(companyRetrieve).toHaveBeenCalledTimes(0);
         expect(companySearch).toHaveBeenCalledTimes(1);
         expect(companySearch).toHaveBeenLastCalledWith(req, {
