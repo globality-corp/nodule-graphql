@@ -25,6 +25,10 @@ function injectExtensions(response, req) {
  * Format the given error before it is serialized and sent to the client
  */
 function formatError(error) {
+    const { config } = getContainer();
+    const graphqlConfig = config.routes.graphql;
+    const { hideErrors } = graphqlConfig;
+
     const extensions = error.extensions || {};
     const originalError = error.originalError || {};
     const code = extensions.code || originalError.code;
@@ -53,7 +57,10 @@ function formatError(error) {
 
     // According to section 7.1.2 of the GraphQL specification, fields `message`, and `path` are
     // required. The `locations` field may be included.
-    newError.message = error.message;
+    if (!hideErrors) {
+        newError.message = error.message;
+    }
+
     newError.path = error.path;
 
     if (error.locations) {
@@ -84,11 +91,11 @@ function createApolloServerOptions() {
     const graphqlConfig = config.routes.graphql;
 
     if (graphqlConfig.tracing) {
-        global.console.warn('DEPRACATED: config.routes.graphql.tracing. No longer used.');
+        global.console.warn('DEPRECATED: config.routes.graphql.tracing. No longer used.');
     }
 
     if (graphqlConfig.cacheControl) {
-        global.console.warn('DEPRACATED: config.routes.graphql.tracing. No longer used');
+        global.console.warn('DEPRECATED: config.routes.graphql.tracing. No longer used');
     }
 
     const { apolloEngine } = config.routes.graphql;
@@ -115,7 +122,7 @@ setDefaults('routes.graphql', {
      * Apollo caching is resource-based, not service-based. Caching should occur as close
      * as possible to the source of truth (e.g. at service calls).
      *
-     * @depracated
+     * @deprecated
      */
     cacheControl: false,
     /* Disable tracing by default.
@@ -123,9 +130,14 @@ setDefaults('routes.graphql', {
      * Tracing is verbose and increases volume. Tracing should be enabled if apollo engine
      * is enabled (which shared tracing over the local network).
      *
-     * @depracated
+     * @deprecated
      */
     tracing: false,
+
+    /**
+     * Suppress sending back full error messages back with responses
+     */
+    hideErrors: false,
 });
 
 
