@@ -21,14 +21,26 @@ function injectExtensions(response, req) {
     return Object.keys(extensions).length ? merge(response, { extensions }) : response;
 }
 
-/**
- * Format the given error before it is serialized and sent to the client
+/* Determine whether or not to mask the returned error message
+ *
+ * Hides error messages based on a catch-all config.
  */
-function formatError(error) {
+function determineErrorMessage(error) {
     const { config } = getContainer();
     const graphqlConfig = config.routes.graphql;
     const { hideErrors } = graphqlConfig;
 
+    if (!hideErrors) {
+        return error.message;
+    }
+
+    return 'Gateway Error';
+}
+
+/**
+ * Format the given error before it is serialized and sent to the client
+ */
+function formatError(error) {
     const extensions = error.extensions || {};
     const originalError = error.originalError || {};
     const code = extensions.code || originalError.code;
@@ -57,10 +69,7 @@ function formatError(error) {
 
     // According to section 7.1.2 of the GraphQL specification, fields `message`, and `path` are
     // required. The `locations` field may be included.
-    if (!hideErrors) {
-        newError.message = error.message;
-    }
-
+    newError.message = determineErrorMessage(error);
     newError.path = error.path;
 
     if (error.locations) {

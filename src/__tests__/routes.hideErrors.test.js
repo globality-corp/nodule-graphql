@@ -45,7 +45,7 @@ describe('hide errors', () => {
             code: 'HTTP-404',
         }));
         expect(response.body.errors[0].locations).toBeDefined();
-        expect(response.body.errors[0].message).toEqual('');
+        expect(response.body.errors[0].message).toEqual('Gateway Error');
         expect(response.body.errors[0].path).toEqual([
             'user',
         ]);
