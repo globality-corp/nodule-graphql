@@ -1,4 +1,4 @@
-import { get, merge, pickBy } from 'lodash';
+import { get, includes, merge, pickBy } from 'lodash';
 import { ApolloServer } from 'apollo-server-express';
 
 import { bind, getContainer, setDefaults } from '@globality/nodule-config';
@@ -21,6 +21,23 @@ function injectExtensions(response, req) {
     return Object.keys(extensions).length ? merge(response, { extensions }) : response;
 }
 
+
+/*
+ * Check error message whitelist to determine which errors are safe to return
+ */
+function checkErrorMessageWhitelist(error) {
+    return includes(
+        [
+            // Persisted queries require these specific error messages to function correctly
+            // https://github.com/apollographql/apollo-link-persisted-queries/blob/master/src/index.ts
+            'PersistedQueryNotFound',
+            'PersistedQueryNotSupported',
+        ],
+        error.message,
+    );
+}
+
+
 /* Determine whether or not to mask the returned error message
  *
  * Hides error messages based on a catch-all config.
@@ -30,7 +47,7 @@ function determineErrorMessage(error) {
     const graphqlConfig = config.routes.graphql;
     const { hideErrors } = graphqlConfig;
 
-    if (!hideErrors) {
+    if (!hideErrors || checkErrorMessageWhitelist(error)) {
         return error.message;
     }
 
