@@ -26,6 +26,10 @@ async function retrieveUser(userId) {
         throw error;
     }
 
+    if (userId && userId === '888') {
+        throw new NotFound('PersistedQueryNotFound');
+    }
+
     if (userId && userId !== '30') {
         throw new NotFound('No such user');
     }
