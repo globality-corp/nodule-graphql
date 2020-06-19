@@ -42,7 +42,7 @@ export default function middleware(req, res, next) {
         secret: negotiateKey,
         audience: matchingAudience,
         requestProperty: 'locals.jwt',
-        getToken: req => req.cookies.token,
+        getToken: request => request.cookies.token,
     });
 
     return validator(req, res, (error) => {
