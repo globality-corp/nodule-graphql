@@ -1,7 +1,7 @@
 import { clearBinding, Nodule } from '@globality/nodule-config';
 
 import { signSymmetric } from 'index';
-import middleware from '../middleware';
+import createValidateJWTMiddleware from '../middleware';
 
 
 describe('JWT middleware', () => {
@@ -20,22 +20,6 @@ describe('JWT middleware', () => {
         res.end = jest.fn(() => null);
     });
 
-    it('requires an authorization header', () => {
-        const req = {
-            headers: {
-            },
-        };
-
-        middleware(req, res);
-
-        expect(res.status).toHaveBeenCalledTimes(1);
-        expect(res.status).toHaveBeenCalledWith(401);
-        expect(res.json).toHaveBeenCalledTimes(1);
-        expect(res.json).toHaveBeenCalledWith({ message: 'Unauthorized' });
-        expect(res.end).toHaveBeenCalledTimes(1);
-        expect(res.end).toHaveBeenCalledWith();
-    });
-
     it('requires an audience', () => {
         const req = {
             headers: {
@@ -43,7 +27,7 @@ describe('JWT middleware', () => {
             },
         };
 
-        expect(() => middleware(req)).toThrow(
+        expect(() => createValidateJWTMiddleware()(req)).toThrow(
             'JWT middleware requires `middleware.jwt.audience` to be configured',
         );
     });
@@ -58,6 +42,7 @@ describe('JWT middleware', () => {
                 jwt: {
                     audience,
                     secret,
+                    getToken: req => req.cookies.idToken,
                 },
             },
         }).load();
@@ -67,9 +52,12 @@ describe('JWT middleware', () => {
             headers: {
                 authorization: `Bearer ${token}`,
             },
+            cookies: {
+                idToken: token,
+            },
         };
 
-        middleware(req, res, (error) => {
+        createValidateJWTMiddleware()(req, res, (error) => {
             expect(error).not.toBeDefined();
             expect(req.locals.jwt.aud).toEqual(audience);
             expect(req.locals.jwt.email).toEqual(email);
@@ -87,6 +75,7 @@ describe('JWT middleware', () => {
                 jwt: {
                     audience: audiences,
                     secret,
+                    getToken: req => req.cookies.idToken,
                 },
             },
         }).load();
@@ -96,9 +85,12 @@ describe('JWT middleware', () => {
             headers: {
                 authorization: `Bearer ${token}`,
             },
+            cookies: {
+                idToken: token,
+            },
         };
 
-        middleware(req, res, (error) => {
+        createValidateJWTMiddleware()(req, res, (error) => {
             expect(error).not.toBeDefined();
             expect(req.locals.jwt.aud).toEqual(audience);
             expect(req.locals.jwt.email).toEqual(email);
@@ -116,6 +108,7 @@ describe('JWT middleware', () => {
                 jwt: {
                     audience: audiences,
                     secret,
+                    getToken: req => req.cookies.idToken,
                 },
             },
         }).load();
@@ -125,9 +118,12 @@ describe('JWT middleware', () => {
             headers: {
                 authorization: `Bearer ${token}`,
             },
+            cookies: {
+                idToken: token,
+            },
         };
 
-        middleware(req, res, (error) => {
+        createValidateJWTMiddleware()(req, res, (error) => {
             expect(error).not.toBeDefined();
             expect(req.locals.jwt.aud).toEqual('test-audience');
             expect(req.locals.jwt.email).toEqual(email);
@@ -145,6 +141,7 @@ describe('JWT middleware', () => {
                 jwt: {
                     audience,
                     secret,
+                    getToken: req => req.cookies.idToken,
                 },
             },
         }).load();
@@ -153,6 +150,9 @@ describe('JWT middleware', () => {
         const req = {
             headers: {
                 authorization: `Bearer ${token}`,
+            },
+            cookies: {
+                idToken: token,
             },
         };
 
@@ -165,6 +165,6 @@ describe('JWT middleware', () => {
             return done();
         };
 
-        middleware(req, res);
+        createValidateJWTMiddleware()(req, res);
     });
 });
