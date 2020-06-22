@@ -31,18 +31,13 @@ function chooseAudience(audience) {
 export default function middleware(req, res, next) {
     const config = getConfig('middleware.jwt') || {};
     const { audience, realm } = config;
-
-    if (!req.headers.authorization) {
-        return sendUnauthorized(req, res, realm);
-    }
-
     const matchingAudience = chooseAudience(audience);
 
     const validator = jwt({
         secret: negotiateKey,
         audience: matchingAudience,
         requestProperty: 'locals.jwt',
-        getToken: request => request.cookies.token,
+        getToken: request => request.cookies.idToken,
     });
 
     return validator(req, res, (error) => {

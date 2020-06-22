@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs';
 import request from 'supertest';
 import '@globality/nodule-express';
+import cookieParser from 'cookie-parser';
 import { getConfig, getContainer, Nodule } from '@globality/nodule-config';
 
 import { signSymmetric, signPrivate } from 'index';
@@ -22,6 +23,7 @@ describe('Configuring the middleware', () => {
                     domain,
                     publicKeyRootPath,
                     secret,
+                    getToken: req => req.cookies.idToken,
                 },
             },
         }).load();
@@ -30,6 +32,7 @@ describe('Configuring the middleware', () => {
         const { jwt } = getContainer('middleware');
 
         app = express;
+        app.use(cookieParser());
         app.use(jwt);
         app.use('/*', notFound);
     });
@@ -59,9 +62,9 @@ describe('Configuring the middleware', () => {
         const email = 'first.last@example.com';
         const token = signSymmetric({ email }, secret, audience);
 
-        const response = await request(app).get('/').set(
-            'Authorization', `Bearer ${token}`,
-        );
+        const response = await request(app)
+            .get('/')
+            .set('Cookie', [`idToken=${token}`]);
 
         expect(response.statusCode).toBe(404);
         return done();
@@ -72,9 +75,9 @@ describe('Configuring the middleware', () => {
         const key = readFileSync(`${__dirname}/example.key`, 'ascii');
         const token = signPrivate({ email }, key, audience);
 
-        const response = await request(app).get('/').set(
-            'Authorization', `Bearer ${token}`,
-        );
+        const response = await request(app)
+            .get('/')
+            .set('Cookie', [`idToken=${token}`]);
 
         expect(response.statusCode).toBe(404);
         return done();
