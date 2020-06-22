@@ -6,7 +6,6 @@ import middleware from '../middleware';
 
 describe('JWT middleware', () => {
     let res;
-    const idToken = 'idToken';
 
     beforeEach(() => {
         clearBinding('config');
