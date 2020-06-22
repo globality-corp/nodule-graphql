@@ -6,6 +6,7 @@ import middleware from '../middleware';
 
 describe('JWT middleware', () => {
     let res;
+    const idToken = 'idToken';
 
     beforeEach(() => {
         clearBinding('config');
@@ -18,22 +19,6 @@ describe('JWT middleware', () => {
         res.json = jest.fn(() => res);
         res.set = jest.fn(() => res);
         res.end = jest.fn(() => null);
-    });
-
-    it('requires an authorization header', () => {
-        const req = {
-            headers: {
-            },
-        };
-
-        middleware(req, res);
-
-        expect(res.status).toHaveBeenCalledTimes(1);
-        expect(res.status).toHaveBeenCalledWith(401);
-        expect(res.json).toHaveBeenCalledTimes(1);
-        expect(res.json).toHaveBeenCalledWith({ message: 'Unauthorized' });
-        expect(res.end).toHaveBeenCalledTimes(1);
-        expect(res.end).toHaveBeenCalledWith();
     });
 
     it('requires an audience', () => {
@@ -58,6 +43,7 @@ describe('JWT middleware', () => {
                 jwt: {
                     audience,
                     secret,
+                    getToken: req => req.cookies.idToken,
                 },
             },
         }).load();
@@ -66,6 +52,9 @@ describe('JWT middleware', () => {
         const req = {
             headers: {
                 authorization: `Bearer ${token}`,
+            },
+            cookies: {
+                idToken: token,
             },
         };
 
@@ -87,6 +76,7 @@ describe('JWT middleware', () => {
                 jwt: {
                     audience: audiences,
                     secret,
+                    getToken: req => req.cookies.idToken,
                 },
             },
         }).load();
@@ -95,6 +85,9 @@ describe('JWT middleware', () => {
         const req = {
             headers: {
                 authorization: `Bearer ${token}`,
+            },
+            cookies: {
+                idToken: token,
             },
         };
 
@@ -116,6 +109,7 @@ describe('JWT middleware', () => {
                 jwt: {
                     audience: audiences,
                     secret,
+                    getToken: req => req.cookies.idToken,
                 },
             },
         }).load();
@@ -124,6 +118,9 @@ describe('JWT middleware', () => {
         const req = {
             headers: {
                 authorization: `Bearer ${token}`,
+            },
+            cookies: {
+                idToken: token,
             },
         };
 
@@ -145,6 +142,7 @@ describe('JWT middleware', () => {
                 jwt: {
                     audience,
                     secret,
+                    getToken: req => req.cookies.idToken,
                 },
             },
         }).load();
@@ -153,6 +151,9 @@ describe('JWT middleware', () => {
         const req = {
             headers: {
                 authorization: `Bearer ${token}`,
+            },
+            cookies: {
+                idToken: token,
             },
         };
 
