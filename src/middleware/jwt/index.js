@@ -2,6 +2,7 @@ import { bind, setDefaults } from '@globality/nodule-config';
 
 import passBasicAuth from './passBasicAuth';
 import middleware from './middleware';
+import setCookieMiddleware from './setCookieMiddleware';
 
 
 /* Configure JWT-based authorization as a middleware.
@@ -31,3 +32,4 @@ setDefaults('middleware.jwt', {
 
 bind('middleware.passBasicAuth', () => passBasicAuth);
 bind('middleware.jwt', () => middleware);
+bind('middleware.setCookieMiddleware', () => setCookieMiddleware);

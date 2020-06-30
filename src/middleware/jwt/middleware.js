@@ -6,7 +6,7 @@ import sendUnauthorized from './errors';
 import negotiateKey from './negotiate';
 
 
-function chooseAudience(audience) {
+export function chooseAudience(audience) {
     if (!audience) {
         const metadata = getMetadata();
         if (!metadata || !metadata.testing) {
