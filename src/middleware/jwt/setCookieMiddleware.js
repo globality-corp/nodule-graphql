@@ -13,7 +13,7 @@ export default function setCookieMiddleware (req, res, next) {
         secret: negotiateKey,
         audience: matchingAudience,
         requestProperty: 'locals.jwt',
-        getToken: request => request.params.idToken,
+        getToken: request => request.body.idToken,
     });
 
     return validator(req, res, (error) => {
