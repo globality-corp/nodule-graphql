@@ -219,7 +219,7 @@ bind('routes.graphql', () => {
     terminal.enabled('graphql');
 
     if (corsReflectOrigin) {
-        return server.getMiddleware({ cors: { origin: true, credentials: true }});
+        return server.getMiddleware({ cors: { origin: true, credentials: true } });
     }
 
     return server.getMiddleware();
