@@ -164,6 +164,10 @@ setDefaults('routes.graphql', {
      * Suppress sending back full error messages back with responses
      */
     hideErrors: false,
+    /**
+     * Return request origin for Access-Control-Allow-Origin header
+    */
+    corsReflectOrigin: false,
 });
 
 
@@ -206,11 +210,17 @@ setDefaults('routes.graphql.apolloEngine', {
 
 
 bind('routes.graphql', () => {
-    const { terminal } = getContainer();
+    const { config, terminal } = getContainer();
+    const graphqlConfig = config.routes.graphql;
+    const { corsReflectOrigin } = graphqlConfig;
     const options = createApolloServerOptions();
     const server = new ApolloServer(options);
 
     terminal.enabled('graphql');
+
+    if (corsReflectOrigin) {
+        return server.getMiddleware({ cors: { origin: true, credentials: true }});
+    }
 
     return server.getMiddleware();
 });
