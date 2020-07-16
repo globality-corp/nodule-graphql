@@ -42,6 +42,7 @@ export default function middleware(req, res, next) {
         secret: negotiateKey,
         audience: matchingAudience,
         requestProperty: 'locals.jwt',
+        algorithms: ['HS256', 'RS256'],
     });
 
     return validator(req, res, (error) => {
