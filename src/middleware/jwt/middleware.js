@@ -1,4 +1,5 @@
 import jwt from 'express-jwt';
+import { get } from 'lodash';
 
 import { getConfig, getMetadata, getContainer } from '@globality/nodule-config';
 
@@ -38,10 +39,17 @@ export default function middleware(req, res, next) {
 
     const matchingAudience = chooseAudience(audience);
 
+    const algorithms = get(config, 'algorithms', 'HS256,RS256').split(',').filter(
+        algorithm => !!algorithm,
+    ).map(
+        algorithm => algorithm.trim(),
+    );
+
     const validator = jwt({
         secret: negotiateKey,
         audience: matchingAudience,
         requestProperty: 'locals.jwt',
+        algorithms,
     });
 
     return validator(req, res, (error) => {
