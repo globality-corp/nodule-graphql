@@ -153,7 +153,7 @@ describe('JWT middleware', () => {
 
             createValidateJWTMiddleware()(req, res);
         });
-    
+
     });
 
     describe('JWT source: header', () => {
