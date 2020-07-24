@@ -1,7 +1,7 @@
 import { bind, setDefaults } from '@globality/nodule-config';
 
 import passBasicAuth from './passBasicAuth';
-import middleware from './middleware';
+import createValidateJWTMiddleware from './middleware';
 
 
 /* Configure JWT-based authorization as a middleware.
@@ -26,8 +26,13 @@ setDefaults('middleware.jwt', {
     /* A basic auth realm to generate WWW-Authenticate headers for.
      */
     realm: null,
+
+
 });
 
 
 bind('middleware.passBasicAuth', () => passBasicAuth);
-bind('middleware.jwt', () => middleware);
+bind('middleware.jwt', () => createValidateJWTMiddleware({ jwtSource: 'header' }));
+bind('middleware.jwtBody', () => createValidateJWTMiddleware({ jwtSource: 'body' }));
+bind('middleware.jwtCookie', () => createValidateJWTMiddleware({ jwtSource: 'cookie' }));
+bind('middleware.jwtHeader', () => createValidateJWTMiddleware({ jwtSource: 'header' }));

@@ -1,6 +1,6 @@
 {
     "name": "@globality/nodule-graphql",
-    "version": "1.4.0",
+    "version": "1.5.0",
     "description": "Node GraphQL Conventions",
     "main": "lib/",
     "repository": "git@github.com:globality-corp/nodule-graphql",
@@ -12,12 +12,14 @@
         "lint": "eslint src --cache",
         "pack:dev": "./scripts/pack-dev.sh",
         "test": "jest",
-        "verify": "yarn lint && yarn test"
+        "verify": "yarn lint && yarn test",
+        "preyalc": "yarn clean && yarn build"
     },
     "dependencies": {
         "apollo-server-express": "^2.9.9",
         "axios": "^0.18.0",
         "connect-requestid": "^1.1.0",
+        "cookie-parser": "^1.4.5",
         "cors": "^2.8.4",
         "dataloader": "^1.4.0",
         "enum": "^2.4.0",
