@@ -209,8 +209,6 @@ bind('routes.graphql', () => {
     const { terminal } = getContainer();
     const options = createApolloServerOptions();
     const server = new ApolloServer(options);
-
     terminal.enabled('graphql');
-
-    return server.getMiddleware();
+    return server.getMiddleware({ cors: false });
 });

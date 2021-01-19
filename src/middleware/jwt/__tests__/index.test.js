@@ -59,9 +59,9 @@ describe('Configuring the middleware', () => {
         const email = 'first.last@example.com';
         const token = signSymmetric({ email }, secret, audience);
 
-        const response = await request(app).get('/').set(
-            'Authorization', `Bearer ${token}`,
-        );
+        const response = await request(app)
+            .get('/')
+            .set('Authorization', `Bearer ${token}`);
 
         expect(response.statusCode).toBe(404);
         return done();
@@ -72,9 +72,9 @@ describe('Configuring the middleware', () => {
         const key = readFileSync(`${__dirname}/example.key`, 'ascii');
         const token = signPrivate({ email }, key, audience);
 
-        const response = await request(app).get('/').set(
-            'Authorization', `Bearer ${token}`,
-        );
+        const response = await request(app)
+            .get('/')
+            .set('Authorization', `Bearer ${token}`);
 
         expect(response.statusCode).toBe(404);
         return done();

@@ -1,4 +1,6 @@
 import jwt from 'express-jwt';
+import { get } from 'lodash';
+import { UNAUTHORIZED } from 'http-status-codes';
 
 import { getConfig, getMetadata, getContainer } from '@globality/nodule-config';
 
@@ -6,7 +8,7 @@ import sendUnauthorized from './errors';
 import negotiateKey from './negotiate';
 
 
-function chooseAudience(audience) {
+export function chooseAudience(audience) {
     if (!audience) {
         const metadata = getMetadata();
         if (!metadata || !metadata.testing) {
@@ -28,28 +30,68 @@ function chooseAudience(audience) {
 }
 
 
-export default function middleware(req, res, next) {
-    const config = getConfig('middleware.jwt') || {};
-    const { audience, realm } = config;
+export default function createValidateJWTMiddleware (options = { jwtSource: 'header' }) {
+    const { jwtSource } = options;
 
-    if (!req.headers.authorization) {
-        return sendUnauthorized(req, res, realm);
-    }
+    return function middleware (req, res, next) {
+        const config = getConfig('middleware.jwt') || {};
+        const { audience, realm } = config;
+        const matchingAudience = chooseAudience(audience);
 
-    const matchingAudience = chooseAudience(audience);
+        const algorithms = get(config, 'algorithms', 'HS256,RS256').split(',').filter(
+            algorithm => !!algorithm,
+        ).map(
+            algorithm => algorithm.trim(),
+        );
 
-    const validator = jwt({
-        secret: negotiateKey,
-        audience: matchingAudience,
-        requestProperty: 'locals.jwt',
-    });
+        const jwtOptions = {
+            secret: negotiateKey,
+            audience: matchingAudience,
+            requestProperty: 'locals.jwt',
+            algorithms,
+        };
 
-    return validator(req, res, (error) => {
-        if (error) {
-            const { logger } = getContainer();
-            logger.info(req, `jwt validation failed: ${error.message}`, error);
-            return sendUnauthorized(req, res, realm);
+        switch (jwtSource) {
+            case 'body':
+                if (!req.body.idToken) {
+                    return res.status(UNAUTHORIZED).end();
+                }
+                jwtOptions.getToken = request => request.body.idToken;
+                break;
+            case 'cookie':
+                if (!req.cookies.idToken) {
+                    return res.status(UNAUTHORIZED).end();
+                }
+                jwtOptions.getToken = request => request.cookies.idToken;
+                break;
+            case 'header':
+                if (!req.headers.authorization) {
+                    return sendUnauthorized(req, res, realm);
+                }
+                break;
+            default:
+                throw new Error('invalid JWT source');
         }
-        return next();
-    });
+
+        const validator = jwt(jwtOptions);
+
+        return validator(req, res, (error) => {
+            if (error) {
+                const { logger } = getContainer();
+                logger.info(req, `jwt validation failed: ${error.message}`, error);
+
+                switch (jwtSource) {
+                    case 'cookie':
+                        return res.status(UNAUTHORIZED).end();
+                    case 'body':
+                        return res.status(UNAUTHORIZED).end();
+                    case 'header':
+                        return sendUnauthorized(req, res, realm);
+                    default:
+                        throw new Error('invalid JWT source');
+                }
+            }
+            return next();
+        });
+    };
 }
