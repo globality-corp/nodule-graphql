@@ -1,7 +1,8 @@
 {
-  "type": "node-module",
   "params": {
     "name": "nodule-graphql",
     "open_source": true
-  }
+  },
+  "type": "node-module",
+  "version": "2020.51.0"
 }
