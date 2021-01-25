@@ -1,9 +1,11 @@
-import Spooky from 'node-spookyhash-v2';
+import { hash128 } from 'spookyhash';
 
-// compatibility to python-spooky
-// see spooky_hash128 https://github.com/DomainTools/spooky/blob/master/spookymodule.cpp
-const emptyBuffer = Buffer.from([0, 0, 0, 0, 0, 0, 0, 0]);
 
-export default function getHash(str) {
-    return Spooky.hash128(Buffer.from(str), emptyBuffer, emptyBuffer).toString('hex');
-}
+/**
+ * Computes the 128-bit hash of a string.
+ * @param {string} str  Input string to hash.
+ * @returns {string}  Hash value, formatted as a 32-digit hex string.
+ */
+const getHash = str => hash128(Buffer.from(str)).toString('hex');
+
+export default getHash;
