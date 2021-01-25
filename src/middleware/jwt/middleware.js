@@ -1,6 +1,6 @@
 import jwt from 'express-jwt';
 import { get } from 'lodash';
-import { UNAUTHORIZED } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 
 import { getConfig, getMetadata, getContainer } from '@globality/nodule-config';
 
@@ -54,13 +54,13 @@ export default function createValidateJWTMiddleware (options = { jwtSource: 'hea
         switch (jwtSource) {
             case 'body':
                 if (!req.body.idToken) {
-                    return res.status(UNAUTHORIZED).end();
+                    return res.status(StatusCodes.UNAUTHORIZED).end();
                 }
                 jwtOptions.getToken = request => request.body.idToken;
                 break;
             case 'cookie':
                 if (!req.cookies.idToken) {
-                    return res.status(UNAUTHORIZED).end();
+                    return res.status(StatusCodes.UNAUTHORIZED).end();
                 }
                 jwtOptions.getToken = request => request.cookies.idToken;
                 break;
@@ -82,9 +82,9 @@ export default function createValidateJWTMiddleware (options = { jwtSource: 'hea
 
                 switch (jwtSource) {
                     case 'cookie':
-                        return res.status(UNAUTHORIZED).end();
+                        return res.status(StatusCodes.UNAUTHORIZED).end();
                     case 'body':
-                        return res.status(UNAUTHORIZED).end();
+                        return res.status(StatusCodes.UNAUTHORIZED).end();
                     case 'header':
                         return sendUnauthorized(req, res, realm);
                     default:
