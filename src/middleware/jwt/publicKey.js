@@ -1,15 +1,13 @@
 import { readFileSync } from 'fs';
 import { memoize } from 'lodash';
 
-
-/* Convert JWKS data to PEM format.
+/**
+ * Convert JWKS data to PEM format.
  *
  * Adapted from jwks-rsa (MIT License).
  *
  * See: https://github.com/auth0/node-jwks-rsa/blob/master/src/utils.js
  */
-
-
 function prepadSigned(hexStr) {
     const msb = hexStr[0];
     if (msb < '0' || msb > '7') {
@@ -18,7 +16,6 @@ function prepadSigned(hexStr) {
     return hexStr;
 }
 
-
 function toHex(number) {
     const nstr = number.toString(16);
     if (nstr.length % 2) {
@@ -26,7 +23,6 @@ function toHex(number) {
     }
     return nstr;
 }
-
 
 function encodeLengthHex(n) {
     if (n <= 127) {
@@ -63,8 +59,8 @@ const rsaPublicKeyToPEM = (modulusB64, exponentB64) => {
     return pem;
 };
 
-
-/* Load public key from file and transform to PEM format (which express-jwt expects).
+/**
+ * Load public key from file and transform to PEM format (which express-jwt expects).
  *
  * Note that jwks-rsa wants to download the JWKS file at runtime.
  * Instead, we commit the JWKS data locally.
@@ -77,7 +73,7 @@ export default function loadPublicKey(domain, kid, publicKeyRootPath) {
     const path = `${publicKeyRootPath}/${domain}.jwks`;
     // NB: don't load the file more than once
     const jwks = JSON.parse(memoize(readFileSync)(path));
-    const signingKeys = jwks.keys.filter(key => key.kid === kid);
+    const signingKeys = jwks.keys.filter((key) => key.kid === kid);
     const signingKey = signingKeys[0];
     if (!signingKey) {
         throw new Error(`No key matches: ${kid}`);

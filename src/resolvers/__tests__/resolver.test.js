@@ -3,7 +3,6 @@ import {
     createResolver,
 } from 'index';
 
-
 describe('a resolver', () => {
     it('returns an aggregated value', async () => {
         const resolver = createResolver({
@@ -15,7 +14,7 @@ describe('a resolver', () => {
     it('transforms an aggregated value', async () => {
         const resolver = createResolver({
             aggregate: async () => 21,
-            transform: result => 2 * result,
+            transform: (result) => 2 * result,
         });
         expect(await resolver.resolve()).toEqual(42);
     });
@@ -24,7 +23,7 @@ describe('a resolver', () => {
         const resolver = createResolver({
             aggregate: async () => 21,
             authorize: async () => true,
-            transform: result => 2 * result,
+            transform: (result) => 2 * result,
         });
         expect(await resolver.resolve()).toEqual(42);
     });
@@ -35,7 +34,7 @@ describe('a resolver', () => {
             authorize: async () => {
                 throw new Forbidden();
             },
-            transform: result => 2 * result,
+            transform: (result) => 2 * result,
         });
         await expect(resolver.resolve()).rejects.toThrow('Forbidden');
     });
@@ -50,7 +49,7 @@ describe('a resolver', () => {
                 throw new Forbidden();
             },
             authorizeData: true,
-            transform: result => 2 * result,
+            transform: (result) => 2 * result,
         });
         expect(await resolver.resolve()).toEqual(42);
     });
@@ -65,7 +64,7 @@ describe('a resolver', () => {
                 throw new Forbidden();
             },
             authorizeData: false,
-            transform: result => 2 * result,
+            transform: (result) => 2 * result,
         });
         await expect(resolver.resolve()).rejects.toThrow('Forbidden');
     });
@@ -74,7 +73,7 @@ describe('a resolver', () => {
         const resolver = createResolver({
             aggregate: async () => 21,
             authorize: 'null',
-            transform: result => 2 * result,
+            transform: (result) => 2 * result,
         });
         expect(await resolver.resolve()).toEqual(42);
     });

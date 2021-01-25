@@ -1,6 +1,5 @@
 import loadPublicKey from '../publicKey';
 
-
 describe('loadPublicKey', () => {
     it('loads a public key', () => {
         const domain = 'example';

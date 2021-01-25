@@ -1,7 +1,7 @@
-import { UNAUTHORIZED } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 
-
-/* Add WWW-Authenticate header.
+/**
+ * Add WWW-Authenticate header.
  *
  * Allows graphiql to return trigger a browser prompt.
  */
@@ -29,7 +29,7 @@ function addHeader(req, res, realm) {
 export default function sendUnauthorized(req, res, realm) {
     return addHeader(
         req,
-        res.status(UNAUTHORIZED),
+        res.status(StatusCodes.UNAUTHORIZED),
         realm,
     ).json({
         message: 'Unauthorized',

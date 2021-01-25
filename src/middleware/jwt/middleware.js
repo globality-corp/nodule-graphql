@@ -1,12 +1,11 @@
 import jwt from 'express-jwt';
 import { get } from 'lodash';
-import { UNAUTHORIZED } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 
 import { getConfig, getMetadata, getContainer } from '@globality/nodule-config';
 
 import sendUnauthorized from './errors';
 import negotiateKey from './negotiate';
-
 
 export function chooseAudience(audience) {
     if (!audience) {
@@ -29,7 +28,6 @@ export function chooseAudience(audience) {
     return audience;
 }
 
-
 export default function createValidateJWTMiddleware (options = { jwtSource: 'header' }) {
     const { jwtSource } = options;
 
@@ -39,9 +37,9 @@ export default function createValidateJWTMiddleware (options = { jwtSource: 'hea
         const matchingAudience = chooseAudience(audience);
 
         const algorithms = get(config, 'algorithms', 'HS256,RS256').split(',').filter(
-            algorithm => !!algorithm,
+            (algorithm) => !!algorithm,
         ).map(
-            algorithm => algorithm.trim(),
+            (algorithm) => algorithm.trim(),
         );
 
         const jwtOptions = {
@@ -54,15 +52,15 @@ export default function createValidateJWTMiddleware (options = { jwtSource: 'hea
         switch (jwtSource) {
             case 'body':
                 if (!req.body.idToken) {
-                    return res.status(UNAUTHORIZED).end();
+                    return res.status(StatusCodes.UNAUTHORIZED).end();
                 }
-                jwtOptions.getToken = request => request.body.idToken;
+                jwtOptions.getToken = (request) => request.body.idToken;
                 break;
             case 'cookie':
                 if (!req.cookies.idToken) {
-                    return res.status(UNAUTHORIZED).end();
+                    return res.status(StatusCodes.UNAUTHORIZED).end();
                 }
-                jwtOptions.getToken = request => request.cookies.idToken;
+                jwtOptions.getToken = (request) => request.cookies.idToken;
                 break;
             case 'header':
                 if (!req.headers.authorization) {
@@ -82,9 +80,9 @@ export default function createValidateJWTMiddleware (options = { jwtSource: 'hea
 
                 switch (jwtSource) {
                     case 'cookie':
-                        return res.status(UNAUTHORIZED).end();
+                        return res.status(StatusCodes.UNAUTHORIZED).end();
                     case 'body':
-                        return res.status(UNAUTHORIZED).end();
+                        return res.status(StatusCodes.UNAUTHORIZED).end();
                     case 'header':
                         return sendUnauthorized(req, res, realm);
                     default:

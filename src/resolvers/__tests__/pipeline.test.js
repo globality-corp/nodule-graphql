@@ -4,7 +4,6 @@ import { getResolverPipeline } from '../pipeline';
 import { createResolver } from '../types';
 import '../null';
 
-
 describe('Resolver pipeline', () => {
 
     beforeEach(() => {
@@ -12,7 +11,7 @@ describe('Resolver pipeline', () => {
         bind('graphql.masks.bar', () => (obj, args, context, info) => [obj, obj.bar, context, info]);
         bind('graphql.masks.baz', () => (obj, args, context, info) => [obj, 2 * args, context, info]);
 
-        bind('graphql.transforms.foo', () => value => value / 2);
+        bind('graphql.transforms.foo', () => (value) => value / 2);
 
         bind('graphql.resolvers.identity', () => createResolver({
             aggregate: (obj, args) => args,

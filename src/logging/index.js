@@ -1,5 +1,7 @@
-/* Client request logger.
+/**
+ * Client request logger.
  */
+
 import { assign, get } from 'lodash';
 import { extractLoggingProperties } from '@globality/nodule-logging';
 import { bind, getContainer } from '@globality/nodule-config';
@@ -32,7 +34,6 @@ export function buildRequestLogs(req, serviceName, operationName, request) {
     };
 }
 
-
 export function logSuccess(req, request, response, requestLogs, executeStartTime) {
     const { method, url } = request;
     const { config, logger } = getContainer();
@@ -49,15 +50,16 @@ export function logSuccess(req, request, response, requestLogs, executeStartTime
             get(config, 'logger.serviceResponseRules', []),
         ),
     };
-    if (get(config, 'logger.slownessWarning.enabled', false) &&
-        executeTime > get(config, 'logger.slownessWarning.warnForServiceResponseTimeMs', 1000)) {
+    if (
+        get(config, 'logger.slownessWarning.enabled', false)
+        && executeTime > get(config, 'logger.slownessWarning.warnForServiceResponseTimeMs', 1000)
+    ) {
         logger.warning(req, 'ServiceSlownessWarning', logs);
     }
     if (get(config, 'logger.serviceRequestSucceeded.enabled', false)) {
         logger.info(req, 'ServiceRequestSucceeded', logs);
     }
 }
-
 
 export function extractErrorData(error) {
     const response = get(error, 'response');
@@ -68,7 +70,6 @@ export function extractErrorData(error) {
 
     return get(error, 'data');
 }
-
 
 export function extractErrorMessage(error) {
     const responseData = get(error, 'response.data');
@@ -89,7 +90,6 @@ export function extractErrorStatus(error) {
 
     return get(error, 'status') || get(error, 'code');
 }
-
 
 export function logFailure(req, request, error, requestLogs) {
     const { method, url } = request;

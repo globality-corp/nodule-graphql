@@ -3,7 +3,6 @@ import cors from 'cors';
 import { merge } from 'lodash';
 import { bind, getConfig, setDefaults } from '@globality/nodule-config';
 
-
 /* Set the max-age head on OPTIONS responses; helps avoid redundant
  * pre-flight checks for GraphQL queries (which are POSTs).
  */

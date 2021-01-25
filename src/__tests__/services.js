@@ -2,7 +2,6 @@ import { bind } from '@globality/nodule-config';
 
 import { NotFound } from '@globality/nodule-express';
 
-
 async function retrieveCompany(companyId) {
     if (companyId && companyId !== 'GSW') {
         throw new NotFound('No such user');
@@ -13,7 +12,6 @@ async function retrieveCompany(companyId) {
         name: 'Golden State Warriors',
     };
 }
-
 
 async function retrieveUser(userId) {
     if (userId && userId === '999') {
@@ -41,7 +39,6 @@ async function retrieveUser(userId) {
         lastName: 'Curry',
     };
 }
-
 
 bind('services.company.retrieve', () => retrieveCompany);
 bind('services.user.retrieve', () => retrieveUser);

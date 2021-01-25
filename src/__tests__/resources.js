@@ -7,7 +7,6 @@ import {
 
 import { getResolver } from 'index';
 
-
 export const CompanyType = new GraphQLObjectType({
     name: 'CompanyType',
     description: 'Company',
@@ -20,7 +19,6 @@ export const CompanyType = new GraphQLObjectType({
         },
     },
 });
-
 
 export const UserType = new GraphQLObjectType({
     name: 'UserType',
@@ -45,7 +43,6 @@ export const UserType = new GraphQLObjectType({
     },
 });
 
-
 export const UserListType = new GraphQLObjectType({
     name: 'UserListType',
     fields: {
@@ -54,7 +51,6 @@ export const UserListType = new GraphQLObjectType({
         },
     },
 });
-
 
 export const User = {
     user: {

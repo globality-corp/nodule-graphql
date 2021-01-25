@@ -1,11 +1,12 @@
-/* Middleware that allows passing JWT via Basic Auth header.
+/**
+ * Middleware that allows passing JWT via Basic Auth header.
  *
  * Enabling basic auth pass through greatly simplifies graphiql usage.
  */
+
 import { getConfig, getContainer } from '@globality/nodule-config';
 
 import sendUnauthorized from './errors';
-
 
 export default function passBasicAuth(req, res, next) {
     const { logger } = getContainer();

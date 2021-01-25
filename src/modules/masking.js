@@ -1,7 +1,8 @@
-/* Masking short cut functions.
+/**
+ * Masking short cut functions.
  */
-import { isFunction } from 'lodash';
 
+import { isFunction } from 'lodash';
 
 export default function withArgs(value) {
     return (obj, args, ...rest) => [

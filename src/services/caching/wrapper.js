@@ -6,8 +6,8 @@ import dedup from '../dedup/wrapper';
 import logCacheUsage from './logging';
 import traceCacheCall from './traceCacheCall';
 
-
-/* Cache outcomes.
+/**
+ * Cache outcomes.
  */
 export const CacheResult = new Enum({
     read: 'Fetched from cache',
@@ -17,7 +17,8 @@ export const CacheResult = new Enum({
     error: 'Cache error',
 });
 
-/* Lazy create a single data loader for all cache requests.
+/**
+ * Lazy create a single data loader for all cache requests.
  *
  * Using a data loader allows us to dedup and aggregate cache requests,
  * which is especially useful with memached's `Multi-Get` operation.
@@ -28,7 +29,7 @@ export function getCacheLoader(req) {
     const { cache } = getContainer();
     let loader = get(req, 'loaders.cache');
     if (!loader) {
-        loader = new DataLoader(argsList => cache.safeGet(req, argsList));
+        loader = new DataLoader((argsList) => cache.safeGet(req, argsList));
         set(req, 'loaders.cache', loader);
     }
     return loader;
@@ -49,7 +50,8 @@ export function getCacheAction(req, cacheData, spec) {
     return CacheResult.read;
 }
 
-/* First fetch a resource from memached, then fallback to the service.
+/**
+ * First fetch a resource from memached, then fallback to the service.
  */
 async function getFromCacheThenService(wrapped, spec, req, args, key) {
     const { config, logger, cache } = getContainer();
@@ -88,7 +90,8 @@ async function getFromCacheThenService(wrapped, spec, req, args, key) {
     }
 }
 
-/* Wrap a service request so that it uses caching.
+/**
+ * Wrap a service request so that it uses caching.
  *
  * `spec` is an instance of `CachingSpec`
  */

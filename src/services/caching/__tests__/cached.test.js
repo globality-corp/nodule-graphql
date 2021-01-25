@@ -9,7 +9,6 @@ import {
     CachingSpec,
 } from '../types';
 
-
 let req;
 let plumbusRetrieve;
 let dinglebopSearch;

@@ -55,12 +55,11 @@ let companySearch;
 let requestWrapper;
 let searchWrapper;
 
-
 describe('dataLoader requestWrapper', () => {
     beforeEach(() => {
         companyRetrieve = jest.fn(async (_, { id }) => ({ id }));
         companySearch = jest.fn(async (_, { companyIds }) => ({
-            items: companyIds.map(id => ({ id })),
+            items: companyIds.map((id) => ({ id })),
             count: companyIds.length,
             offset: 0,
             limit: 20,
@@ -217,7 +216,7 @@ describe('dataLoader requestWrapper', () => {
 
     it('should raise for too many results', async () => {
         companySearch = jest.fn(async (_, { companyIds }) => ({
-            items: [...companyIds.map(id => ({ id })), { id: 999 }],
+            items: [...companyIds.map((id) => ({ id })), { id: 999 }],
             count: companyIds.length + 1,
             offset: 0,
             limit: 20,
@@ -248,7 +247,7 @@ describe('dataLoader requestWrapper', () => {
 
     it('should raise for no results', async () => {
         companySearch = jest.fn(async (_, { companyIds }) => ({
-            items: companyIds.filter(id => id !== -999).map(id => ({ id })),
+            items: companyIds.filter((id) => id !== -999).map((id) => ({ id })),
             count: companyIds.length - 1,
             offset: 0,
             limit: 20,
@@ -320,7 +319,7 @@ describe('dataLoader requestWrapper', () => {
 
     it('should handle many search results', async () => {
         companySearch = jest.fn(async (_, { companyIds }) => ({
-            items: [...companyIds.map(id => ({ id })), { id: 999 }],
+            items: [...companyIds.map((id) => ({ id })), { id: 999 }],
             count: companyIds.length + 1,
             offset: 0,
             limit: 20,
@@ -349,7 +348,7 @@ describe('dataLoader requestWrapper', () => {
 
     it('should batch handle missing search call', async () => {
         companySearch = jest.fn(async (_, { companyIds }) => ({
-            items: companyIds.filter(id => id !== -999).map(id => ({ id })),
+            items: companyIds.filter((id) => id !== -999).map((id) => ({ id })),
             count: companyIds.length - 1,
             offset: 0,
             limit: 20,

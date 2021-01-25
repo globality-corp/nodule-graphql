@@ -1,15 +1,15 @@
 import { isFunction, isNil } from 'lodash';
 import { getContainer } from '@globality/nodule-config';
 
-
-/* Default mask function: preserves standard arguments
+/**
+ * Default mask function: preserves standard arguments
  */
 function defaultMask(obj, args, context, info) {
     return [obj, args, context, info];
 }
 
-
-/* A resolver is a structured abstraction around a GraphQL resolver function.
+/**
+ * A resolver is a structured abstraction around a GraphQL resolver function.
  *
  * It includes:
  *
@@ -70,14 +70,15 @@ export class Resolver {
     }
 }
 
-/* Create a resolver.
+/**
+ * Create a resolver.
  */
 export function createResolver(options) {
     return new Resolver(options);
 }
 
-
-/* Create a strict resolver.
+/**
+ * Create a strict resolver.
  *
  * A strict resolver must define an authorize and a mask function.
  */

@@ -5,7 +5,6 @@ import { getConfig, getContainer, Nodule } from '@globality/nodule-config';
 
 import { signSymmetric, signPrivate } from 'index';
 
-
 describe('Configuring the middleware', () => {
     const audience = 'audience';
     const domain = 'example';

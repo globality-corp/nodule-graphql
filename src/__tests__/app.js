@@ -7,7 +7,6 @@ import 'index';
 import './services';
 import './schema';
 
-
 export default function createApp() {
     const {
         express,

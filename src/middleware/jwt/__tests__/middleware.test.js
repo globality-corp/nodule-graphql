@@ -3,7 +3,6 @@ import { clearBinding, Nodule } from '@globality/nodule-config';
 import { signSymmetric } from 'index';
 import createValidateJWTMiddleware from '../middleware';
 
-
 describe('JWT middleware', () => {
     let res;
 
@@ -121,7 +120,6 @@ describe('JWT middleware', () => {
             });
         });
 
-
         it('returns an error on an invalid signature', async (done) => {
             const email = 'first.last@example.com';
             const audience = 'test-audience';
@@ -233,7 +231,7 @@ describe('JWT middleware', () => {
                     jwt: {
                         audience,
                         secret,
-                        getToken: req => req.body.idToken,
+                        getToken: (req) => req.body.idToken,
                     },
                 },
             }).load();
@@ -262,7 +260,7 @@ describe('JWT middleware', () => {
                     jwt: {
                         audience,
                         secret,
-                        getToken: req => req.body.idToken,
+                        getToken: (req) => req.body.idToken,
                     },
                 },
             }).load();
@@ -299,7 +297,7 @@ describe('JWT middleware', () => {
                     jwt: {
                         audience,
                         secret,
-                        getToken: req => req.cookies.idToken,
+                        getToken: (req) => req.cookies.idToken,
                     },
                 },
             }).load();
@@ -328,7 +326,7 @@ describe('JWT middleware', () => {
                     jwt: {
                         audience,
                         secret,
-                        getToken: req => req.cookies.idToken,
+                        getToken: (req) => req.cookies.idToken,
                     },
                 },
             }).load();

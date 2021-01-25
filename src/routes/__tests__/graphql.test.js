@@ -23,11 +23,9 @@ const QueryType = new GraphQLObjectType({
     },
 });
 
-
 const schema = new GraphQLSchema({
     query: QueryType,
 });
-
 
 bind('graphql.schema', () => schema);
 
@@ -42,7 +40,7 @@ describe('routes.graphql', () => {
             apiKey: 'mock-api-key',
             schemaTag: 'mock-schema-tag',
             sendVariableValues: {
-                transform: value => value,
+                transform: (value) => value,
             },
             sendHeaders: {
                 onlyNames: ['x-mock-header'],

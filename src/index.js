@@ -30,5 +30,4 @@ export {
     ANY_SINGLE_ITEM_LIST,
     ANY_UUID,
     CachingSpec,
-    setCache,
 } from './services';

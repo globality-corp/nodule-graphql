@@ -48,7 +48,6 @@ const CachingConfig = {
     }),
 };
 
-
 describe('CachingSpec', () => {
     const spec = CachingConfig['fleeb.grumbo.search'];
     const doubleSpec = CachingConfig['fleeb.grumbo.retrieve'];
