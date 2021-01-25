@@ -5678,10 +5678,10 @@ split-string@^3.0.1, split-string@^3.0.2:
   dependencies:
     extend-shallow "^3.0.0"
 
-spookyhash@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/spookyhash/-/spookyhash-1.1.0.tgz#813889959073e815663f5325d74108b0c3c48b8c"
-  integrity sha512-swnBstIZJL3aBB+WrFzwe4Ne6fHhOlm3gbR40H/PI9V9G/sS4CrKMWvX9cv+9sCkJ+etqvNEbr3IykOWPGOuIw==
+spookyhash@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/spookyhash/-/spookyhash-1.2.0.tgz#2ffcc04585b1881b0488690d94a3fd7f63ae04eb"
+  integrity sha512-IrT3lhQ0CNhr3H7aFGIvMcOfdDQjmrKyk4ktk71PNf61QZJdQ9bGtjhKOr7HyDRVZ1w/jVYuGBo1YJ/MvgZgcw==
   dependencies:
     bindings "^1.5.0"
     node-addon-api "^3.1.0"
