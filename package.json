@@ -43,10 +43,10 @@
         "graphql": ">= 14.5.8 < 15"
     },
     "devDependencies": {
-        "@babel/cli": "^7.7.0",
-        "@babel/core": "^7.7.2",
-        "@babel/node": "^7.7.0",
-        "@babel/preset-env": "^7.7.1",
+        "@babel/cli": "7.12.10",
+        "@babel/core": "7.12.10",
+        "@babel/node": "7.12.10",
+        "@babel/preset-env": "7.12.11",
         "@globality/nodule-config": "~2.13.2",
         "@globality/nodule-express": "^0.1.14",
         "@globality/nodule-logging": "~1.5.2",
