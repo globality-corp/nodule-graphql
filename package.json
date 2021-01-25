@@ -19,7 +19,6 @@
         "apollo-server-express": "2.19.2",
         "axios": "0.21.1",
         "connect-requestid": "^1.1.0",
-        "cookie-parser": "^1.4.5",
         "cors": "^2.8.4",
         "dataloader": "^1.4.0",
         "enum": "^2.4.0",
