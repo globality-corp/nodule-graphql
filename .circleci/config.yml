@@ -22,7 +22,6 @@ jobs:
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "yarn.lock" }}
-          - v1-dependencies-
 
       - run:
           name: Install Dependencies
@@ -107,30 +106,43 @@ workflows:
 
   build:
     jobs:
-      - checkout
+      - checkout:
+          context: 
+          - Globality-Common
       - lint:
+          context: 
+          - Globality-Common
           requires:
             - checkout
       - test:
+          context: 
+          - Globality-Common
           requires:
             - checkout
       - build:
+          context: 
+          - Globality-Common
           requires:
             - lint
             - test
       - deploy_rc:
+          context:
+          - Globality-Common
           requires:
             - build
-
   release:
     jobs:
       - checkout:
+          context: 
+          - Globality-Common
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
             branches:
               ignore: /.*/
       - lint:
+          context: 
+          - Globality-Common
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
@@ -139,6 +151,8 @@ workflows:
           requires:
             - checkout
       - test:
+          context: 
+          - Globality-Common
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
@@ -147,6 +161,8 @@ workflows:
           requires:
             - checkout
       - build:
+          context: 
+          - Globality-Common
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
@@ -155,6 +171,8 @@ workflows:
           requires:
             - test
       - deploy:
+          context: 
+          - Globality-Common
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
