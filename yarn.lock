@@ -1054,7 +1054,7 @@
     bottlejs "^1.7.0"
     lodash "^4.17.15"
 
-"@globality/nodule-express@^0.1.14":
+"@globality/nodule-express@0.1.14":
   version "0.1.14"
   resolved "https://registry.yarnpkg.com/@globality/nodule-express/-/nodule-express-0.1.14.tgz#0ba1c2bf663b1d352601b23cbc39a2c334490aee"
   integrity sha512-UE41yF9LOvSdivCs0Zlg4PzUamHnirTcpDoflqo6CQUJUwb+32iEnhXIi5svXts+wFiTN9yzwpl1bZzXulvs7w==
@@ -1069,7 +1069,7 @@
     jsonwebtoken "^8.2.0"
     lodash "^4.17.5"
 
-"@globality/nodule-logging@~1.5.2":
+"@globality/nodule-logging@1.5.2":
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/@globality/nodule-logging/-/nodule-logging-1.5.2.tgz#5a244b3631d5485744a1e9c040c9e916d11a7ce4"
   integrity sha512-TuqD0Jm9sMVQm9irOp4wFQiyq6vQ8QzTS1Jo5V0bkpEKpIC7nsOF0/Q1dV2i4/7GxqkyQws+JkU2DJ72HH+kdw==
@@ -1082,10 +1082,10 @@
     on-finished "~2.3.0"
     on-headers "~1.0.1"
 
-"@globality/nodule-openapi@^0.17.2":
-  version "0.17.2"
-  resolved "https://registry.yarnpkg.com/@globality/nodule-openapi/-/nodule-openapi-0.17.2.tgz#f77b99384f582f0ba5064a8ddb0004d70c634ecb"
-  integrity sha512-MBakH7h4hOnbqf3rp1iqAgLzfszs4MDL8OxXftV/js7C5LGmy3e3VKqNA4xXLzUFUOaocfxMj/SWzNyBztlVtQ==
+"@globality/nodule-openapi@0.19.1":
+  version "0.19.1"
+  resolved "https://registry.yarnpkg.com/@globality/nodule-openapi/-/nodule-openapi-0.19.1.tgz#f4ccd5696d96fa74a7183914002b1b40df2540b6"
+  integrity sha512-9FO4tEx53IWGch4bVnaSPMwo91DQetMzDG3TXw1dpEPtTAEB5hNtw+UEMlRWZmIcbTgBE4jiqWJLqC1sLnpu9A==
   dependencies:
     "@globality/nodule-config" "^2.3.0"
     axios "^0.18.1"
