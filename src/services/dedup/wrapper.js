@@ -8,8 +8,8 @@
  * Our own batching and caching are necessary in many cases.
  */
 import DataLoader from 'dataloader';
-import uuidv4 from 'uuid/v4';
 import { get, set } from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 import { getContainer } from '@globality/nodule-config';
 import { concurrentPaginate } from '@globality/nodule-openapi';
 
