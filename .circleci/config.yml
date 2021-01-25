@@ -77,6 +77,19 @@ jobs:
           root: ~/repo
           <<: *whitelist
 
+  deploy_rc:
+    <<: *defaults
+
+    steps:
+      - attach_workspace:
+          at: ~/repo
+
+      - run:
+          name: Publish to NPM
+          command: |
+            sed  -i '/version/s/[^.]*$/'"0-dev${CIRCLE_BUILD_NUM}\",/" package.json
+            npm publish
+
   deploy:
     <<: *defaults
 
@@ -112,7 +125,11 @@ workflows:
           requires:
             - lint
             - test
-
+      - deploy_rc:
+          context:
+          - Globality-Common
+          requires:
+            - build
   release:
     jobs:
       - checkout:
