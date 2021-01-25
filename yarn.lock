@@ -1036,7 +1036,16 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@globality/nodule-config@^2.3.0", "@globality/nodule-config@~2.13.2":
+"@globality/nodule-config@2.13.3":
+  version "2.13.3"
+  resolved "https://registry.yarnpkg.com/@globality/nodule-config/-/nodule-config-2.13.3.tgz#4995d6f035405c856be7d9cc97ea7eba5d099126"
+  integrity sha512-i3DGTzkTKH9Jq+3MB5Of9PSSXCD/nX9ZvHWbowjG4D9x/NntTD88FT/SXusOVUh0xV1wG7ROKc9PZTmNoM7F+A==
+  dependencies:
+    aws-sdk "2.829.0"
+    bottlejs "1.7.2"
+    lodash "4.17.20"
+
+"@globality/nodule-config@^2.3.0":
   version "2.13.2"
   resolved "https://registry.yarnpkg.com/@globality/nodule-config/-/nodule-config-2.13.2.tgz#493f0ec56def9f4af9ca3fe56a1318615aabf413"
   integrity sha512-nhDRG4QBz8b8sGrDXYJMHIb0CtrzxpILBRIBn723Xrqx0UeaTIGUjXwt0NDNUSqb2tiGPcWeLUmSnV+5bdDHFg==
@@ -2045,6 +2054,21 @@ atob@^2.1.1:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
+aws-sdk@2.829.0:
+  version "2.829.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.829.0.tgz#da70407a8bddc21b1dc1c9ba61ac3daea39b9364"
+  integrity sha512-0LV0argbcE1HhOeCeCZWUbpP4rWzwqe+0WmnR+jCJPY0w0n/ntGU/GW8obzhhhUej8pS4AkuAJNgzbwlTnxUmw==
+  dependencies:
+    buffer "4.9.2"
+    events "1.1.1"
+    ieee754 "1.1.13"
+    jmespath "0.15.0"
+    querystring "0.2.0"
+    sax "1.2.1"
+    url "0.10.3"
+    uuid "3.3.2"
+    xml2js "0.4.19"
+
 aws-sdk@^2.231.1:
   version "2.596.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.596.0.tgz#1a4af0609e174a50ffb8ed8981981e6d77a614fb"
@@ -2242,7 +2266,7 @@ body-parser@1.19.0, body-parser@^1.18.3:
     raw-body "2.4.0"
     type-is "~1.6.17"
 
-bottlejs@^1.7.0:
+bottlejs@1.7.2, bottlejs@^1.7.0:
   version "1.7.2"
   resolved "https://registry.yarnpkg.com/bottlejs/-/bottlejs-1.7.2.tgz#a9a29c937cda3c4b4dcbcfc71c473c7f79108ca6"
   integrity sha512-voMPQ+g8/4GBiDE5lp43fgfoBn7Q5fZI7k3ye8ErrPoHzuuRS0Gff9lZYeyalh86uz5P304iZ14wNAM+3TZguQ==
@@ -2320,6 +2344,15 @@ buffer@4.9.1:
   version "4.9.1"
   resolved "https://registry.yarnpkg.com/buffer/-/buffer-4.9.1.tgz#6d1bb601b07a4efced97094132093027c95bc298"
   integrity sha1-bRu2AbB6TvztlwlBMgkwJ8lbwpg=
+  dependencies:
+    base64-js "^1.0.2"
+    ieee754 "^1.1.4"
+    isarray "^1.0.0"
+
+buffer@4.9.2:
+  version "4.9.2"
+  resolved "https://registry.yarnpkg.com/buffer/-/buffer-4.9.2.tgz#230ead344002988644841ab0244af8c44bbe3ef8"
+  integrity sha512-xq+q3SRMOxGivLhBNaUdC64hDTQwejJ+H0T/NB1XMtTVEwNTrfFF3gAxiyW0Bu/xWEGhjVKgUcMhCrUy2+uCWg==
   dependencies:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
