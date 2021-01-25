@@ -2,13 +2,12 @@ import {
     createStrictResolver,
 } from 'index';
 
-
 describe('a strict resolver', () => {
     it('requires an aggregate function', async () => {
         expect(
             () => createStrictResolver({
                 authorize: () => true,
-                transform: value => value,
+                transform: (value) => value,
             }),
         ).toThrow(
             'Strict resolver must define an `aggregate` option',
@@ -19,7 +18,7 @@ describe('a strict resolver', () => {
         expect(
             () => createStrictResolver({
                 aggregate: async () => null,
-                transform: value => value,
+                transform: (value) => value,
             }),
         ).toThrow(
             'Strict resolver must define an `authorize` option',

@@ -5,7 +5,6 @@ import { User } from './resources';
 // activate component bindings
 import './resolvers';
 
-
 const QueryType = new GraphQLObjectType({
     name: 'QueryType',
     description: 'Top-level queries',
@@ -14,10 +13,8 @@ const QueryType = new GraphQLObjectType({
     },
 });
 
-
 const schema = new GraphQLSchema({
     query: QueryType,
 });
-
 
 bind('graphql.schema', () => schema);

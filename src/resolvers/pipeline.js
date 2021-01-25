@@ -1,8 +1,8 @@
 import { flatten, indexOf, isFunction } from 'lodash';
 import { getContainer } from '@globality/nodule-config';
 
-
-/* Expand a key either into itself (if it's a string) or via a function call.
+/**
+ * Expand a key either into itself (if it's a string) or via a function call.
  *
  * Allowing keys to be functions allows resolver selection to be dynamic,
  * based on runtime arguments.
@@ -11,14 +11,14 @@ function expandKey(key, ...args) {
     return isFunction(key) ? key(...args) : key;
 }
 
-
-/* Build a mapping from keys to DI members with the given type.
+/**
+ * Build a mapping from keys to DI members with the given type.
  */
 function buildMapping(keys, type) {
     return keys.map(
-        key => [key, getContainer(`graphql.${type}.${key}`)],
+        (key) => [key, getContainer(`graphql.${type}.${key}`)],
     ).filter(
-        pair => !!pair[1],
+        (pair) => !!pair[1],
     ).reduce(
         (acc, [key, value]) => Object.assign(
             acc,
@@ -30,8 +30,8 @@ function buildMapping(keys, type) {
     );
 }
 
-
-/* Execute a pipeline.
+/**
+ * Execute a pipeline.
  */
 async function executePipeline(pipeline, args) {
     // we expect exactly one resolver
@@ -59,8 +59,8 @@ async function executePipeline(pipeline, args) {
     );
 }
 
-
-/* Validate a pipeline.
+/**
+ * Validate a pipeline.
  */
 function validatePipeline(pipeline) {
     // Ensure we have *exactly* one resolver
@@ -97,8 +97,8 @@ function validatePipeline(pipeline) {
     );
 }
 
-
-/* Define a pipeline of functions that make up a single logical resolver.
+/**
+ * Define a pipeline of functions that make up a single logical resolver.
  *
  * Exactly one of these functions is expected to be a proper resolver; the
  * other functions should be supplemental `mask` or `transform` functions,
@@ -119,7 +119,7 @@ export function getResolverPipeline(...keys) {
 
         // First, expand inputs keys in case they are actually functions
         pipeline.keys = flatten(keys.map(
-            key => expandKey(key, ...args),
+            (key) => expandKey(key, ...args),
         ));
 
         // Next, map keys to resolvers, masks, and transfoms
@@ -136,8 +136,8 @@ export function getResolverPipeline(...keys) {
     };
 }
 
-
-/* Look up a single resolver by key.
+/**
+ * Look up a single resolver by key.
  */
 export function getResolver(key) {
     // we just want a degenerate pipeline

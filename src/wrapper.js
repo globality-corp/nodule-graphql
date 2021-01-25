@@ -1,7 +1,7 @@
 import { get, set, values } from 'lodash';
 
-
-/* Safely fetch fields from a type.
+/**
+ * Safely fetch fields from a type.
  */
 export function safeGetFields(type) {
     try {
@@ -11,8 +11,8 @@ export function safeGetFields(type) {
     }
 }
 
-
-/* Wrap *all* resolvers in a schema.
+/**
+ * Wrap *all* resolvers in a schema.
  */
 export function wrapResolvers(schema, wrapper) {
     values(schema.getTypeMap()).forEach((type) => {

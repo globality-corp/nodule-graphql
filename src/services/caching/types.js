@@ -6,12 +6,10 @@ import createKey from '../core/keys';
 import spooky128 from './spooky128';
 import JSONStringify from './JSONStringify';
 
-
-export const ANY_NOT_NULL = value => !isNil(value);
-export const ANY_PARAMETER = value => !isUndefined(value);
-export const ANY_SINGLE_ITEM_LIST = value => isArray(value) && value.length === 1;
-export const ANY_UUID = value => anyNonNil(value);
-
+export const ANY_NOT_NULL = (value) => !isNil(value);
+export const ANY_PARAMETER = (value) => !isUndefined(value);
+export const ANY_SINGLE_ITEM_LIST = (value) => isArray(value) && value.length === 1;
+export const ANY_UUID = (value) => anyNonNil(value);
 
 export class CachingSpec {
     constructor({
@@ -58,7 +56,7 @@ export class CachingSpec {
         }
 
         if (this.requireArgs.length) {
-            return !this.requireArgs.some(reqArgs => this.validateArgs(args, reqArgs));
+            return !this.requireArgs.some((reqArgs) => this.validateArgs(args, reqArgs));
         }
         return false;
     }
@@ -113,12 +111,12 @@ export class CachingSpec {
         const requireArgs = reqArgs || this.requireArgs[0];
 
         // every arg must in the required args
-        if (!Object.keys(args).every(arg => requireArgs[arg] !== undefined)) {
+        if (!Object.keys(args).every((arg) => requireArgs[arg] !== undefined)) {
             return false;
         }
 
         // no required arg can be missing
-        return Object.keys(requireArgs).every(key => CachingSpec.validateArg(
+        return Object.keys(requireArgs).every((key) => CachingSpec.validateArg(
             requireArgs,
             key,
             args[key],
@@ -136,9 +134,11 @@ export class CachingSpec {
             return true;
         }
 
-        if (isArray(requiredValue) &&
-            isArray(value) &&
-            isEqual(value.sort(), requiredValue.sort())) {
+        if (
+            isArray(requiredValue)
+            && isArray(value)
+            && isEqual(value.sort(), requiredValue.sort())
+        ) {
             return true;
         }
 

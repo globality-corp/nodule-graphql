@@ -1,6 +1,5 @@
 import { withArgs } from 'index';
 
-
 describe('withArgs', () => {
 
     it('replaces arguments', () => {
@@ -8,6 +7,6 @@ describe('withArgs', () => {
     });
 
     it('replaces arguments with a function', () => {
-        expect(withArgs(obj => 8 * obj)(1, 2, 3, 4)).toEqual([1, 8, 3, 4]);
+        expect(withArgs((obj) => 8 * obj)(1, 2, 3, 4)).toEqual([1, 8, 3, 4]);
     });
 });

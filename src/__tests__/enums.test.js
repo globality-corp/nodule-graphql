@@ -17,7 +17,7 @@ const compareGraphQLAndGraphQL = (graphqlEnum1, graphqlEnum2) => {
         return false;
     }
 
-    return gqlEnumValues1.every(item => (
+    return gqlEnumValues1.every((item) => (
         item.value === graphqlEnum2.getValue(item.name).value
     ));
 };
@@ -29,7 +29,7 @@ const compareStandardAndGraphQL = (standardEnum, graphqlEnum) => {
         return false;
     }
 
-    return gqlEnumValues.every(item => (
+    return gqlEnumValues.every((item) => (
         standardEnum[item.name].value === graphqlEnum.getValue(item.name).value
     ));
 };

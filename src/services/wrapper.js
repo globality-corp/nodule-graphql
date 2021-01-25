@@ -1,7 +1,9 @@
-/* Wrap service calls by composing multiple wrapper functions.
+/**
+ * Wrap service calls by composing multiple wrapper functions.
  *
  * We support batching, caching, and (in-request) deduplication.
  */
+
 import { flatten } from 'lodash';
 import { getContainer } from '@globality/nodule-config';
 
@@ -35,14 +37,15 @@ function buildWrappers() {
     return wrappers;
 }
 
-/* Wrap a service call if args are defined.
+/**
+ * Wrap a service call if args are defined.
  */
 export function wrapIf(service, wrapper, args) {
     return args ? wrapper(service, args) : service;
 }
 
-
-/* Wrap a single service call.
+/**
+ * Wrap a single service call.
  */
 function wrap(wrappers, name) {
     return wrappers.reduce(
@@ -51,20 +54,19 @@ function wrap(wrappers, name) {
     );
 }
 
-
 function getServiceWrappers() {
     const wrappers = buildWrappers();
 
     // calculate the full list of service names that are wrapped
     const wrappedServiceNames = Array.from(new Set(
         flatten(
-            wrappers.map(value => Object.keys(value[0])),
+            wrappers.map((value) => Object.keys(value[0])),
         ),
     ));
 
     return Object.assign(
         {},
-        ...wrappedServiceNames.map(name => ({ [name]: wrap(wrappers, name) })),
+        ...wrappedServiceNames.map((name) => ({ [name]: wrap(wrappers, name) })),
     );
 }
 

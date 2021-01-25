@@ -2,7 +2,6 @@ import { Nodule } from '@globality/nodule-config';
 
 import { getResolver } from 'index';
 
-
 describe('null resolver', () => {
     beforeEach(async () => {
         await Nodule.testing().load();

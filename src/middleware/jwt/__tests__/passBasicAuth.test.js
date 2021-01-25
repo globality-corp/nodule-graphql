@@ -3,7 +3,6 @@ import '@globality/nodule-logging'; // factory import
 
 import passBasicAuth from '../passBasicAuth';
 
-
 describe('passBasicAuth middleware', () => {
     let res;
 

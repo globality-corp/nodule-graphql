@@ -14,9 +14,9 @@ import { concurrentPaginate, all } from '@globality/nodule-openapi';
  */
 function canArgsBeBatched(args, accumulateBy) {
     return (
-        args[accumulateBy] !== undefined &&
-        args.offset === undefined &&
-        (args.limit === undefined || args.limit === 1)
+        args[accumulateBy] !== undefined
+        && args.offset === undefined
+        && (args.limit === undefined || args.limit === 1)
     );
 }
 
@@ -65,9 +65,9 @@ function filterArgsToBatch(argsList, accumulateBy) {
  */
 function getArgsChunksList(req, argsList, accumulateBy) {
     const { createKey, config } = getContainer();
-    const argsGroups = groupBy(argsList, args => createKey(omit(args, accumulateBy)));
+    const argsGroups = groupBy(argsList, (args) => createKey(omit(args, accumulateBy)));
     const batchLimit = get(config, 'performance.batchLimit', 30);
-    return flatten(Object.keys(argsGroups).map(key => chunk(argsGroups[key], batchLimit)));
+    return flatten(Object.keys(argsGroups).map((key) => chunk(argsGroups[key], batchLimit)));
 }
 
 /*  Returns a (key(args): response) object (with one key) based on serviceRequest call and args
@@ -82,7 +82,7 @@ function getArgsChunksList(req, argsList, accumulateBy) {
 async function resolveSimpleRequest(req, serviceRequest, args) {
     const { createKey } = getContainer();
     const key = createKey(args);
-    const res = await serviceRequest(req, args).catch(error => ({ error }));
+    const res = await serviceRequest(req, args).catch((error) => ({ error }));
     return { [key]: res };
 }
 
@@ -108,7 +108,7 @@ async function resolveSimpleRequest(req, serviceRequest, args) {
  */
 function batchRequestsArgs(argsList, { accumulateBy, accumulateInto, assignArgs = [{}] }) {
     const batchedArgs = {
-        [accumulateInto]: uniq(flatten(argsList.map(args => args[accumulateBy]))),
+        [accumulateInto]: uniq(flatten(argsList.map((args) => args[accumulateBy]))),
         ...omit(argsList[0], [accumulateBy, 'limit']),
     };
     return assign(batchedArgs, ...assignArgs);
@@ -148,7 +148,8 @@ function fakeResponse(items, fakeSearchResponse) {
     return items[0];
 }
 
-/* Returns a (key(args): response) object (with more then key) based on batched searchRequest call
+/**
+ * Returns a (key(args): response) object (with more then key) based on batched searchRequest call
  * Example:
  * Input:
  *     argsList: [
@@ -188,7 +189,7 @@ async function resolveBatchRequest(
      * If error is raised, create many { error, id } items
      */
     const allResults = await all(req, { searchRequest, args: batchedArgs })
-        .catch(error => batchedArgs[accumulateInto].map(id => ({
+        .catch((error) => batchedArgs[accumulateInto].map((id) => ({
             error,
             [splitResponseBy]: id,
         })));
@@ -200,7 +201,7 @@ async function resolveBatchRequest(
         (acc, requestArgs) => ({
             [createKey(requestArgs)]: chain([requestArgs[accumulateBy]])
                 .flatten()
-                .map(accumulateArg => groupedResults[accumulateArg])
+                .map((accumulateArg) => groupedResults[accumulateArg])
                 .concat()
                 .flatten()
                 .compact()
@@ -219,8 +220,8 @@ async function resolveBatchRequest(
     );
 }
 
-
-/* Resolve number of search requests at the same time can batch some search requests into one.
+/**
+ * Resolve number of search requests at the same time can batch some search requests into one.
  *     argsList: list of search requests args (see caching.js)
  *     searchRequest: async function that can resolve search requests (see caching.js)
  *     accumulateBy: the request arg that can be batch (for example: userId)
@@ -252,12 +253,12 @@ export default async function batchRequests(
     const argsListNotToBatch = [
         ...unBatchableArgsList,
         ...argsChunksList
-            .filter(argsChunks => argsChunks.length === 1)
-            .map(argsChunks => argsChunks[0]),
+            .filter((argsChunks) => argsChunks.length === 1)
+            .map((argsChunks) => argsChunks[0]),
     ];
 
     // Batch
-    const argsListToBatch = argsChunksList.filter(argsChunks => argsChunks.length > 1);
+    const argsListToBatch = argsChunksList.filter((argsChunks) => argsChunks.length > 1);
 
     /* Create a search request promises based on argsList.
      * Every promise will return an object with (str(args): response) items
@@ -267,9 +268,9 @@ export default async function batchRequests(
      * (objects can have more then one key if the requsts are batched)
      */
     const requestPromises = [
-        ...argsListNotToBatch.map(args => resolveSimpleRequest(req, serviceRequest, args)),
+        ...argsListNotToBatch.map((args) => resolveSimpleRequest(req, serviceRequest, args)),
         ...argsListToBatch.map(
-            argsChunks => resolveBatchRequest(req, {
+            (argsChunks) => resolveBatchRequest(req, {
                 requestsArgs: argsChunks,
                 searchRequest: batchSearchRequest || serviceRequest,
                 accumulateBy,
@@ -285,5 +286,5 @@ export default async function batchRequests(
     const { createKey } = getContainer();
     // Merge all responses to one (str(args) => response) object and arrange the response
     const responsesObject = Object.assign(...resonseObjects);
-    return argsList.map(args => responsesObject[createKey(args)]);
+    return argsList.map((args) => responsesObject[createKey(args)]);
 }

@@ -2,7 +2,6 @@ import expressPlayground from 'graphql-playground-middleware-express';
 import { defaultPlaygroundOptions } from 'apollo-server-express';
 import { bind, getContainer, setDefaults } from '@globality/nodule-config';
 
-
 function createMiddleware(config) {
     // Wrapping expressPlayground in order to inject the authorization header
     // into the graphql playground app.
@@ -22,12 +21,10 @@ function createMiddleware(config) {
     };
 }
 
-
 setDefaults('routes.graphiql', {
     endpointUrl: '/content/graphql',
     enabled: false,
 });
-
 
 bind('routes.graphiql', () => {
     const { config, terminal } = getContainer();

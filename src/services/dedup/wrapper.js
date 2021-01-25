@@ -13,8 +13,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { getContainer } from '@globality/nodule-config';
 import { concurrentPaginate } from '@globality/nodule-openapi';
 
-
-/* Fetch (and lazy-create) loaders by name.
+/**
+ * Fetch (and lazy-create) loaders by name.
  *
  * Loaders are cached on the request for re-use. Loaders are not shared
  * across requests because of potential to violate access control policies
@@ -26,11 +26,11 @@ function getLoader(req, loaderId, loadMany, allowBatch) {
 
     if (!loader) {
         loader = new DataLoader(
-            argsList => loadMany(req, argsList),
+            (argsList) => loadMany(req, argsList),
             {
                 // key uses a json like representation of ordered keys
                 // straight json would not work if parameters came in different order
-                cacheKeyFn: args => createKey(args),
+                cacheKeyFn: (args) => createKey(args),
                 batch: allowBatch,
             },
         );
@@ -39,8 +39,8 @@ function getLoader(req, loaderId, loadMany, allowBatch) {
     return loader;
 }
 
-
-/* Is a response object from a DataLoader function an errror (vs a BE result).
+/**
+ * Is a response object from a DataLoader function an errror (vs a BE result).
  *
  * An error object is an object with:
  *   1. An error key (with Error as value)
@@ -50,8 +50,8 @@ function isError(object) {
     return (object.error && Object.keys(object).length <= 2);
 }
 
-
-/* Wrapper that uses DataLoader for in-request de-duplication.
+/**
+ * Wrapper that uses DataLoader for in-request de-duplication.
  */
 export function dedupMany(loadMany, { loaderName, allowBatch = false }) {
     const loaderId = loaderName || uuidv4();
@@ -70,12 +70,12 @@ export function dedupMany(loadMany, { loaderName, allowBatch = false }) {
     });
 }
 
-
-/* Wrapper that uses DataLoader for in-request de-duplication.
+/**
+ * Wrapper that uses DataLoader for in-request de-duplication.
  */
 export default function dedup(load, { loaderName }) {
     const loadMany = async (req, argsList = []) => concurrentPaginate(
-        argsList.map(args => load(req, args)),
+        argsList.map((args) => load(req, args)),
     );
 
     return dedupMany(loadMany, { loaderName });

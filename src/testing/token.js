@@ -1,7 +1,8 @@
-/* Token generation functions (intended for testing).
+/**
+ * Token generation functions (intended for testing).
  */
-import jwt from 'jsonwebtoken';
 
+import jwt from 'jsonwebtoken';
 
 export function signSymmetric(assertions, key = 'secret', audience = 'audience', expiresIn = 36000) {
     const secret = Buffer.from(key, 'base64');
@@ -15,7 +16,6 @@ export function signSymmetric(assertions, key = 'secret', audience = 'audience',
         },
     );
 }
-
 
 export function signPrivate(assertions, key, audience = 'audience', expiresIn = 36000, keyid = 'kid') {
     return jwt.sign(

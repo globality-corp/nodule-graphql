@@ -3,8 +3,8 @@ import { ApolloServer } from 'apollo-server-express';
 
 import { bind, getContainer, setDefaults } from '@globality/nodule-config';
 
-
-/* Inject custom extensions in the graphql response.
+/**
+ * Inject custom extensions in the graphql response.
  *
  * Includes extension data from `req.locals.extensions.foo` if requested.
  */
@@ -21,8 +21,7 @@ function injectExtensions(response, req) {
     return Object.keys(extensions).length ? merge(response, { extensions }) : response;
 }
 
-
-/*
+/**
  * Check error message whitelist to determine which errors are safe to return
  */
 function checkErrorMessageWhitelist(error) {
@@ -37,8 +36,8 @@ function checkErrorMessageWhitelist(error) {
     );
 }
 
-
-/* Determine whether or not to mask the returned error message
+/**
+ * Determine whether or not to mask the returned error message
  *
  * Hides error messages based on a catch-all config.
  */
@@ -63,14 +62,14 @@ function formatError(error) {
     const code = extensions.code || originalError.code;
     const headers = originalError.headers || {};
     const traceId = (
-        extensions.traceId ||
-        originalError.traceId ||
-        headers['x-trace-id']
+        extensions.traceId
+        || originalError.traceId
+        || headers['x-trace-id']
     );
     const requestId = (
-        extensions.requestId ||
-        originalError.requestId ||
-        headers['x-request-id']
+        extensions.requestId
+        || originalError.requestId
+        || headers['x-request-id']
     );
 
     // Include the HTTP status code, trace ID and request ID if they exist. These can come from
@@ -141,9 +140,9 @@ function createApolloServerOptions() {
     };
 }
 
-
 setDefaults('routes.graphql', {
-    /* Disable cache control.
+    /**
+     * Disable cache control.
      *
      * Apollo caching is resource-based, not service-based. Caching should occur as close
      * as possible to the source of truth (e.g. at service calls).
@@ -151,7 +150,9 @@ setDefaults('routes.graphql', {
      * @deprecated
      */
     cacheControl: false,
-    /* Disable tracing by default.
+
+    /**
+     * Disable tracing by default.
      *
      * Tracing is verbose and increases volume. Tracing should be enabled if apollo engine
      * is enabled (which shared tracing over the local network).
@@ -165,7 +166,6 @@ setDefaults('routes.graphql', {
      */
     hideErrors: false,
 });
-
 
 /**
  * Apollo engine configs are applied to the Apollo Server instance used by the
@@ -185,12 +185,12 @@ setDefaults('routes.graphql.apolloEngine', {
 
     /**
      * API Key used to send metrics to Apollo Graph Manager.
-     * */
+     */
     apiKey: null,
 
     /**
      * Tag for GQL schema used by Apollo Graph Manager.
-     * */
+     */
     schemaTag: null,
 
     /**
@@ -203,7 +203,6 @@ setDefaults('routes.graphql.apolloEngine', {
      */
     sendHeaders: null,
 });
-
 
 bind('routes.graphql', () => {
     const { terminal } = getContainer();

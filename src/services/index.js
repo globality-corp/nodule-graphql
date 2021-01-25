@@ -14,17 +14,18 @@ export {
 } from './caching/types';
 
 export function cloneClients(obj) {
-    return cloneDeepWith(obj, node => (
-        typeof node === 'function' ?
-            async (req, args) => node(req, args) :
-            Object.keys(node).reduce(
+    return cloneDeepWith(obj, (node) => (
+        typeof node === 'function'
+            ? async (req, args) => node(req, args)
+            : Object.keys(node).reduce(
                 (acc, key) => ({ ...acc, [key]: cloneClients(node[key]) }),
                 {},
             )
     ));
 }
 
-/* Wraps clients with the configured services (batching, dedup, etc.)
+/**
+ * Wraps clients with the configured services (batching, dedup, etc.)
  * We clone the clients to avoid modifying to the original clients
  */
 function wrapClients(clients) {

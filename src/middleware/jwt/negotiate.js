@@ -4,7 +4,6 @@ import { getConfig, getMetadata } from '@globality/nodule-config';
 
 import loadPublicKey from './publicKey';
 
-
 export const ALGORITHMS = {
     HS256: ({ secret }) => {
         if (!secret) {
@@ -32,8 +31,8 @@ export const ALGORITHMS = {
     },
 };
 
-
-/* Negotiate the appropriate key for a specific JWT request.
+/**
+ * Negotiate the appropriate key for a specific JWT request.
  *
  * Implements an `express-jwt` secret callback.
  */
@@ -46,9 +45,9 @@ export default function negotiateKey(req, header, payload, next) {
 
     const config = getConfig('middleware.jwt') || {};
     const algorithms = get(config, 'algorithms', 'HS256,RS256').split(',').filter(
-        algorithm => !!algorithm,
+        (algorithm) => !!algorithm,
     ).map(
-        algorithm => algorithm.trim(),
+        (algorithm) => algorithm.trim(),
     );
 
     if (algorithms.indexOf(alg) === -1) {

@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 
-
-/* Add WWW-Authenticate header.
+/**
+ * Add WWW-Authenticate header.
  *
  * Allows graphiql to return trigger a browser prompt.
  */
