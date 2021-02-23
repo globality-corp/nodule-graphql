@@ -123,7 +123,8 @@ function createApolloServerOptions() {
         global.console.warn('DEPRECATED: config.routes.graphql.tracing. No longer used');
     }
 
-    const { apolloEngine } = config.routes.graphql;
+    const { apolloEngine, apolloPlugins } = config.routes.graphql;
+
     const {
         enabled: engineEnabled,
         ...engineConfig
@@ -137,6 +138,9 @@ function createApolloServerOptions() {
         rootValue: null,
         schema,
         engine: engineEnabled ? engineConfig : false,
+        plugins: [
+            apolloPlugins
+        ] ? apolloPlugins : null,
     };
 }
 

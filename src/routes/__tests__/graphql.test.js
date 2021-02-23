@@ -4,7 +4,7 @@ import {
     GraphQLSchema,
 } from 'graphql';
 
-import { bind, setDefaults, getContainer, Nodule } from '@globality/nodule-config';
+import { bind, setDefaults, getContainer, clearBinding, Nodule } from '@globality/nodule-config';
 
 jest.mock('apollo-server-express');
 
@@ -31,6 +31,15 @@ bind('graphql.schema', () => schema);
 
 describe('routes.graphql', () => {
 
+
+    beforeEach(() => {
+        // clearBinding('mockApolloServer');
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     it('will supply apollo engine configs to apollo server instance', async () => {
         const mockApolloServer = jest.fn();
         apolloServerExpress.ApolloServer.mockImplementation(mockApolloServer.mockReturnThis());
@@ -50,7 +59,8 @@ describe('routes.graphql', () => {
         await Nodule.testing().load();
 
         getContainer('routes').graphql; // eslint-disable-line no-unused-expressions
-
+        
+        console.log(mockApolloServer.mock.calls);
         expect(mockApolloServer.mock.calls).toHaveLength(1);
         expect(mockApolloServer.mock.calls[0]).toHaveLength(1);
         expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('engine', expect.objectContaining({
@@ -63,6 +73,34 @@ describe('routes.graphql', () => {
                 onlyNames: ['x-mock-header'],
             },
         }));
+        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', undefined);
     });
 
+    it('will supply apollo plugins configs to apollo server instance', async () => {
+        const mockApolloServer = jest.fn();
+        apolloServerExpress.ApolloServer.mockImplementation(mockApolloServer.mockReturnThis());
+
+        setDefaults('routes.graphql.apolloPlugins', {
+            requestDidStart(_) {
+              return {
+                didEncounterErrors(ctx) {
+                  console.log('Server starting up!');
+                }
+              };
+            }
+          });
+
+        await Nodule.testing().load();
+
+        getContainer('routes').graphql; // eslint-disable-line no-unused-expressions
+
+        console.log(mockApolloServer.mock.calls);
+        expect(mockApolloServer.mock.calls).toHaveLength(1);
+        expect(mockApolloServer.mock.calls[0]).toHaveLength(1);
+        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', {
+                requestDidStart: expect.any(Function)
+            },
+        );
+        console.log(mockApolloServer.mock.calls[0][0]);
+    });
 });
