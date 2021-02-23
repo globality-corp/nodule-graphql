@@ -33,15 +33,22 @@ describe('routes.graphql', () => {
 
 
     beforeEach(() => {
-        // clearBinding('mockApolloServer');
+        clearBinding('mockApolloServer');
+        // clearBinding('config');
     });
 
     afterEach(() => {
-        jest.clearAllMocks();
+        // jest.clearAllMocks();
+        // mockApolloServer.mockClear();
+        jest.restoreAllMocks()
+        apolloServerExpress.ApolloServer.mockRestore();
+        clearBinding('mockApolloServer');
+        clearBinding('apolloServerExpress.ApolloServer');
+
     });
 
     it('will supply apollo engine configs to apollo server instance', async () => {
-        const mockApolloServer = jest.fn();
+        var mockApolloServer = jest.fn();
         apolloServerExpress.ApolloServer.mockImplementation(mockApolloServer.mockReturnThis());
 
         setDefaults('routes.graphql.apolloEngine', {
@@ -60,7 +67,8 @@ describe('routes.graphql', () => {
 
         getContainer('routes').graphql; // eslint-disable-line no-unused-expressions
         
-        console.log(mockApolloServer.mock.calls);
+        console.log(mockApolloServer.mock);
+        // console.log(mockApolloServer.mock.calls);
         expect(mockApolloServer.mock.calls).toHaveLength(1);
         expect(mockApolloServer.mock.calls[0]).toHaveLength(1);
         expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('engine', expect.objectContaining({
@@ -77,7 +85,7 @@ describe('routes.graphql', () => {
     });
 
     it('will supply apollo plugins configs to apollo server instance', async () => {
-        const mockApolloServer = jest.fn();
+        var mockApolloServer = jest.fn();
         apolloServerExpress.ApolloServer.mockImplementation(mockApolloServer.mockReturnThis());
 
         setDefaults('routes.graphql.apolloPlugins', {
@@ -88,19 +96,19 @@ describe('routes.graphql', () => {
                 }
               };
             }
-          });
+        });
 
         await Nodule.testing().load();
 
         getContainer('routes').graphql; // eslint-disable-line no-unused-expressions
 
-        console.log(mockApolloServer.mock.calls);
+        console.log(mockApolloServer.mock);
         expect(mockApolloServer.mock.calls).toHaveLength(1);
         expect(mockApolloServer.mock.calls[0]).toHaveLength(1);
         expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', {
                 requestDidStart: expect.any(Function)
             },
         );
-        console.log(mockApolloServer.mock.calls[0][0]);
+        // console.log(mockApolloServer.mock.calls[0][0]);
     });
 });
