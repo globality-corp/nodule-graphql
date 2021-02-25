@@ -139,7 +139,7 @@ function createApolloServerOptions() {
         schema,
         engine: engineEnabled ? engineConfig : false,
         plugins: [
-            apolloPlugins
+            apolloPlugins,
         ] ? apolloPlugins : null,
     };
 }
