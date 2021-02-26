@@ -120,7 +120,7 @@ function createApolloServerOptions() {
     }
 
     if (graphqlConfig.cacheControl) {
-        global.console.warn('DEPRECATED: config.routes.graphql.tracing. No longer used');
+        global.console.warn('DEPRECATED: config.routes.graphql.cacheControl. No longer used');
     }
 
     const { apolloEngine, apolloPlugins } = config.routes.graphql;
