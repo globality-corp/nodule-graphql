@@ -38,13 +38,12 @@ describe('routes.graphql', () => {
         setDefaults('routes.graphql.apolloPlugins', {
             requestDidStart() {
                 return {
-                    didEncounterErrors(ctx) {
-                        console.log('Server starting up!');
-                        console.log(ctx);
+                    didEncounterErrors() {
+                        console.log('didEncounterErrors')
                     },
                 };
             },
-        });
+          });
 
         await Nodule.testing().load();
 
@@ -52,8 +51,8 @@ describe('routes.graphql', () => {
 
         expect(mockApolloServer.mock.calls).toHaveLength(1);
         expect(mockApolloServer.mock.calls[0]).toHaveLength(1);
-        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', {
+        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', [{
             requestDidStart: expect.any(Function),
-        });
+        }]);
     });
 });
