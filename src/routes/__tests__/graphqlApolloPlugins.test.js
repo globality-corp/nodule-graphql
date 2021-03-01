@@ -39,11 +39,11 @@ describe('routes.graphql', () => {
             requestDidStart() {
                 return {
                     didEncounterErrors() {
-                        console.log('didEncounterErrors')
+                        console.log('didEncounterErrors');
                     },
                 };
             },
-          });
+        });
 
         await Nodule.testing().load();
 
