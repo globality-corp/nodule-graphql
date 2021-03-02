@@ -63,7 +63,7 @@ describe('routes.graphql', () => {
                 onlyNames: ['x-mock-header'],
             },
         }));
-        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', undefined);
+        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', []);
     });
 
     // it('will supply apollo plugins configs to apollo server instance', async () => {
