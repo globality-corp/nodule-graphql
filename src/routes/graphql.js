@@ -110,6 +110,11 @@ function formatError(error) {
     return newError;
 }
 
+/**
+ * Creates apollo server initialization options.
+ * 
+ * Allows to configure apollo engine options and plugins.
+ */
 function createApolloServerOptions() {
     const { config, graphql } = getContainer();
     const { schema } = graphql;
