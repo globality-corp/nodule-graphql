@@ -66,31 +66,4 @@ describe('routes.graphql', () => {
         expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', []);
     });
 
-    // it('will supply apollo plugins configs to apollo server instance', async () => {
-    //     var mockApolloServer = jest.fn();
-    //     apolloServerExpress.ApolloServer.mockImplementation(mockApolloServer.mockReturnThis());
-
-    //     setDefaults('routes.graphql.apolloPlugins', {
-    //         requestDidStart(_) {
-    //           return {
-    //             didEncounterErrors(ctx) {
-    //               console.log('Server starting up!');
-    //             }
-    //           };
-    //         }
-    //     });
-
-    //     await Nodule.testing().load();
-
-    //     getContainer('routes').graphql; // eslint-disable-line no-unused-expressions
-
-    //     console.log(mockApolloServer.mock);
-    //     expect(mockApolloServer.mock.calls).toHaveLength(1);
-    //     expect(mockApolloServer.mock.calls[0]).toHaveLength(1);
-    //     expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', {
-    //             requestDidStart: expect.any(Function)
-    //         },
-    //     );
-    //     // console.log(mockApolloServer.mock.calls[0][0]);
-    // });
 });
