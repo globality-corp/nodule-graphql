@@ -36,13 +36,9 @@ describe('routes.graphql', () => {
         apolloServerExpress.ApolloServer.mockImplementation(mockApolloServer.mockReturnThis());
 
         setDefaults('routes.graphql.apolloPlugins', {
-            requestDidStart() {
-                return {
-                    didEncounterErrors() {
-                        console.log('didEncounterErrors');
-                    },
-                };
-            },
+            requestDidStart: () => ({
+                didEncounterErrors: () => null,
+            }),
         });
 
         await Nodule.testing().load();
