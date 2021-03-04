@@ -35,11 +35,11 @@ describe('routes.graphql', () => {
         const mockApolloServer = jest.fn();
         apolloServerExpress.ApolloServer.mockImplementation(mockApolloServer.mockReturnThis());
 
-        setDefaults('routes.graphql.apolloPlugins', {
+        setDefaults('routes.graphql.apolloPlugins', [{
             requestDidStart: () => ({
                 didEncounterErrors: () => null,
             }),
-        });
+        }]);
 
         await Nodule.testing().load();
 
