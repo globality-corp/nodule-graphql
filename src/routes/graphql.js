@@ -112,7 +112,7 @@ function formatError(error) {
 
 /**
  * Creates apollo server initialization options.
- * 
+ *
  * Allows to configure apollo engine options and plugins.
  */
 function createApolloServerOptions() {
@@ -143,7 +143,7 @@ function createApolloServerOptions() {
         rootValue: null,
         schema,
         engine: engineEnabled ? engineConfig : false,
-        plugins: apolloPlugins ?? [],
+        plugins: apolloPlugins || [],
     };
 }
 
