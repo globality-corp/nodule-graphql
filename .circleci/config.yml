@@ -107,20 +107,20 @@ workflows:
   build:
     jobs:
       - checkout:
-          context: 
+          context:
           - Globality-Common
       - lint:
-          context: 
+          context:
           - Globality-Common
           requires:
             - checkout
       - test:
-          context: 
+          context:
           - Globality-Common
           requires:
             - checkout
       - build:
-          context: 
+          context:
           - Globality-Common
           requires:
             - lint
@@ -130,10 +130,11 @@ workflows:
           - Globality-Common
           requires:
             - build
+
   release:
     jobs:
       - checkout:
-          context: 
+          context:
           - Globality-Common
           filters:
             tags:
@@ -141,7 +142,7 @@ workflows:
             branches:
               ignore: /.*/
       - lint:
-          context: 
+          context:
           - Globality-Common
           filters:
             tags:
@@ -151,7 +152,7 @@ workflows:
           requires:
             - checkout
       - test:
-          context: 
+          context:
           - Globality-Common
           filters:
             tags:
@@ -161,7 +162,7 @@ workflows:
           requires:
             - checkout
       - build:
-          context: 
+          context:
           - Globality-Common
           filters:
             tags:
@@ -171,7 +172,7 @@ workflows:
           requires:
             - test
       - deploy:
-          context: 
+          context:
           - Globality-Common
           filters:
             tags:
