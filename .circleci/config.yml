@@ -4,8 +4,7 @@ defaults: &defaults
     - image: circleci/node:14.15.4
 
 whitelist: &whitelist
-  paths:
-    .
+  paths: .
 
 version: 2
 jobs:
@@ -90,7 +89,7 @@ jobs:
             sed  -i '/version/s/[^.]*$/'"0-dev${CIRCLE_BUILD_NUM}\",/" package.json
             npm publish
 
-  deploy:
+  publish_library_to_npmjs:
     <<: *defaults
 
     steps:
@@ -101,6 +100,20 @@ jobs:
           name: Publish to NPM
           command: npm publish
 
+  publish_library_to_jfrog:
+    <<: *defaults
+
+    steps:
+      - attach_workspace:
+          at: ~/repo
+
+      - run:
+          name: Publish to JFrog
+          command: |
+            curl -s -u$JFROG_AUTH https://globality.jfrog.io/globality/api/npm/auth > .npmrc
+            echo "registry=https://globality.jfrog.io/globality/api/npm/npm"       >> .npmrc
+            npm publish
+
 workflows:
   version: 2
 
@@ -108,26 +121,26 @@ workflows:
     jobs:
       - checkout:
           context:
-          - Globality-Common
+            - Globality-Common
       - lint:
           context:
-          - Globality-Common
+            - Globality-Common
           requires:
             - checkout
       - test:
           context:
-          - Globality-Common
+            - Globality-Common
           requires:
             - checkout
       - build:
           context:
-          - Globality-Common
+            - Globality-Common
           requires:
             - lint
             - test
       - deploy_rc:
           context:
-          - Globality-Common
+            - Globality-Common
           requires:
             - build
 
@@ -135,7 +148,7 @@ workflows:
     jobs:
       - checkout:
           context:
-          - Globality-Common
+            - Globality-Common
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
@@ -143,7 +156,7 @@ workflows:
               ignore: /.*/
       - lint:
           context:
-          - Globality-Common
+            - Globality-Common
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
@@ -153,7 +166,7 @@ workflows:
             - checkout
       - test:
           context:
-          - Globality-Common
+            - Globality-Common
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
@@ -163,7 +176,7 @@ workflows:
             - checkout
       - build:
           context:
-          - Globality-Common
+            - Globality-Common
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
@@ -171,9 +184,19 @@ workflows:
               ignore: /.*/
           requires:
             - test
-      - deploy:
+      - publish_library_to_npmjs:
           context:
-          - Globality-Common
+            - Globality-Common
+          filters:
+            tags:
+              only: /[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
+          requires:
+            - build
+      - publish_library_to_jfrog:
+          context:
+            - Globality-Common
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
