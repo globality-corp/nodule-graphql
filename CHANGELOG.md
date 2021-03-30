@@ -1,6 +1,6 @@
 # Changelog
 
-### v1.6.1
+### v1.7.0
 
 - Added ability to set `routes.graphql.apolloPlugins` config. Used to configure Apollo plugins that allow to customize response to events regarding startup apollo server startup and phases of a GraphQL request ([read more about Apollo Server plugins](https://www.apollographql.com/docs/apollo-server/integrations/plugins)).
 
