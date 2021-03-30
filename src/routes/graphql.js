@@ -110,6 +110,11 @@ function formatError(error) {
     return newError;
 }
 
+/**
+ * Creates apollo server initialization options.
+ *
+ * Allows to configure apollo engine options and plugins.
+ */
 function createApolloServerOptions() {
     const { config, graphql } = getContainer();
     const { schema } = graphql;
@@ -120,10 +125,11 @@ function createApolloServerOptions() {
     }
 
     if (graphqlConfig.cacheControl) {
-        global.console.warn('DEPRECATED: config.routes.graphql.tracing. No longer used');
+        global.console.warn('DEPRECATED: config.routes.graphql.cacheControl. No longer used');
     }
 
-    const { apolloEngine } = config.routes.graphql;
+    const { apolloEngine, apolloPlugins } = config.routes.graphql;
+
     const {
         enabled: engineEnabled,
         ...engineConfig
@@ -137,6 +143,7 @@ function createApolloServerOptions() {
         rootValue: null,
         schema,
         engine: engineEnabled ? engineConfig : false,
+        plugins: apolloPlugins || [],
     };
 }
 

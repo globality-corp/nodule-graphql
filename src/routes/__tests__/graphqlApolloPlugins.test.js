@@ -31,21 +31,15 @@ bind('graphql.schema', () => schema);
 
 describe('routes.graphql', () => {
 
-    it('will supply apollo engine configs to apollo server instance', async () => {
+    it('will supply apollo plugins configs to apollo server instance', async () => {
         const mockApolloServer = jest.fn();
         apolloServerExpress.ApolloServer.mockImplementation(mockApolloServer.mockReturnThis());
 
-        setDefaults('routes.graphql.apolloEngine', {
-            enabled: true,
-            apiKey: 'mock-api-key',
-            schemaTag: 'mock-schema-tag',
-            sendVariableValues: {
-                transform: (value) => value,
-            },
-            sendHeaders: {
-                onlyNames: ['x-mock-header'],
-            },
-        });
+        setDefaults('routes.graphql.apolloPlugins', [{
+            requestDidStart: () => ({
+                didEncounterErrors: () => null,
+            }),
+        }]);
 
         await Nodule.testing().load();
 
@@ -53,17 +47,8 @@ describe('routes.graphql', () => {
 
         expect(mockApolloServer.mock.calls).toHaveLength(1);
         expect(mockApolloServer.mock.calls[0]).toHaveLength(1);
-        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('engine', expect.objectContaining({
-            apiKey: 'mock-api-key',
-            schemaTag: 'mock-schema-tag',
-            sendVariableValues: {
-                transform: expect.any(Function),
-            },
-            sendHeaders: {
-                onlyNames: ['x-mock-header'],
-            },
-        }));
-        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', []);
+        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', [{
+            requestDidStart: expect.any(Function),
+        }]);
     });
-
 });
