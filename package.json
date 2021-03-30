@@ -1,6 +1,6 @@
 {
     "name": "@globality/nodule-graphql",
-    "version": "1.6.0",
+    "version": "1.6.2",
     "description": "Node GraphQL Conventions",
     "main": "lib/",
     "repository": "git@github.com:globality-corp/nodule-graphql",
@@ -48,7 +48,7 @@
         "@globality/nodule-config": "2.13.3",
         "@globality/nodule-express": "0.1.14",
         "@globality/nodule-logging": "1.5.2",
-        "@globality/nodule-openapi": "0.19.1",
+        "@globality/nodule-openapi": "0.19.4",
         "body-parser": "1.19.0",
         "eslint": "7.18.0",
         "eslint-config-airbnb-base": "14.2.1",

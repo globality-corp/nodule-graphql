@@ -1,8 +1,11 @@
 {
   "params": {
+    "extra_publication": {
+      "jfrog": true
+    },
     "name": "nodule-graphql",
     "open_source": true
   },
   "type": "node-module",
-  "version": "2021.3.1"
+  "version": "2021.10.0"
 }
