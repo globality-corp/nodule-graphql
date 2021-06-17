@@ -5450,10 +5450,10 @@ nocache@2.1.0:
   resolved "https://registry.yarnpkg.com/nocache/-/nocache-2.1.0.tgz#120c9ffec43b5729b1d5de88cd71aa75a0ba491f"
   integrity sha512-0L9FvHG3nfnnmaEQPjT9xhfN4ISk0A8/2j4M37Np4mcDesJjHgEUfgPhdCyZuFI954tjokaIj/A3NdpFNdEh4Q==
 
-node-addon-api@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-3.1.0.tgz#98b21931557466c6729e51cb77cd39c965f42239"
-  integrity sha512-flmrDNB06LIl5lywUz7YlNGZH/5p0M7W28k8hzd9Lshtdh1wshD2Y+U4h9LD6KObOy1f+fEVdgprPrEymjM5uw==
+node-addon-api@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-3.2.1.tgz#81325e0a2117789c0128dab65e7e38f07ceba161"
+  integrity sha512-mmcei9JghVNDYydghQmeDX8KoAm0FAiYyIcUt/N4nhyAipB17pllZQDOJD2fotxABnt4Mdz+dKTO7eftLg4d0A==
 
 node-environment-flags@^1.0.5:
   version "1.0.6"
@@ -6562,13 +6562,13 @@ split-string@^3.0.1, split-string@^3.0.2:
   dependencies:
     extend-shallow "^3.0.0"
 
-spookyhash@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/spookyhash/-/spookyhash-1.2.0.tgz#2ffcc04585b1881b0488690d94a3fd7f63ae04eb"
-  integrity sha512-IrT3lhQ0CNhr3H7aFGIvMcOfdDQjmrKyk4ktk71PNf61QZJdQ9bGtjhKOr7HyDRVZ1w/jVYuGBo1YJ/MvgZgcw==
+spookyhash@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/spookyhash/-/spookyhash-2.0.0.tgz#6c1d0f06fd87b22ad84092eb78b3506f35a65237"
+  integrity sha512-pSOW1lA+RdfAP4BYRTU1mCjnPAZUylu9bAbjRpEXwuYp8HxEG+vRezbBppv+bUkJXGksLwoOpDw5D8eTgvVUKA==
   dependencies:
     bindings "^1.5.0"
-    node-addon-api "^3.1.0"
+    node-addon-api "^3.2.1"
 
 sprintf-js@~1.0.2:
   version "1.0.3"
