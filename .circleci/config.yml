@@ -84,10 +84,9 @@ jobs:
           at: ~/repo
 
       - run:
-          name: Publish to NPM and JFrog
+          name: Publish to JFrog
           command: |
             sed  -i '/version/s/[^.]*$/'"0-dev${CIRCLE_BUILD_NUM}\",/" package.json
-            npm publish
             curl -s -u$JFROG_AUTH https://globality.jfrog.io/globality/api/npm/auth > .npmrc
             echo "registry=https://globality.jfrog.io/globality/api/npm/npm"       >> .npmrc
             npm publish
