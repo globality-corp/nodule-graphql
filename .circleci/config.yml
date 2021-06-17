@@ -84,7 +84,7 @@ jobs:
           at: ~/repo
 
       - run:
-          name: Publish to NPM nd JFrog
+          name: Publish to NPM and JFrog
           command: |
             sed  -i '/version/s/[^.]*$/'"0-dev${CIRCLE_BUILD_NUM}\",/" package.json
             npm publish
