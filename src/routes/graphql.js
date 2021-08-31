@@ -193,7 +193,17 @@ setDefaults('routes.graphql.apolloEngine', {
     /**
      * API Key used to send metrics to Apollo Graph Manager.
      */
-    apiKey: null,
+    key: null,
+
+    /**
+     * The ID of your graph in Apollo's registry
+     */
+    graphId: null,
+
+    /**
+     * The variant of your graph to associate this server's schema and metrics with
+     */
+    graphVariant: null,
 
     /**
      * Tag for GQL schema used by Apollo Graph Manager.
