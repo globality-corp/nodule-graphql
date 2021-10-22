@@ -129,7 +129,9 @@ function createApolloServerOptions() {
     }
 
     const { apolloEngine, apolloPlugins } = config.routes.graphql;
-    const plugins = apolloPlugins ? Object.keys(apolloPlugins).map((key) => apolloPlugins[key]) : [];
+    const plugins = apolloPlugins
+        ? Object.keys(apolloPlugins).map((key) => apolloPlugins[key])
+        : [];
 
     const {
         enabled: engineEnabled,
