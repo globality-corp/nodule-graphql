@@ -1,4 +1,4 @@
-import Spooky from 'node-spookyhash-v2';
+import Spooky from 'spookyhash';
 
 // compatibility to python-spooky
 // see spooky_hash128 https://github.com/DomainTools/spooky/blob/master/spookymodule.cpp

@@ -4,7 +4,7 @@ executors:
   node-executor:
     working_directory: ~/repo
     docker:
-      - image: circleci/node:8.11.3
+      - image: circleci/node:14.16.1
         environment:
           EXTRA_INDEX_URL: "InjectedDuringRuntime"
           AWS_ECR_DOMAIN: "InjectedDuringRuntime"
