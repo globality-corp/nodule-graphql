@@ -23,16 +23,16 @@ function valueToString(value) {
  *
  */
 const createKey = (args, keyName = '') => {
-    console.log("Creating cache key for args:");
+    console.log('Creating cache key for args:');
     console.log(JSON.stringify(args));
-    console.log("Key name: " + keyName);
+    console.log(`Key name: ${keyName}`);
     const namespace = get(getContainer('config.cache'), 'namespace', uuidv5.URL);
     const argsString = Object.keys(args).sort().map(
         key => `${key}=${valueToString(args[key])}`,
     ).join('&');
     const keyString = `${keyName}?${argsString}`;
     const key = uuidv5(keyString, namespace);
-    console.log("Created: " + key);
+    console.log(`Created: ${key}`);
     return key;
 };
 
