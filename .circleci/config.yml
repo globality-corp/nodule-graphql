@@ -1,28 +1,79 @@
-defaults: &defaults
-  working_directory: ~/repo
-  docker:
-    - image: circleci/node:8.11.3
+
+
+executors:
+  node-executor:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:14.16.1
+        environment:
+          EXTRA_INDEX_URL: "InjectedDuringRuntime"
+          AWS_ECR_DOMAIN: "InjectedDuringRuntime"
+          JFROG_AUTH: "InjectedDuringRuntime"
+          APOLLO_ENGINE_API_KEY: "InjectedDuringRuntime"
+
+  globality-build-executor:
+    working_directory: ~/repo
+    docker:
+      - image: ${AWS_ECR_DOMAIN}/globality-build:2021.48.0
+        aws_auth:
+          aws_access_key_id: ${AWS_ACCESS_KEY_ID}
+          aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
+        environment:
+          EXTRA_INDEX_URL: "InjectedDuringRuntime"
+          AWS_ECR_DOMAIN: "InjectedDuringRuntime"
+          JFROG_AUTH: "InjectedDuringRuntime"
 
 whitelist: &whitelist
-  paths:
-    .
+  paths: .
 
-version: 2
+version: 2.1
+
+commands:
+  attach_repo_workspace:
+    steps:
+      - attach_workspace:
+          at: ~/repo
+
+  persist_to_repo_workspace:
+    steps:
+      - persist_to_workspace:
+          root: ~/repo
+          <<: *whitelist
+
+  set_rc_version:
+    steps:
+      - run:
+          name: Set RC version
+          command: |
+            sed  -i '/version/s/[^.]*$/'"0-dev${CIRCLE_BUILD_NUM}\",/" package.json
+
+  publish_to_npmjs:
+    steps:
+      - run:
+          name: Publish to NPM
+          command: |
+            echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
+            npm publish
+
+  publish_to_jfrog:
+    steps:
+      - run:
+          name: Publish to JFrog
+          command: |
+            curl -s -u$JFROG_AUTH https://globality.jfrog.io/globality/api/npm/auth > .npmrc
+            echo "registry=https://globality.jfrog.io/globality/api/npm/npm"       >> .npmrc
+            npm publish
+
 jobs:
   checkout:
-    <<: *defaults
+    executor: node-executor
 
     steps:
       - checkout
 
-      - run:
-          name: Authenticate NPM
-          command: |
-            echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "yarn.lock" }}
-          - v1-dependencies-
 
       - run:
           name: Install Dependencies
@@ -33,104 +84,122 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "yarn.lock" }}
 
-      - persist_to_workspace:
-          root: ~/repo
-          <<: *whitelist
+      - persist_to_repo_workspace
 
   lint:
-    <<: *defaults
+    executor: node-executor
 
     steps:
-      - attach_workspace:
-          at: ~/repo
+      - attach_repo_workspace
 
       - run:
           name: Lint
           command: yarn lint
 
   test:
-    <<: *defaults
+    executor: node-executor
 
     steps:
-      - attach_workspace:
-          at: ~/repo
+      - attach_repo_workspace
 
       - run:
           name: Test
           command: yarn test
 
-      - persist_to_workspace:
-          root: ~/repo
-          <<: *whitelist
+      - persist_to_repo_workspace
+
 
   build:
-    <<: *defaults
+    executor: node-executor
 
     steps:
-      - attach_workspace:
-          at: ~/repo
+      - attach_repo_workspace
 
       - run:
           name: Build code
           command: yarn build
 
-      - persist_to_workspace:
-          root: ~/repo
-          <<: *whitelist
+      - persist_to_repo_workspace
 
-  deploy_rc:
-    <<: *defaults
+  deploy_rc_to_npmjs:
+    executor: node-executor
 
     steps:
-      - attach_workspace:
-          at: ~/repo
+      - attach_repo_workspace
+      - set_rc_version
+      - publish_to_npmjs
 
-      - run:
-          name: Publish to NPM
-          command: |
-            sed  -i '/version/s/[^.]*$/'"0-dev${CIRCLE_BUILD_NUM}\",/" package.json
-            npm publish
-
-  deploy:
-    <<: *defaults
+  deploy_rc_to_jfrog:
+    executor: node-executor
 
     steps:
-      - attach_workspace:
-          at: ~/repo
+      - attach_repo_workspace
+      - set_rc_version
+      - publish_to_jfrog
 
-      - run:
-          name: Publish to NPM
-          command: npm publish
+  publish_library_to_npmjs:
+    executor: node-executor
+
+    steps:
+      - attach_repo_workspace
+      - publish_to_npmjs
+
+  publish_library_to_jfrog:
+    executor: node-executor
+
+    steps:
+      - attach_repo_workspace
+      - publish_to_jfrog
 
 workflows:
   version: 2
 
   build:
     jobs:
-      - checkout
+      - checkout:
+          context:
+            - Globality-Common
       - lint:
+          context:
+            - Globality-Common
           requires:
             - checkout
       - test:
+          context:
+            - Globality-Common
           requires:
             - checkout
       - build:
+          context:
+            - Globality-Common
           requires:
             - lint
             - test
-      - deploy_rc:
+            - type_check
+      - deploy_rc_to_npmjs:
+          context:
+            - Globality-Common
+          requires:
+            - build
+      - deploy_rc_to_jfrog:
+          context:
+            - Globality-Common
           requires:
             - build
 
   release:
     jobs:
       - checkout:
+          context:
+            - Globality-Common
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
             branches:
               ignore: /.*/
       - lint:
+          context:
+            - Globality-Common
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
@@ -139,6 +208,8 @@ workflows:
           requires:
             - checkout
       - test:
+          context:
+            - Globality-Common
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
@@ -147,6 +218,8 @@ workflows:
           requires:
             - checkout
       - build:
+          context:
+            - Globality-Common
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
@@ -154,7 +227,21 @@ workflows:
               ignore: /.*/
           requires:
             - test
-      - deploy:
+            - lint
+            - type_check
+      - publish_library_to_npmjs:
+          context:
+            - Globality-Common
+          filters:
+            tags:
+              only: /[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
+          requires:
+            - build
+      - publish_library_to_jfrog:
+          context:
+            - Globality-Common
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
