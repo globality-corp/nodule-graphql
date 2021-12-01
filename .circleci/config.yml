@@ -175,7 +175,6 @@ workflows:
           requires:
             - lint
             - test
-            - type_check
       - deploy_rc_to_npmjs:
           context:
             - Globality-Common
@@ -228,7 +227,6 @@ workflows:
           requires:
             - test
             - lint
-            - type_check
       - publish_library_to_npmjs:
           context:
             - Globality-Common
