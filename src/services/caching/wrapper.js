@@ -96,6 +96,8 @@ async function getFromCacheThenService(wrapped, spec, req, args, key) {
  * `spec` is an instance of `CachingSpec`
  */
 export default function wrap(wrapped, spec) {
+    const { logger } = getContainer();
+    logger.info(null, '**nodule-graphql** logging something');
     const wrapper = async (req, args) => {
         if (spec.shouldSkipCache(req, args)) {
             return wrapped(req, args);
