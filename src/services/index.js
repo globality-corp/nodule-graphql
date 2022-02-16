@@ -14,6 +14,7 @@ export {
 } from './caching/types';
 
 export function cloneClients(obj) {
+    // console.log(obj);
     return cloneDeepWith(obj, (node) => (
         typeof node === 'function'
             ? async (req, args) => node(req, args)
