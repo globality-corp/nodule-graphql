@@ -23,13 +23,15 @@ export const CacheResult = new Enum({
  * Using a data loader allows us to dedup and aggregate cache requests,
  * which is especially useful with memached's `Multi-Get` operation.
  */
-export function getCacheLoader(req) {
+export function getCacheLoader(req, spec) {
     // Get a DataLoader for cache operations
     // Create it if it's the first use of it for the req.
     const { cache } = getContainer();
     let loader = get(req, 'loaders.cache');
     if (!loader) {
-        loader = new DataLoader((argsList) => cache.safeGet(req, argsList));
+        loader = new DataLoader(
+            (argsList) => cache.safeGet(req, argsList, spec.resourceName, spec.endpointName),
+        );
         set(req, 'loaders.cache', loader);
     }
     return loader;
@@ -56,7 +58,7 @@ export function getCacheAction(req, cacheData, spec) {
 async function getFromCacheThenService(wrapped, spec, req, args, key) {
     const { config, logger, cache } = getContainer();
     try {
-        const cacheData = await getCacheLoader(req).load(key);
+        const cacheData = await getCacheLoader(req, spec).load(key);
         const cacheAction = getCacheAction(req, cacheData, spec);
 
         if (cacheAction === CacheResult.read) {
@@ -72,7 +74,7 @@ async function getFromCacheThenService(wrapped, spec, req, args, key) {
             const result = CacheResult.write;
             const ttl = spec.cacheTTL || parseInt(get(config, 'cache.ttl', 0), 10);
             // don't await
-            cache.safeSave(req, key, serviceData, ttl);
+            cache.safeSave(req, key, serviceData, ttl, spec.resourceName, spec.endpointName);
             return [serviceData, result];
         }
         return [serviceData, CacheResult.noop];

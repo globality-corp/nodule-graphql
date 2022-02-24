@@ -18,6 +18,7 @@ export class CachingSpec {
         resourceName,
         requireArgs = null,
         supportNoCache = false,
+        endpointName = null,
     }) {
         if (!resourceName) {
             throw new Error('resourceName is required');
@@ -33,6 +34,7 @@ export class CachingSpec {
 
         this.supportNoCache = supportNoCache;
         this.loaderName = loaderName;
+        this.endpointName = endpointName;
     }
 
     /* Should fetch from the cache
