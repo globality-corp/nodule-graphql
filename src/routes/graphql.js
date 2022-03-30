@@ -1,5 +1,6 @@
 import { get, includes, merge, pickBy } from 'lodash';
 import { ApolloServer } from 'apollo-server-express';
+import { compileQuery, isCompiledQuery } from 'graphql-jit';
 
 import { bind, getContainer, setDefaults } from '@globality/nodule-config';
 
@@ -110,6 +111,31 @@ function formatError(error) {
     return newError;
 }
 
+function executor(schema) {
+    // FIXME should be a LRU cache
+    const cache = {};
+
+    return async ({ context, document, operationName, request, queryHash }) => {
+        const prefix = operationName || 'NotParametrized';
+        const key = `${prefix}-${queryHash}`;
+
+        let compiledQuery = cache[key];
+
+        if (!compiledQuery) {
+            const result = compileQuery(schema, document, operationName || undefined, {});
+            if (isCompiledQuery(result)) {
+                compiledQuery = result;
+                cache[key] = result;
+            } else {
+                // ExecutionResult
+                return result;
+            }
+        }
+
+        return compiledQuery.query(undefined, context, request.variables || {});
+    };
+}
+
 /**
  * Creates apollo server initialization options.
  *
@@ -145,6 +171,7 @@ function createApolloServerOptions() {
         playground: false,
         rootValue: null,
         schema,
+        executor: executor(schema),
         engine: engineEnabled ? engineConfig : false,
         plugins,
     };
