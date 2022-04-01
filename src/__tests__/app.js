@@ -7,12 +7,12 @@ import 'index';
 import './services';
 import './schema';
 
-export default function createApp() {
+export default async function createApp() {
     const { express, graphiql, graphql, health, notFound } = getContainer('routes');
 
     express.get('/health', health);
 
-    express.post('/graphql', bodyParser.json(), graphql);
+    express.post('/graphql', bodyParser.json(), await graphql);
 
     if (graphiql) {
         express.get('/graphiql', bodyParser.json(), graphiql);

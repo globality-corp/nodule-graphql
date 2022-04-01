@@ -1,6 +1,6 @@
 {
     "name": "@globality/nodule-graphql",
-    "version": "1.9.1",
+    "version": "2.0.0",
     "description": "Node GraphQL Conventions",
     "main": "lib/",
     "repository": "git@github.com:globality-corp/nodule-graphql",
@@ -17,7 +17,8 @@
         "preyalc": "yarn clean && yarn build"
     },
     "dependencies": {
-        "apollo-server-express": "2.25.2",
+        "apollo-server-core": "^3.6.7",
+        "apollo-server-express": "^3.6.7",
         "axios": "0.26.1",
         "connect-requestid": "1.1.0",
         "cors": "2.8.5",
@@ -39,7 +40,7 @@
         "@globality/nodule-express": ">= 0.1.14 < 1",
         "@globality/nodule-logging": ">= 1.5.2 < 2",
         "@globality/nodule-openapi": ">= 0.21.0 < 1",
-        "graphql": ">= 14.5.8 < 15"
+        "graphql": "^15.5.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
@@ -52,7 +53,7 @@
         "@globality/nodule-logging": "1.5.2",
         "@globality/nodule-openapi": "0.21.0",
         "body-parser": "1.19.0",
-        "graphql": "14.7.0",
+        "graphql": "^15.5.0",
         "jest": "^27.5.1",
         "supertest": "6.1.2"
     },

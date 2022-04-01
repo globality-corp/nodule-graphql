@@ -6,7 +6,7 @@ jest.mock('@globality/nodule-config', () => {
     // NB: require here is necessary as scoping in jest 24 requires you to
     // import mocked functions in the same context where the mock is defined
     // and imports can only be used at the top level.
-    // eslint-disable-next-line
+    // eslint-disable-next-line global-require
     const { default: createKey } = require('../../core/keys');
 
     const mockConfig = {

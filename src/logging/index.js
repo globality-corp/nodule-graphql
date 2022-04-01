@@ -13,10 +13,9 @@ export function calculateExecuteTime(executeStartTime) {
 
 export function getElapsedTime(req) {
     if (!req._startAt) {
-        // eslint-disable-line no-underscore-dangle
         return 0;
     }
-    const diff = process.hrtime(req._startAt); // eslint-disable-line no-underscore-dangle
+    const diff = process.hrtime(req._startAt);
     return diff[0] * 1e3 + diff[1] * 1e-6;
 }
 

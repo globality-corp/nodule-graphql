@@ -9,7 +9,7 @@ describe('routes', () => {
     });
 
     it('resolves requests', async () => {
-        const app = createApp();
+        const app = await createApp();
 
         const query = `
           query example {
@@ -46,7 +46,7 @@ describe('routes', () => {
     });
 
     it('handles not found errors', async () => {
-        const app = createApp();
+        const app = await createApp();
         const query = `
           query example {
             user(id: "99") {
@@ -79,7 +79,7 @@ describe('routes', () => {
     });
 
     it('handles forbidden errors', async () => {
-        const app = createApp();
+        const app = await createApp();
 
         const query = `
           query example {
@@ -113,7 +113,7 @@ describe('routes', () => {
     });
 
     it('handles custom errors with x-request-id and x-trace-id headers', async () => {
-        const app = createApp();
+        const app = await createApp();
 
         const query = `
         query example {

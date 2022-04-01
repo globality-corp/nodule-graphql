@@ -17,7 +17,7 @@ describe('hide errors', () => {
     });
 
     it('hides errors', async () => {
-        const app = createApp();
+        const app = await createApp();
         const query = `
           query example {
             user(id: "99") {
@@ -50,7 +50,7 @@ describe('hide errors', () => {
     });
 
     it('doesnt hide persisted query errors', async () => {
-        const app = createApp();
+        const app = await createApp();
         const query = `
           query example {
             user(id: "888") {

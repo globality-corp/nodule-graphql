@@ -1,4 +1,5 @@
 import { bind, getContainer, setDefaults } from '@globality/nodule-config';
+import { ApolloServerPluginUsageReporting, ApolloServerPluginUsageReportingDisabled } from 'apollo-server-core';
 import { ApolloServer } from 'apollo-server-express';
 import { get, includes, merge, pickBy } from 'lodash';
 
@@ -119,17 +120,24 @@ function createApolloServerOptions() {
     const { apolloEngine, apolloPlugins } = config.routes.graphql;
     const plugins = apolloPlugins ? Object.keys(apolloPlugins).map((key) => apolloPlugins[key]) : [];
 
-    const { enabled: engineEnabled, ...engineConfig } = apolloEngine;
+    const { enabled: engineEnabled, schemaTag, graphVariant, apiKey, ...engineConfig } = apolloEngine;
+    const enginePlugin = engineEnabled
+        ? ApolloServerPluginUsageReporting({
+              ...engineConfig,
+          })
+        : ApolloServerPluginUsageReportingDisabled();
 
     return {
         context: ({ req }) => req,
         formatError,
         formatResponse: injectExtensions,
-        playground: false,
         rootValue: null,
         schema,
-        engine: engineEnabled ? engineConfig : false,
-        plugins,
+        apollo: {
+            key: apiKey,
+            graphVariant: graphVariant || schemaTag || undefined,
+        },
+        plugins: [...plugins, enginePlugin],
     };
 }
 
@@ -182,6 +190,12 @@ setDefaults('routes.graphql.apolloEngine', {
     apiKey: null,
 
     /**
+     * Variant for GQL schema used by Apollo Graph Manager.
+     */
+    graphVariant: null,
+
+    /**
+     * DEPRECATED: Use graphVariant instead
      * Tag for GQL schema used by Apollo Graph Manager.
      */
     schemaTag: null,
@@ -197,10 +211,11 @@ setDefaults('routes.graphql.apolloEngine', {
     sendHeaders: null,
 });
 
-bind('routes.graphql', () => {
+bind('routes.graphql', async () => {
     const { terminal } = getContainer();
     const options = createApolloServerOptions();
     const server = new ApolloServer(options);
+    await server.start();
     terminal.enabled('graphql');
     return server.getMiddleware({ cors: false });
 });

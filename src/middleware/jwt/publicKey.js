@@ -48,7 +48,7 @@ const rsaPublicKeyToPEM = (modulusB64, exponentB64) => {
     const encodedModlen = encodeLengthHex(modlen);
     const encodedExplen = encodeLengthHex(explen);
     const totalLength = encodeLengthHex(modlen + explen + encodedModlen.length / 2 + encodedExplen.length / 2 + 2);
-    const encodedPubkey = `30${totalLength}02${encodedModlen}${modulusHex}02${encodedExplen}${exponentHex}`; // eslint-disable-line max-len
+    const encodedPubkey = `30${totalLength}02${encodedModlen}${modulusHex}02${encodedExplen}${exponentHex}`;
 
     const der = Buffer.from(encodedPubkey, 'hex').toString('base64');
 

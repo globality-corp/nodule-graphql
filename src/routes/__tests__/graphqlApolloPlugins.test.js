@@ -1,8 +1,10 @@
 import { bind, setDefaults, getContainer, Nodule } from '@globality/nodule-config';
-import * as apolloServerExpress from 'apollo-server-express'; // eslint-disable-line import/first
+import * as apolloServerCore from 'apollo-server-core';
+import * as apolloServerExpress from 'apollo-server-express';
 import { GraphQLObjectType, GraphQLString, GraphQLSchema } from 'graphql';
 
 jest.mock('apollo-server-express');
+jest.mock('apollo-server-core');
 
 import '../graphql'; // eslint-disable-line import/first
 import '../../terminal'; // eslint-disable-line import/first
@@ -28,14 +30,18 @@ describe('routes.graphql', () => {
     it('will supply apollo plugins configs to apollo server instance', async () => {
         const mockApolloServer = jest.fn();
         apolloServerExpress.ApolloServer.mockImplementation(mockApolloServer.mockReturnThis());
+        const mockApolloServerPluginUsageReportingDisabled = apolloServerCore.ApolloServerPluginUsageReportingDisabled.mockImplementation(
+            () => 'ApolloServerPluginUsageReportingDisabled'
+        );
 
-        setDefaults('routes.graphql.apolloPlugins', [
+        const plugins = [
             {
                 requestDidStart: () => ({
                     didEncounterErrors: () => null,
                 }),
             },
-        ]);
+        ];
+        setDefaults('routes.graphql.apolloPlugins', plugins);
 
         await Nodule.testing().load();
 
@@ -43,10 +49,8 @@ describe('routes.graphql', () => {
 
         expect(mockApolloServer.mock.calls).toHaveLength(1);
         expect(mockApolloServer.mock.calls[0]).toHaveLength(1);
-        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', [
-            {
-                requestDidStart: expect.any(Function),
-            },
-        ]);
+        expect(mockApolloServerPluginUsageReportingDisabled).toHaveBeenCalledTimes(1);
+        expect(mockApolloServerPluginUsageReportingDisabled).toHaveBeenCalledWith();
+        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', [plugins[0], 'ApolloServerPluginUsageReportingDisabled']);
     });
 });

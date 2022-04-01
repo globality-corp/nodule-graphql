@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-
 import { GraphQLEnumType } from 'graphql';
 
 // converts an Enum type created using the 'enum' package to a GraphQLEnumType
