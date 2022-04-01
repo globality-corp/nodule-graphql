@@ -1,208 +1,212 @@
 defaults: &defaults
-  working_directory: ~/repo
-  docker:
-    - image: circleci/node:14.17.0
+    working_directory: ~/repo
+    docker:
+        - image: circleci/node:14.17.0
+          environment:
+              JFROG_AUTH: 'InjectedDuringRuntime'
 
 whitelist: &whitelist
-  paths: .
+    paths: .
 
 version: 2
 jobs:
-  checkout:
-    <<: *defaults
+    checkout:
+        <<: *defaults
 
-    steps:
-      - checkout
+        steps:
+            - checkout
 
-      - run:
-          name: Authenticate NPM
-          command: |
-            echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "yarn.lock" }}
+            - run:
+                  name: Authenticate NPM
+                  command: |
+                      touch .npmrc
+                      curl -u$JFROG_AUTH https://globality.jfrog.io/globality/api/npm/auth > .npmrc
+                      echo "registry=https://globality.jfrog.io/globality/api/npm/npm" >> .npmrc
+            - restore_cache:
+                  keys:
+                      - v1-dependencies-{{ checksum "yarn.lock" }}
 
-      - run:
-          name: Install Dependencies
-          command: yarn install
+            - run:
+                  name: Install Dependencies
+                  command: yarn install
 
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "yarn.lock" }}
+            - save_cache:
+                  paths:
+                      - node_modules
+                  key: v1-dependencies-{{ checksum "yarn.lock" }}
 
-      - persist_to_workspace:
-          root: ~/repo
-          <<: *whitelist
+            - persist_to_workspace:
+                  root: ~/repo
+                  <<: *whitelist
 
-  lint:
-    <<: *defaults
+    lint:
+        <<: *defaults
 
-    steps:
-      - attach_workspace:
-          at: ~/repo
+        steps:
+            - attach_workspace:
+                  at: ~/repo
 
-      - run:
-          name: Lint
-          command: yarn lint
+            - run:
+                  name: Lint
+                  command: yarn lint
 
-  test:
-    <<: *defaults
+    test:
+        <<: *defaults
 
-    steps:
-      - attach_workspace:
-          at: ~/repo
+        steps:
+            - attach_workspace:
+                  at: ~/repo
 
-      - run:
-          name: Test
-          command: yarn test
+            - run:
+                  name: Test
+                  command: yarn test
 
-      - persist_to_workspace:
-          root: ~/repo
-          <<: *whitelist
+            - persist_to_workspace:
+                  root: ~/repo
+                  <<: *whitelist
 
-  build:
-    <<: *defaults
+    build:
+        <<: *defaults
 
-    steps:
-      - attach_workspace:
-          at: ~/repo
+        steps:
+            - attach_workspace:
+                  at: ~/repo
 
-      - run:
-          name: Build code
-          command: yarn build
+            - run:
+                  name: Build code
+                  command: yarn build
 
-      - persist_to_workspace:
-          root: ~/repo
-          <<: *whitelist
+            - persist_to_workspace:
+                  root: ~/repo
+                  <<: *whitelist
 
-  deploy_rc:
-    <<: *defaults
+    deploy_rc:
+        <<: *defaults
 
-    steps:
-      - attach_workspace:
-          at: ~/repo
+        steps:
+            - attach_workspace:
+                  at: ~/repo
 
-      - run:
-          name: Publish to JFrog
-          command: |
-            sed  -i '/version/s/[^.]*$/'"0-dev${CIRCLE_BUILD_NUM}\",/" package.json
-            curl -s -u$JFROG_AUTH https://globality.jfrog.io/globality/api/npm/auth > .npmrc
-            echo "registry=https://globality.jfrog.io/globality/api/npm/npm"       >> .npmrc
-            npm publish
+            - run:
+                  name: Publish to JFrog
+                  command: |
+                      sed  -i '/version/s/[^.]*$/'"0-dev${CIRCLE_BUILD_NUM}\",/" package.json
+                      curl -s -u$JFROG_AUTH https://globality.jfrog.io/globality/api/npm/auth > .npmrc
+                      echo "registry=https://globality.jfrog.io/globality/api/npm/npm"       >> .npmrc
+                      npm publish
 
-  publish_library_to_npmjs:
-    <<: *defaults
+    publish_library_to_npmjs:
+        <<: *defaults
 
-    steps:
-      - attach_workspace:
-          at: ~/repo
+        steps:
+            - attach_workspace:
+                  at: ~/repo
 
-      - run:
-          name: Publish to NPM
-          command: npm publish
+            - run:
+                  name: Publish to NPM
+                  command: npm publish
 
-  publish_library_to_jfrog:
-    <<: *defaults
+    publish_library_to_jfrog:
+        <<: *defaults
 
-    steps:
-      - attach_workspace:
-          at: ~/repo
+        steps:
+            - attach_workspace:
+                  at: ~/repo
 
-      - run:
-          name: Publish to JFrog
-          command: |
-            curl -s -u$JFROG_AUTH https://globality.jfrog.io/globality/api/npm/auth > .npmrc
-            echo "registry=https://globality.jfrog.io/globality/api/npm/npm"       >> .npmrc
-            npm publish
+            - run:
+                  name: Publish to JFrog
+                  command: |
+                      curl -s -u$JFROG_AUTH https://globality.jfrog.io/globality/api/npm/auth > .npmrc
+                      echo "registry=https://globality.jfrog.io/globality/api/npm/npm"       >> .npmrc
+                      npm publish
 
 workflows:
-  version: 2
+    version: 2
 
-  build:
-    jobs:
-      - checkout:
-          context:
-            - Globality-Common
-      - lint:
-          context:
-            - Globality-Common
-          requires:
-            - checkout
-      - test:
-          context:
-            - Globality-Common
-          requires:
-            - checkout
-      - build:
-          context:
-            - Globality-Common
-          requires:
-            - lint
-            - test
-      - deploy_rc:
-          context:
-            - Globality-Common
-          requires:
-            - build
+    build:
+        jobs:
+            - checkout:
+                  context:
+                      - Globality-Common
+            - lint:
+                  context:
+                      - Globality-Common
+                  requires:
+                      - checkout
+            - test:
+                  context:
+                      - Globality-Common
+                  requires:
+                      - checkout
+            - build:
+                  context:
+                      - Globality-Common
+                  requires:
+                      - lint
+                      - test
+            - deploy_rc:
+                  context:
+                      - Globality-Common
+                  requires:
+                      - build
 
-  release:
-    jobs:
-      - checkout:
-          context:
-            - Globality-Common
-          filters:
-            tags:
-              only: /[0-9]+(\.[0-9]+)*/
-            branches:
-              ignore: /.*/
-      - lint:
-          context:
-            - Globality-Common
-          filters:
-            tags:
-              only: /[0-9]+(\.[0-9]+)*/
-            branches:
-              ignore: /.*/
-          requires:
-            - checkout
-      - test:
-          context:
-            - Globality-Common
-          filters:
-            tags:
-              only: /[0-9]+(\.[0-9]+)*/
-            branches:
-              ignore: /.*/
-          requires:
-            - checkout
-      - build:
-          context:
-            - Globality-Common
-          filters:
-            tags:
-              only: /[0-9]+(\.[0-9]+)*/
-            branches:
-              ignore: /.*/
-          requires:
-            - test
-      - publish_library_to_npmjs:
-          context:
-            - Globality-Common
-          filters:
-            tags:
-              only: /[0-9]+(\.[0-9]+)*/
-            branches:
-              ignore: /.*/
-          requires:
-            - build
-      - publish_library_to_jfrog:
-          context:
-            - Globality-Common
-          filters:
-            tags:
-              only: /[0-9]+(\.[0-9]+)*/
-            branches:
-              ignore: /.*/
-          requires:
-            - build
+    release:
+        jobs:
+            - checkout:
+                  context:
+                      - Globality-Common
+                  filters:
+                      tags:
+                          only: /[0-9]+(\.[0-9]+)*/
+                      branches:
+                          ignore: /.*/
+            - lint:
+                  context:
+                      - Globality-Common
+                  filters:
+                      tags:
+                          only: /[0-9]+(\.[0-9]+)*/
+                      branches:
+                          ignore: /.*/
+                  requires:
+                      - checkout
+            - test:
+                  context:
+                      - Globality-Common
+                  filters:
+                      tags:
+                          only: /[0-9]+(\.[0-9]+)*/
+                      branches:
+                          ignore: /.*/
+                  requires:
+                      - checkout
+            - build:
+                  context:
+                      - Globality-Common
+                  filters:
+                      tags:
+                          only: /[0-9]+(\.[0-9]+)*/
+                      branches:
+                          ignore: /.*/
+                  requires:
+                      - test
+            - publish_library_to_npmjs:
+                  context:
+                      - Globality-Common
+                  filters:
+                      tags:
+                          only: /[0-9]+(\.[0-9]+)*/
+                      branches:
+                          ignore: /.*/
+                  requires:
+                      - build
+            - publish_library_to_jfrog:
+                  context:
+                      - Globality-Common
+                  filters:
+                      tags:
+                          only: /[0-9]+(\.[0-9]+)*/
+                      branches:
+                          ignore: /.*/
+                  requires:
+                      - build
