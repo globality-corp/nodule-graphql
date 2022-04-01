@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/repo
   docker:
-    - image: circleci/node:14.15.4
+    - image: circleci/node:14.17.0
 
 whitelist: &whitelist
   paths: .

@@ -1,13 +1,8 @@
 import Enum from 'enum';
-import cached from '../wrapper';
+
 import createKey from '../../core/keys';
-import {
-    ANY_NOT_NULL,
-    ANY_PARAMETER,
-    ANY_SINGLE_ITEM_LIST,
-    ANY_UUID,
-    CachingSpec,
-} from '../types';
+import { ANY_NOT_NULL, ANY_PARAMETER, ANY_SINGLE_ITEM_LIST, ANY_UUID, CachingSpec } from '../types';
+import cached from '../wrapper';
 
 let req;
 let plumbusRetrieve;
@@ -16,10 +11,7 @@ const mockCacheGet = jest.fn();
 const mockCacheAdd = jest.fn();
 const mockCreateKey = jest.fn(createKey);
 
-const CachedObjectType = new Enum([
-    'plumbus',
-    'dinglebop',
-]);
+const CachedObjectType = new Enum(['plumbus', 'dinglebop']);
 
 jest.mock('@globality/nodule-config', () => ({
     getMetadata: () => ({
@@ -55,7 +47,7 @@ jest.mock('@globality/nodule-config', () => ({
 describe('cache wrapper', () => {
     beforeEach(() => {
         plumbusRetrieve = jest.fn(async (_, { id, idx }) => ({ id: id || idx }));
-        dinglebopSearch = jest.fn(async (_, { ids }) => ([{ id: ids[0] }]));
+        dinglebopSearch = jest.fn(async (_, { ids }) => [{ id: ids[0] }]);
         req = {
             cacheControl: {},
         };
@@ -350,5 +342,4 @@ describe('cache wrapper', () => {
         expect(plumbusRetrieve).toHaveBeenCalledTimes(0);
         expect(mockCacheAdd).toHaveBeenCalledTimes(0);
     });
-
 });

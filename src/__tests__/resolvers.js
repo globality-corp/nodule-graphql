@@ -1,5 +1,6 @@
 import { bind, getContainer } from '@globality/nodule-config';
 import { Forbidden } from '@globality/nodule-express';
+
 import { createResolver } from 'index';
 
 const retrieveCompanyName = createResolver({

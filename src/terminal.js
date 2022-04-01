@@ -1,6 +1,5 @@
-import padEnd from 'lodash/padEnd';
-
 import { bind } from '@globality/nodule-config';
+import padEnd from 'lodash/padEnd';
 
 const PAD = 20;
 
@@ -27,8 +26,7 @@ export function enabled(service) {
     show(service, 'enabled', GREEN);
 }
 
-function noop() {
-}
+function noop() {}
 
 bind('terminal', ({ metadata }) => ({
     disabled: metadata.testing ? noop : disabled,

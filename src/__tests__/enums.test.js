@@ -1,12 +1,10 @@
 import Enum from 'enum';
 import { GraphQLEnumType } from 'graphql';
+
 import { createGraphQLEnumType } from '../enums';
 
 const compareGraphQLAndGraphQL = (graphqlEnum1, graphqlEnum2) => {
-    if (!(
-        graphqlEnum1.name === graphqlEnum2.name
-        && graphqlEnum1.description === graphqlEnum2.description
-    )) {
+    if (!(graphqlEnum1.name === graphqlEnum2.name && graphqlEnum1.description === graphqlEnum2.description)) {
         return false;
     }
 
@@ -17,9 +15,7 @@ const compareGraphQLAndGraphQL = (graphqlEnum1, graphqlEnum2) => {
         return false;
     }
 
-    return gqlEnumValues1.every((item) => (
-        item.value === graphqlEnum2.getValue(item.name).value
-    ));
+    return gqlEnumValues1.every((item) => item.value === graphqlEnum2.getValue(item.name).value);
 };
 
 const compareStandardAndGraphQL = (standardEnum, graphqlEnum) => {
@@ -29,9 +25,7 @@ const compareStandardAndGraphQL = (standardEnum, graphqlEnum) => {
         return false;
     }
 
-    return gqlEnumValues.every((item) => (
-        standardEnum[item.name].value === graphqlEnum.getValue(item.name).value
-    ));
+    return gqlEnumValues.every((item) => standardEnum[item.name].value === graphqlEnum.getValue(item.name).value);
 };
 
 describe('Enum utilities', () => {

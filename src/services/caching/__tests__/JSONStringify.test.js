@@ -2,25 +2,19 @@ import JSONStringify from '../JSONStringify';
 
 describe('JSONStringify', () => {
     it('adds newline at the end of the string', () => {
-        expect(
-            JSONStringify('Hello World!'),
-        ).toEqual(`"Hello World!"
+        expect(JSONStringify('Hello World!')).toEqual(`"Hello World!"
 `);
     });
 
     it('adds two spaces before list items', () => {
-        expect(
-            JSONStringify([1]),
-        ).toEqual(`[
+        expect(JSONStringify([1])).toEqual(`[
   1
 ]
 `);
     });
 
     it('adds comma and a space for non-last items', () => {
-        expect(
-            JSONStringify([1, 2, 3, 4]),
-        ).toEqual(`[
+        expect(JSONStringify([1, 2, 3, 4])).toEqual(`[
   1, 
   2, 
   3, 
@@ -30,9 +24,7 @@ describe('JSONStringify', () => {
     });
 
     it('adds space after every colon', () => {
-        expect(
-            JSONStringify({ a: 1, b: 2 }),
-        ).toEqual(`{
+        expect(JSONStringify({ a: 1, b: 2 })).toEqual(`{
   "a": 1, 
   "b": 2
 }
@@ -69,9 +61,7 @@ describe('JSONStringify', () => {
                 },
             ],
         };
-        expect(
-            JSONStringify(obj),
-        ).toEqual(`{
+        expect(JSONStringify(obj)).toEqual(`{
   "count": 2, 
   "items": [
     {
@@ -102,5 +92,4 @@ describe('JSONStringify', () => {
 }
 `);
     });
-
 });

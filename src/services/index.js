@@ -1,27 +1,19 @@
-import { cloneDeepWith, set } from 'lodash';
 import { bind, getContainer } from '@globality/nodule-config';
-import getServiceWrappers from './wrapper';
+import { cloneDeepWith, set } from 'lodash';
+
 import createKeyFunc from './core/keys';
+import getServiceWrappers from './wrapper';
 
 export { default as named } from './core/named';
 
-export {
-    ANY_NOT_NULL,
-    ANY_PARAMETER,
-    ANY_SINGLE_ITEM_LIST,
-    ANY_UUID,
-    CachingSpec,
-} from './caching/types';
+export { ANY_NOT_NULL, ANY_PARAMETER, ANY_SINGLE_ITEM_LIST, ANY_UUID, CachingSpec } from './caching/types';
 
 export function cloneClients(obj) {
-    return cloneDeepWith(obj, (node) => (
+    return cloneDeepWith(obj, (node) =>
         typeof node === 'function'
             ? async (req, args) => node(req, args)
-            : Object.keys(node).reduce(
-                (acc, key) => ({ ...acc, [key]: cloneClients(node[key]) }),
-                {},
-            )
-    ));
+            : Object.keys(node).reduce((acc, key) => ({ ...acc, [key]: cloneClients(node[key]) }), {})
+    );
 }
 
 /**

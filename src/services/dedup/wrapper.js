@@ -7,11 +7,11 @@
  * DataLoader does not do anything magic that spans multiple clock-ticks.
  * Our own batching and caching are necessary in many cases.
  */
+import { getContainer } from '@globality/nodule-config';
+import { concurrentPaginate } from '@globality/nodule-openapi';
 import DataLoader from 'dataloader';
 import { get, set } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
-import { getContainer } from '@globality/nodule-config';
-import { concurrentPaginate } from '@globality/nodule-openapi';
 
 /**
  * Fetch (and lazy-create) loaders by name.
@@ -25,15 +25,12 @@ function getLoader(req, loaderId, loadMany, allowBatch) {
     let loader = get(req, `loaders.${loaderId}`);
 
     if (!loader) {
-        loader = new DataLoader(
-            (argsList) => loadMany(req, argsList),
-            {
-                // key uses a json like representation of ordered keys
-                // straight json would not work if parameters came in different order
-                cacheKeyFn: (args) => createKey(args),
-                batch: allowBatch,
-            },
-        );
+        loader = new DataLoader((argsList) => loadMany(req, argsList), {
+            // key uses a json like representation of ordered keys
+            // straight json would not work if parameters came in different order
+            cacheKeyFn: (args) => createKey(args),
+            batch: allowBatch,
+        });
         set(req, `loaders.${loaderId}`, loader);
     }
     return loader;
@@ -47,7 +44,7 @@ function getLoader(req, loaderId, loadMany, allowBatch) {
  *   2. An (optional) id key (such as id, userId, etc) and value
  */
 function isError(object) {
-    return (object.error && Object.keys(object).length <= 2);
+    return object.error && Object.keys(object).length <= 2;
 }
 
 /**
@@ -56,27 +53,23 @@ function isError(object) {
 export function dedupMany(loadMany, { loaderName, allowBatch = false }) {
     const loaderId = loaderName || uuidv4();
     // Fetch the loader in call time - (and in the req init)
-    return async (req, args) => getLoader(
-        req,
-        loaderId,
-        loadMany,
-        allowBatch,
-    ).load(args).then((res) => {
-        // special case - batch wrapper can an object with an error key to raise
-        if (isError(res)) {
-            throw res.error;
-        }
-        return res;
-    });
+    return async (req, args) =>
+        getLoader(req, loaderId, loadMany, allowBatch)
+            .load(args)
+            .then((res) => {
+                // special case - batch wrapper can an object with an error key to raise
+                if (isError(res)) {
+                    throw res.error;
+                }
+                return res;
+            });
 }
 
 /**
  * Wrapper that uses DataLoader for in-request de-duplication.
  */
 export default function dedup(load, { loaderName }) {
-    const loadMany = async (req, argsList = []) => concurrentPaginate(
-        argsList.map((args) => load(req, args)),
-    );
+    const loadMany = async (req, argsList = []) => concurrentPaginate(argsList.map((args) => load(req, args)));
 
     return dedupMany(loadMany, { loaderName });
 }

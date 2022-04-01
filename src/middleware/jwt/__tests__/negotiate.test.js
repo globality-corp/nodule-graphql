@@ -3,7 +3,6 @@ import { clearBinding, Nodule } from '@globality/nodule-config';
 import negotiateKey from '../negotiate';
 
 describe('negotiateKey', () => {
-
     beforeEach(() => {
         clearBinding('config');
         clearBinding('metadata');
@@ -17,9 +16,7 @@ describe('negotiateKey', () => {
         negotiateKey(req, null, payload, next);
 
         expect(next).toHaveBeenCalledTimes(1);
-        expect(next).toHaveBeenCalledWith(
-            new Error('Could not parse JWT header; token may be invalid or expired'),
-        );
+        expect(next).toHaveBeenCalledWith(new Error('Could not parse JWT header; token may be invalid or expired'));
     });
 
     it('requires a supported signing algorithm', () => {
@@ -33,19 +30,19 @@ describe('negotiateKey', () => {
         negotiateKey(req, header, payload, next);
 
         expect(next).toHaveBeenCalledTimes(1);
-        expect(next).toHaveBeenCalledWith(
-            new Error('Unsupported algorithm: FOO256'),
-        );
+        expect(next).toHaveBeenCalledWith(new Error('Unsupported algorithm: FOO256'));
     });
 
     it('requires an implemented algorithm', async () => {
-        await Nodule.testing().fromObject({
-            middleware: {
-                jwt: {
-                    algorithms: 'FOO256,BAR256',
+        await Nodule.testing()
+            .fromObject({
+                middleware: {
+                    jwt: {
+                        algorithms: 'FOO256,BAR256',
+                    },
                 },
-            },
-        }).load();
+            })
+            .load();
 
         const req = {};
         const header = {
@@ -57,19 +54,19 @@ describe('negotiateKey', () => {
         negotiateKey(req, header, payload, next);
 
         expect(next).toHaveBeenCalledTimes(1);
-        expect(next).toHaveBeenCalledWith(
-            new Error('Unimplemented algorithm: BAR256'),
-        );
+        expect(next).toHaveBeenCalledWith(new Error('Unimplemented algorithm: BAR256'));
     });
 
     it('returns a symmetric private key', async () => {
-        await Nodule.testing().fromObject({
-            middleware: {
-                jwt: {
-                    secret: 'secret',
+        await Nodule.testing()
+            .fromObject({
+                middleware: {
+                    jwt: {
+                        secret: 'secret',
+                    },
                 },
-            },
-        }).load();
+            })
+            .load();
 
         const req = {};
         const header = {
@@ -98,9 +95,7 @@ describe('negotiateKey', () => {
         negotiateKey(req, header, payload, next);
 
         expect(next).toHaveBeenCalledTimes(1);
-        expect(next).toHaveBeenCalledWith(
-            new Error('HS256 signing requires `middleware.jwt.secret` to be configured'),
-        );
+        expect(next).toHaveBeenCalledWith(new Error('HS256 signing requires `middleware.jwt.secret` to be configured'));
     });
 
     it('handles public key lookup errors', async () => {
@@ -114,8 +109,6 @@ describe('negotiateKey', () => {
         negotiateKey(req, header, payload, next);
 
         expect(next).toHaveBeenCalledTimes(1);
-        expect(next).toHaveBeenCalledWith(
-            new Error('RS256 signing requires `middleware.jwt.domain` to be configured'),
-        );
+        expect(next).toHaveBeenCalledWith(new Error('RS256 signing requires `middleware.jwt.domain` to be configured'));
     });
 });

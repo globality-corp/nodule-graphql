@@ -27,11 +27,9 @@ function addHeader(req, res, realm) {
 }
 
 export default function sendUnauthorized(req, res, realm) {
-    return addHeader(
-        req,
-        res.status(StatusCodes.UNAUTHORIZED),
-        realm,
-    ).json({
-        message: 'Unauthorized',
-    }).end();
+    return addHeader(req, res.status(StatusCodes.UNAUTHORIZED), realm)
+        .json({
+            message: 'Unauthorized',
+        })
+        .end();
 }

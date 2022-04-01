@@ -1,4 +1,5 @@
 import { get as mockGet, set as mockSet } from 'lodash';
+
 import batched from '../wrapper';
 
 jest.mock('@globality/nodule-config', () => {
@@ -80,9 +81,7 @@ describe('dataLoader requestWrapper', () => {
     });
 
     it('should not batch 1 call', async () => {
-        const companies = await Promise.all([
-            requestWrapper(req, { id: 1 }),
-        ]);
+        const companies = await Promise.all([requestWrapper(req, { id: 1 })]);
         expect(companies[0].id).toBe(1);
         expect(companyRetrieve).toHaveBeenCalledTimes(1);
         expect(companyRetrieve).toHaveBeenLastCalledWith(req, {
@@ -92,10 +91,7 @@ describe('dataLoader requestWrapper', () => {
     });
 
     it('should batch 2 calls', async () => {
-        const companies = await Promise.all([
-            requestWrapper(req, { id: 1 }),
-            requestWrapper(req, { id: 2 }),
-        ]);
+        const companies = await Promise.all([requestWrapper(req, { id: 1 }), requestWrapper(req, { id: 2 })]);
         expect(companies[0].id).toBe(1);
         expect(companies[1].id).toBe(2);
         expect(companyRetrieve).toHaveBeenCalledTimes(0);
@@ -108,10 +104,7 @@ describe('dataLoader requestWrapper', () => {
     });
 
     it('should not batch 2 same call', async () => {
-        const companies = await Promise.all([
-            requestWrapper(req, { id: 1 }),
-            requestWrapper(req, { id: 1 }),
-        ]);
+        const companies = await Promise.all([requestWrapper(req, { id: 1 }), requestWrapper(req, { id: 1 })]);
         expect(companies[0].id).toBe(1);
         expect(companies[1].id).toBe(1);
         expect(companyRetrieve).toHaveBeenCalledTimes(1);
@@ -198,10 +191,7 @@ describe('dataLoader requestWrapper', () => {
             batchSearchRequest: companySearch,
             assignArgs: [{ includeGhosts: true }],
         });
-        const companies = await Promise.all([
-            requestWrapper(req, { id: 1 }),
-            requestWrapper(req, { id: 2 }),
-        ]);
+        const companies = await Promise.all([requestWrapper(req, { id: 1 }), requestWrapper(req, { id: 2 })]);
         expect(companies[0].id).toBe(1);
         expect(companies[1].id).toBe(2);
         expect(companyRetrieve).toHaveBeenCalledTimes(0);
@@ -228,10 +218,7 @@ describe('dataLoader requestWrapper', () => {
         });
         let caughtError;
         try {
-            expect(await Promise.all([
-                requestWrapper(req, { id: 999 }),
-                requestWrapper(req, { id: 1 }),
-            ])).toThrow();
+            expect(await Promise.all([requestWrapper(req, { id: 999 }), requestWrapper(req, { id: 1 })])).toThrow();
         } catch (thrownError) {
             caughtError = thrownError;
         }
@@ -259,10 +246,7 @@ describe('dataLoader requestWrapper', () => {
         });
         let caughtError;
         try {
-            expect(await Promise.all([
-                requestWrapper(req, { id: -999 }),
-                requestWrapper(req, { id: 1 }),
-            ])).toThrow();
+            expect(await Promise.all([requestWrapper(req, { id: -999 }), requestWrapper(req, { id: 1 })])).toThrow();
         } catch (thrownError) {
             caughtError = thrownError;
         }
@@ -283,10 +267,7 @@ describe('dataLoader requestWrapper', () => {
             batchSearchRequest: companySearch,
             splitResponseBy: 'id',
         });
-        const companies = await Promise.all([
-            requestWrapper(req, { idx: 1 }),
-            requestWrapper(req, { idx: 2 }),
-        ]);
+        const companies = await Promise.all([requestWrapper(req, { idx: 1 }), requestWrapper(req, { idx: 2 })]);
         expect(companies[0].id).toBe(1);
         expect(companies[1].id).toBe(2);
         expect(companyRetrieve).toHaveBeenCalledTimes(0);
@@ -299,10 +280,7 @@ describe('dataLoader requestWrapper', () => {
     });
 
     it('should batch 2 search calls', async () => {
-        const companies = await Promise.all([
-            searchWrapper(req, { companyIds: [1, 2] }),
-            searchWrapper(req, { companyIds: [2, 3] }),
-        ]);
+        const companies = await Promise.all([searchWrapper(req, { companyIds: [1, 2] }), searchWrapper(req, { companyIds: [2, 3] })]);
         expect(companies[0].count).toBe(2);
         expect(companies[1].count).toBe(2);
         expect(companies[0].items[0].id).toBe(1);
@@ -329,10 +307,7 @@ describe('dataLoader requestWrapper', () => {
             accumulateInto: 'companyIds',
             splitResponseBy: 'id',
         });
-        const companies = await Promise.all([
-            searchWrapper(req, { companyIds: [999] }),
-            searchWrapper(req, { companyIds: [1] }),
-        ]);
+        const companies = await Promise.all([searchWrapper(req, { companyIds: [999] }), searchWrapper(req, { companyIds: [1] })]);
         expect(companies[0].count).toBe(2);
         expect(companies[0].items[0].id).toBe(999);
         expect(companies[0].items[1].id).toBe(999);
@@ -358,10 +333,7 @@ describe('dataLoader requestWrapper', () => {
             accumulateInto: 'companyIds',
             splitResponseBy: 'id',
         });
-        const companies = await Promise.all([
-            searchWrapper(req, { companyIds: [1] }),
-            searchWrapper(req, { companyIds: [-999] }),
-        ]);
+        const companies = await Promise.all([searchWrapper(req, { companyIds: [1] }), searchWrapper(req, { companyIds: [-999] })]);
         expect(companies[0].items[0].id).toBe(1);
         expect(companies[1].count).toBe(0);
         expect(companySearch).toHaveBeenCalledTimes(1);
@@ -373,10 +345,7 @@ describe('dataLoader requestWrapper', () => {
     });
 
     it('should not batch with offset parameter', async () => {
-        await Promise.all([
-            searchWrapper(req, { companyIds: [1], offset: 1 }),
-            searchWrapper(req, { companyIds: [2], offset: 1 }),
-        ]);
+        await Promise.all([searchWrapper(req, { companyIds: [1], offset: 1 }), searchWrapper(req, { companyIds: [2], offset: 1 })]);
         expect(companySearch).toHaveBeenCalledTimes(2);
         expect(companySearch).toHaveBeenCalledWith(req, {
             companyIds: [1],
@@ -389,10 +358,7 @@ describe('dataLoader requestWrapper', () => {
     });
 
     it('should not batch with limit > 1 parameter', async () => {
-        await Promise.all([
-            searchWrapper(req, { companyIds: [1], limit: 2 }),
-            searchWrapper(req, { companyIds: [2], limit: 2 }),
-        ]);
+        await Promise.all([searchWrapper(req, { companyIds: [1], limit: 2 }), searchWrapper(req, { companyIds: [2], limit: 2 })]);
         expect(companySearch).toHaveBeenCalledTimes(2);
         expect(companySearch).toHaveBeenCalledWith(req, {
             companyIds: [1],

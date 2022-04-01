@@ -2,21 +2,22 @@
  * Client request logger.
  */
 
-import { assign, get } from 'lodash';
-import { extractLoggingProperties } from '@globality/nodule-logging';
 import { bind, getContainer } from '@globality/nodule-config';
+import { extractLoggingProperties } from '@globality/nodule-logging';
+import { assign, get } from 'lodash';
 
 export function calculateExecuteTime(executeStartTime) {
     const executeTime = process.hrtime(executeStartTime);
-    return (executeTime[0] * 1e3) + (executeTime[1] * 1e-6);
+    return executeTime[0] * 1e3 + executeTime[1] * 1e-6;
 }
 
 export function getElapsedTime(req) {
-    if (!req._startAt) { // eslint-disable-line no-underscore-dangle
+    if (!req._startAt) {
+        // eslint-disable-line no-underscore-dangle
         return 0;
     }
     const diff = process.hrtime(req._startAt); // eslint-disable-line no-underscore-dangle
-    return (diff[0] * 1e3) + (diff[1] * 1e-6);
+    return diff[0] * 1e3 + diff[1] * 1e-6;
 }
 
 export function buildRequestLogs(req, serviceName, operationName, request) {
@@ -27,10 +28,7 @@ export function buildRequestLogs(req, serviceName, operationName, request) {
         serviceName,
         serviceRequestName: operationName,
         ...(args ? { serviceRequestArgs: Object.keys(args) } : {}),
-        ...extractLoggingProperties(
-            { params: args },
-            get(config, 'logger.serviceRequestRules', []),
-        ),
+        ...extractLoggingProperties({ params: args }, get(config, 'logger.serviceRequestRules', [])),
     };
 }
 
@@ -41,18 +39,12 @@ export function logSuccess(req, request, response, requestLogs, executeStartTime
     const logs = {
         serviceResponseTimeMs: executeTime,
         ...requestLogs,
-        ...extractLoggingProperties(
-            { url: url.split('?')[0], method },
-            get(config, 'logger.serviceRequestRules', []),
-        ),
-        ...extractLoggingProperties(
-            response,
-            get(config, 'logger.serviceResponseRules', []),
-        ),
+        ...extractLoggingProperties({ url: url.split('?')[0], method }, get(config, 'logger.serviceRequestRules', [])),
+        ...extractLoggingProperties(response, get(config, 'logger.serviceResponseRules', [])),
     };
     if (
-        get(config, 'logger.slownessWarning.enabled', false)
-        && executeTime > get(config, 'logger.slownessWarning.warnForServiceResponseTimeMs', 1000)
+        get(config, 'logger.slownessWarning.enabled', false) &&
+        executeTime > get(config, 'logger.slownessWarning.warnForServiceResponseTimeMs', 1000)
     ) {
         logger.warning(req, 'ServiceSlownessWarning', logs);
     }
@@ -103,10 +95,7 @@ export function logFailure(req, request, error, requestLogs) {
         status: errorStatus,
         errorData,
         ...requestLogs,
-        ...extractLoggingProperties(
-            { url, method },
-            get(config, 'logger.serviceRequestRules', []),
-        ),
+        ...extractLoggingProperties({ url, method }, get(config, 'logger.serviceRequestRules', [])),
     };
 
     if (errorStatus && errorStatus < 500) {

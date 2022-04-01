@@ -1,19 +1,19 @@
-import request from 'supertest';
-
 import { Nodule } from '@globality/nodule-config';
+import request from 'supertest';
 
 import createApp from './app';
 
 describe('hide errors', () => {
-
     beforeEach(async () => {
-        await Nodule.testing().fromObject({
-            routes: {
-                graphql: {
-                    hideErrors: true,
+        await Nodule.testing()
+            .fromObject({
+                routes: {
+                    graphql: {
+                        hideErrors: true,
+                    },
                 },
-            },
-        }).load();
+            })
+            .load();
     });
 
     it('hides errors', async () => {
@@ -30,9 +30,7 @@ describe('hide errors', () => {
               }
             }
           }`;
-        const response = await request(app).post(
-            '/graphql',
-        ).send({
+        const response = await request(app).post('/graphql').send({
             query,
         });
 
@@ -41,14 +39,14 @@ describe('hide errors', () => {
             user: null,
         });
         expect(response.body.errors).toHaveLength(1);
-        expect(response.body.errors[0].extensions).toEqual(expect.objectContaining({
-            code: 'HTTP-404',
-        }));
+        expect(response.body.errors[0].extensions).toEqual(
+            expect.objectContaining({
+                code: 'HTTP-404',
+            })
+        );
         expect(response.body.errors[0].locations).toBeDefined();
         expect(response.body.errors[0].message).toEqual('Gateway Error');
-        expect(response.body.errors[0].path).toEqual([
-            'user',
-        ]);
+        expect(response.body.errors[0].path).toEqual(['user']);
     });
 
     it('doesnt hide persisted query errors', async () => {
@@ -65,9 +63,7 @@ describe('hide errors', () => {
               }
             }
           }`;
-        const response = await request(app).post(
-            '/graphql',
-        ).send({
+        const response = await request(app).post('/graphql').send({
             query,
         });
 
@@ -76,13 +72,13 @@ describe('hide errors', () => {
             user: null,
         });
         expect(response.body.errors).toHaveLength(1);
-        expect(response.body.errors[0].extensions).toEqual(expect.objectContaining({
-            code: 'HTTP-404',
-        }));
+        expect(response.body.errors[0].extensions).toEqual(
+            expect.objectContaining({
+                code: 'HTTP-404',
+            })
+        );
         expect(response.body.errors[0].locations).toBeDefined();
         expect(response.body.errors[0].message).toEqual('PersistedQueryNotFound');
-        expect(response.body.errors[0].path).toEqual([
-            'user',
-        ]);
+        expect(response.body.errors[0].path).toEqual(['user']);
     });
 });

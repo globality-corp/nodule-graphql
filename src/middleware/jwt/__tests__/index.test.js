@@ -1,7 +1,8 @@
 import { readFileSync } from 'fs';
+
+import { getConfig, getContainer, Nodule } from '@globality/nodule-config';
 import request from 'supertest';
 import '@globality/nodule-express';
-import { getConfig, getContainer, Nodule } from '@globality/nodule-config';
 
 import { signSymmetric, signPrivate } from 'index';
 
@@ -14,16 +15,18 @@ describe('Configuring the middleware', () => {
     let app;
 
     beforeEach(async () => {
-        await Nodule.testing().fromObject({
-            middleware: {
-                jwt: {
-                    audience,
-                    domain,
-                    publicKeyRootPath,
-                    secret,
+        await Nodule.testing()
+            .fromObject({
+                middleware: {
+                    jwt: {
+                        audience,
+                        domain,
+                        publicKeyRootPath,
+                        secret,
+                    },
                 },
-            },
-        }).load();
+            })
+            .load();
 
         const { express, notFound } = getContainer('routes');
         const { jwt } = getContainer('middleware');
@@ -33,15 +36,14 @@ describe('Configuring the middleware', () => {
         app.use('/*', notFound);
     });
 
-    it('returns 401 on failed authorization', async (done) => {
+    it('returns 401 on failed authorization', async () => {
         const response = await request(app).get('/');
 
         expect(response.statusCode).toBe(401);
         expect(response.headers['www-authenticate']).not.toBeDefined();
-        return done();
     });
 
-    it('returns 401 and WWW-Authenticate on failed authorization', async (done) => {
+    it('returns 401 and WWW-Authenticate on failed authorization', async () => {
         const jwt = getConfig('middleware.jwt');
 
         jwt.realm = 'test';
@@ -50,32 +52,24 @@ describe('Configuring the middleware', () => {
 
         expect(response.statusCode).toBe(401);
         expect(response.headers['www-authenticate']).toEqual('Basic realm="test"');
-
-        return done();
     });
 
-    it('handles HS256 authorization', async (done) => {
+    it('handles HS256 authorization', async () => {
         const email = 'first.last@example.com';
         const token = signSymmetric({ email }, secret, audience);
 
-        const response = await request(app)
-            .get('/')
-            .set('Authorization', `Bearer ${token}`);
+        const response = await request(app).get('/').set('Authorization', `Bearer ${token}`);
 
         expect(response.statusCode).toBe(404);
-        return done();
     });
 
-    it('handles RS256 authorization', async (done) => {
+    it('handles RS256 authorization', async () => {
         const email = 'first.last@example.com';
         const key = readFileSync(`${__dirname}/example.key`, 'ascii');
         const token = signPrivate({ email }, key, audience);
 
-        const response = await request(app)
-            .get('/')
-            .set('Authorization', `Bearer ${token}`);
+        const response = await request(app).get('/').set('Authorization', `Bearer ${token}`);
 
         expect(response.statusCode).toBe(404);
-        return done();
     });
 });

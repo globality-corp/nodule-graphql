@@ -1,7 +1,6 @@
 import { withArgs } from 'index';
 
 describe('withArgs', () => {
-
     it('replaces arguments', () => {
         expect(withArgs(0)(1, 2, 3, 4)).toEqual([1, 0, 3, 4]);
     });

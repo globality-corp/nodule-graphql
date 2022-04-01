@@ -22,17 +22,18 @@ describe('passBasicAuth middleware', () => {
     it('sends unauthorized for missing auth', async () => {
         const realm = 'realm';
 
-        await Nodule.testing().fromObject({
-            middleware: {
-                jwt: {
-                    realm,
+        await Nodule.testing()
+            .fromObject({
+                middleware: {
+                    jwt: {
+                        realm,
+                    },
                 },
-            },
-        }).load();
+            })
+            .load();
 
         const req = {
-            headers: {
-            },
+            headers: {},
         };
 
         passBasicAuth(req, res);
@@ -46,7 +47,7 @@ describe('passBasicAuth middleware', () => {
         expect(res.end).toHaveBeenCalledWith();
     });
 
-    it('turns basic auth into bearer auth', async (done) => {
+    it('turns basic auth into bearer auth', (done) => {
         const req = {
             headers: {
                 authorization: `Basic ${Buffer.from('Bearer:asdf').toString('base64')}`,

@@ -22,7 +22,7 @@ describe('logCacheUsage', () => {
         {
             cacheTTL: 'spec.cacheTTL',
             resourceName: 'spec.resourceName',
-            requireArgs: { },
+            requireArgs: {},
         }, // spec
         'req',
         'key',

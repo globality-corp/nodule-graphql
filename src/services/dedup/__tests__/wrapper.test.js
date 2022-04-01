@@ -1,6 +1,7 @@
 import { set as mockSet } from 'lodash';
-import dedup from '../wrapper';
+
 import mockCreateKey from '../../core/keys';
+import dedup from '../wrapper';
 
 const mockConfig = {
     createKey: mockCreateKey,
@@ -22,8 +23,7 @@ describe('dataLoader wrapper', () => {
         companyRetrieve = jest.fn(async (_, { id }) => ({ id }));
         req = {
             app: {
-                config: {
-                },
+                config: {},
             },
         };
     });
@@ -64,7 +64,5 @@ describe('dataLoader wrapper', () => {
         company = await wrapper(req, { id: 1 });
         expect(companyRetrieve).toHaveBeenCalledTimes(2);
         expect(company.id).toBe(1);
-
     });
-
 });

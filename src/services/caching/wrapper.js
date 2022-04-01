@@ -1,8 +1,10 @@
-import Enum from 'enum';
-import DataLoader from 'dataloader';
-import { get, set } from 'lodash';
 import { getContainer } from '@globality/nodule-config';
+import DataLoader from 'dataloader';
+import Enum from 'enum';
+import { get, set } from 'lodash';
+
 import dedup from '../dedup/wrapper';
+
 import logCacheUsage from './logging';
 import traceCacheCall from './traceCacheCall';
 

@@ -1,4 +1,5 @@
 import { dedupMany } from '../dedup/wrapper';
+
 import batchRequests from './batchRequests';
 
 /**
@@ -13,31 +14,31 @@ import batchRequests from './batchRequests';
  *             (example: [{ addFoo: true }])
  * loaderName: allows to access the DataLoader loader object with req.loaders.{loaderName}
  */
-export default function batched(serviceRequest, {
-    accumulateBy,
-    accumulateInto,
-    splitResponseBy = null,
-    assignArgs = [],
-    batchSearchRequest = null,
-    isSearchRequest = null,
-    loaderName = null,
-}) {
-    const fakeSearchResponse = (isSearchRequest === null)
-        ? (batchSearchRequest === null)
-        : isSearchRequest;
-    const wrapper = (req, argsList) => (
+export default function batched(
+    serviceRequest,
+    {
+        accumulateBy,
+        accumulateInto,
+        splitResponseBy = null,
+        assignArgs = [],
+        batchSearchRequest = null,
+        isSearchRequest = null,
+        loaderName = null,
+    }
+) {
+    const fakeSearchResponse = isSearchRequest === null ? batchSearchRequest === null : isSearchRequest;
+    const wrapper = (req, argsList) =>
         argsList.length === 1
             ? Promise.all([serviceRequest(req, argsList[0])])
             : batchRequests(req, {
-                argsList,
-                serviceRequest,
-                batchSearchRequest,
-                accumulateBy,
-                accumulateInto,
-                splitResponseBy,
-                assignArgs,
-                fakeSearchResponse,
-            })
-    );
+                  argsList,
+                  serviceRequest,
+                  batchSearchRequest,
+                  accumulateBy,
+                  accumulateInto,
+                  splitResponseBy,
+                  assignArgs,
+                  fakeSearchResponse,
+              });
     return dedupMany(wrapper, { loaderName, allowBatch: true });
 }

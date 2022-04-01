@@ -11,8 +11,6 @@ describe('loadPublicKey', () => {
         const domain = 'example';
         const kid = 'unknown';
 
-        expect(() => loadPublicKey(domain, kid, __dirname)).toThrow(
-            'No key matches: unknown',
-        );
+        expect(() => loadPublicKey(domain, kid, __dirname)).toThrow('No key matches: unknown');
     });
 });
