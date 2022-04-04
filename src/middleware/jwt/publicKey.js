@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs';
+
 import { memoize } from 'lodash';
 
 /**
@@ -29,7 +30,7 @@ function encodeLengthHex(n) {
         return toHex(n);
     }
     const nHex = toHex(n);
-    const lengthOfLengthByte = 128 + (nHex.length / 2);
+    const lengthOfLengthByte = 128 + nHex.length / 2;
     return toHex(lengthOfLengthByte) + nHex;
 }
 
@@ -46,10 +47,8 @@ const rsaPublicKeyToPEM = (modulusB64, exponentB64) => {
 
     const encodedModlen = encodeLengthHex(modlen);
     const encodedExplen = encodeLengthHex(explen);
-    const totalLength = encodeLengthHex(
-        modlen + explen + (encodedModlen.length / 2) + (encodedExplen.length / 2) + 2,
-    );
-    const encodedPubkey = `30${totalLength}02${encodedModlen}${modulusHex}02${encodedExplen}${exponentHex}`; // eslint-disable-line max-len
+    const totalLength = encodeLengthHex(modlen + explen + encodedModlen.length / 2 + encodedExplen.length / 2 + 2);
+    const encodedPubkey = `30${totalLength}02${encodedModlen}${modulusHex}02${encodedExplen}${exponentHex}`;
 
     const der = Buffer.from(encodedPubkey, 'hex').toString('base64');
 

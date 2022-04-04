@@ -2,10 +2,10 @@
  *  Optimization for calling similar microcosm requests at the same time
  *  This utility will reduce the amount of queries that styx creates by batching similar queries
  */
-import { assign, chunk, chain, flatten, get, groupBy, omit, uniq } from 'lodash';
 import { getContainer } from '@globality/nodule-config';
 import { NotFound, InternalServerError } from '@globality/nodule-express';
 import { concurrentPaginate, all } from '@globality/nodule-openapi';
+import { assign, chunk, chain, flatten, get, groupBy, omit, uniq } from 'lodash';
 
 /* Checks that a service request can be batched:
  * 1. Contains an accumulateBy value (such as userId)
@@ -13,11 +13,7 @@ import { concurrentPaginate, all } from '@globality/nodule-openapi';
  * 3. Does not contain limit>1 parameter
  */
 function canArgsBeBatched(args, accumulateBy) {
-    return (
-        args[accumulateBy] !== undefined
-        && args.offset === undefined
-        && (args.limit === undefined || args.limit === 1)
-    );
+    return args[accumulateBy] !== undefined && args.offset === undefined && (args.limit === undefined || args.limit === 1);
 }
 
 /* Split argsList to two argsLists:
@@ -133,16 +129,12 @@ function fakeResponse(items, fakeSearchResponse) {
     }
     if (items.length === 0) {
         return {
-            error: new NotFound(
-                'Batching failed: expected to get one item but got none',
-            ),
+            error: new NotFound('Batching failed: expected to get one item but got none'),
         };
     }
     if (items.length > 1) {
         return {
-            error: new InternalServerError(
-                'Batching failed: expected to get one item but got too many results',
-            ),
+            error: new InternalServerError('Batching failed: expected to get one item but got too many results'),
         };
     }
     return items[0];
@@ -167,15 +159,7 @@ function fakeResponse(items, fakeSearchResponse) {
  */
 async function resolveBatchRequest(
     req,
-    {
-        requestsArgs,
-        searchRequest,
-        accumulateBy,
-        accumulateInto,
-        splitResponseBy,
-        assignArgs,
-        fakeSearchResponse,
-    },
+    { requestsArgs, searchRequest, accumulateBy, accumulateInto, splitResponseBy, assignArgs, fakeSearchResponse }
 ) {
     /* Batch many requests to a single search request
      */
@@ -188,11 +172,12 @@ async function resolveBatchRequest(
     /* Resolve it
      * If error is raised, create many { error, id } items
      */
-    const allResults = await all(req, { searchRequest, args: batchedArgs })
-        .catch((error) => batchedArgs[accumulateInto].map((id) => ({
+    const allResults = await all(req, { searchRequest, args: batchedArgs }).catch((error) =>
+        batchedArgs[accumulateInto].map((id) => ({
             error,
             [splitResponseBy]: id,
-        })));
+        }))
+    );
     // Split the response by 'splitResponseBy'
     const groupedResults = groupBy(allResults, splitResponseBy);
     const { createKey } = getContainer();
@@ -208,7 +193,7 @@ async function resolveBatchRequest(
                 .value(),
             ...acc,
         }),
-        {},
+        {}
     );
     // Fake a microcosm response for every matched result.
     return Object.keys(resultsBuckets).reduce(
@@ -216,7 +201,7 @@ async function resolveBatchRequest(
             [key]: fakeResponse(resultsBuckets[key], fakeSearchResponse),
             ...acc,
         }),
-        {},
+        {}
     );
 }
 
@@ -242,7 +227,7 @@ export default async function batchRequests(
         assignArgs = [],
         batchSearchRequest = null,
         fakeSearchResponse = false,
-    },
+    }
 ) {
     const { batchableArgsList, unBatchableArgsList } = filterArgsToBatch(argsList, accumulateBy);
     const argsChunksList = getArgsChunksList(req, batchableArgsList, accumulateBy);
@@ -252,9 +237,7 @@ export default async function batchRequests(
     // * Requests that can be batched but with length 1
     const argsListNotToBatch = [
         ...unBatchableArgsList,
-        ...argsChunksList
-            .filter((argsChunks) => argsChunks.length === 1)
-            .map((argsChunks) => argsChunks[0]),
+        ...argsChunksList.filter((argsChunks) => argsChunks.length === 1).map((argsChunks) => argsChunks[0]),
     ];
 
     // Batch
@@ -269,8 +252,8 @@ export default async function batchRequests(
      */
     const requestPromises = [
         ...argsListNotToBatch.map((args) => resolveSimpleRequest(req, serviceRequest, args)),
-        ...argsListToBatch.map(
-            (argsChunks) => resolveBatchRequest(req, {
+        ...argsListToBatch.map((argsChunks) =>
+            resolveBatchRequest(req, {
                 requestsArgs: argsChunks,
                 searchRequest: batchSearchRequest || serviceRequest,
                 accumulateBy,
@@ -278,7 +261,7 @@ export default async function batchRequests(
                 splitResponseBy: splitResponseBy || accumulateBy,
                 assignArgs,
                 fakeSearchResponse,
-            }),
+            })
         ),
     ];
 

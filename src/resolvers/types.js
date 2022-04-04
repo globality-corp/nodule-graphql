@@ -1,5 +1,5 @@
-import { isFunction, isNil } from 'lodash';
 import { getContainer } from '@globality/nodule-config';
+import { isFunction, isNil } from 'lodash';
 
 /**
  * Default mask function: preserves standard arguments
@@ -23,15 +23,7 @@ function defaultMask(obj, args, context, info) {
  *     arguments into a form supported by the other functions.
  */
 export class Resolver {
-    constructor(
-        {
-            aggregate,
-            authorize,
-            authorizeData,
-            transform,
-            mask,
-        },
-    ) {
+    constructor({ aggregate, authorize, authorizeData, transform, mask }) {
         this.aggregate = aggregate;
         this.authorize = authorize;
         this.authorizeData = authorizeData;
@@ -43,9 +35,7 @@ export class Resolver {
     async resolve(obj, args, context, info) {
         if (this.authorize) {
             // allow authorizer to be looked up by name
-            const authorize = isFunction(this.authorize)
-                ? this.authorize
-                : getContainer(`graphql.authorizers.${this.authorize}`);
+            const authorize = isFunction(this.authorize) ? this.authorize : getContainer(`graphql.authorizers.${this.authorize}`);
 
             // always invoke authorizers with standard resolver arguments
             if (isNil(this.authorizeData)) {

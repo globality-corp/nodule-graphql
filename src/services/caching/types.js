@@ -1,10 +1,11 @@
+import { getContainer } from '@globality/nodule-config';
 import { anyNonNil } from 'is-uuid';
 import { get, includes, isArray, isEqual, isFunction, isNil, isUndefined } from 'lodash';
-import { getContainer } from '@globality/nodule-config';
 
 import createKey from '../core/keys';
-import spooky128 from './spooky128';
+
 import JSONStringify from './JSONStringify';
+import spooky128 from './spooky128';
 
 export const ANY_NOT_NULL = (value) => !isNil(value);
 export const ANY_PARAMETER = (value) => !isUndefined(value);
@@ -12,13 +13,7 @@ export const ANY_SINGLE_ITEM_LIST = (value) => isArray(value) && value.length ==
 export const ANY_UUID = (value) => anyNonNil(value);
 
 export class CachingSpec {
-    constructor({
-        cacheTTL = null,
-        loaderName = null,
-        resourceName,
-        requireArgs = null,
-        supportNoCache = false,
-    }) {
+    constructor({ cacheTTL = null, loaderName = null, resourceName, requireArgs = null, supportNoCache = false }) {
         if (!resourceName) {
             throw new Error('resourceName is required');
         }
@@ -36,7 +31,7 @@ export class CachingSpec {
     }
 
     /* Should fetch from the cache
-    */
+     */
     shouldSkipCache(req, args = {}) {
         const { config } = getContainer();
         const enabled = get(config, 'cache.enabled', false);
@@ -62,7 +57,7 @@ export class CachingSpec {
     }
 
     /* validate that the returned etag matches the requested one
-    */
+     */
     validateEtag(req, cacheData) {
         const requestedEtags = get(req, `cacheControl.etags.${this.resourceName}`);
         const { config } = getContainer();
@@ -94,7 +89,7 @@ export class CachingSpec {
     }
 
     /* Should use/ignore cached resource - after they're fetched
-    */
+     */
     shouldIgnoreCache(req, cacheData) {
         if (!this.validateEtag(req, cacheData)) {
             return true;
@@ -116,11 +111,7 @@ export class CachingSpec {
         }
 
         // no required arg can be missing
-        return Object.keys(requireArgs).every((key) => CachingSpec.validateArg(
-            requireArgs,
-            key,
-            args[key],
-        ));
+        return Object.keys(requireArgs).every((key) => CachingSpec.validateArg(requireArgs, key, args[key]));
     }
 
     static validateArg(arg, key, value) {
@@ -134,11 +125,7 @@ export class CachingSpec {
             return true;
         }
 
-        if (
-            isArray(requiredValue)
-            && isArray(value)
-            && isEqual(value.sort(), requiredValue.sort())
-        ) {
+        if (isArray(requiredValue) && isArray(value) && isEqual(value.sort(), requiredValue.sort())) {
             return true;
         }
 

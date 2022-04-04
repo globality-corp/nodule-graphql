@@ -1,1 +1,1 @@
-export { default as withArgs } from './masking'; // eslint-disable-line
+export { default as withArgs } from './masking';

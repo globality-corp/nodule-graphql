@@ -1,7 +1,11 @@
-import { get, includes, merge, pickBy } from 'lodash';
-import { ApolloServer } from 'apollo-server-express';
-
 import { bind, getContainer, setDefaults } from '@globality/nodule-config';
+import {
+    ApolloServerPluginUsageReporting,
+    ApolloServerPluginUsageReportingDisabled,
+    ApolloServerPluginLandingPageDisabled,
+} from 'apollo-server-core';
+import { ApolloServer } from 'apollo-server-express';
+import { get, includes, merge, pickBy } from 'lodash';
 
 /**
  * Inject custom extensions in the graphql response.
@@ -14,10 +18,7 @@ function injectExtensions(response, req) {
 
     const requested = get(req, 'body.extensions', {});
     // merge in all local extensions that were requested
-    const extensions = pickBy(
-        req.locals.extensions,
-        (value, key) => key in requested,
-    );
+    const extensions = pickBy(req.locals.extensions, (value, key) => key in requested);
     return Object.keys(extensions).length ? merge(response, { extensions }) : response;
 }
 
@@ -32,7 +33,7 @@ function checkErrorMessageWhitelist(error) {
             'PersistedQueryNotFound',
             'PersistedQueryNotSupported',
         ],
-        error.message,
+        error.message
     );
 }
 
@@ -61,16 +62,8 @@ function formatError(error) {
     const originalError = error.originalError || {};
     const code = extensions.code || originalError.code;
     const headers = originalError.headers || {};
-    const traceId = (
-        extensions.traceId
-        || originalError.traceId
-        || headers['x-trace-id']
-    );
-    const requestId = (
-        extensions.requestId
-        || originalError.requestId
-        || headers['x-request-id']
-    );
+    const traceId = extensions.traceId || originalError.traceId || headers['x-trace-id'];
+    const requestId = extensions.requestId || originalError.requestId || headers['x-request-id'];
 
     // Include the HTTP status code, trace ID and request ID if they exist. These can come from
     // the underlying HTTP library such as axios. Including this information in the error for the
@@ -129,24 +122,26 @@ function createApolloServerOptions() {
     }
 
     const { apolloEngine, apolloPlugins } = config.routes.graphql;
-    const plugins = apolloPlugins
-        ? Object.keys(apolloPlugins).map((key) => apolloPlugins[key])
-        : [];
+    const plugins = apolloPlugins ? Object.keys(apolloPlugins).map((key) => apolloPlugins[key]) : [];
 
-    const {
-        enabled: engineEnabled,
-        ...engineConfig
-    } = apolloEngine;
+    const { enabled: engineEnabled, schemaTag, graphVariant, apiKey, ...engineConfig } = apolloEngine;
+    const enginePlugin = engineEnabled
+        ? ApolloServerPluginUsageReporting({
+              ...engineConfig,
+          })
+        : ApolloServerPluginUsageReportingDisabled();
 
     return {
         context: ({ req }) => req,
         formatError,
         formatResponse: injectExtensions,
-        playground: false,
         rootValue: null,
         schema,
-        engine: engineEnabled ? engineConfig : false,
-        plugins,
+        apollo: {
+            key: apiKey,
+            graphVariant: graphVariant || schemaTag || undefined,
+        },
+        plugins: [ApolloServerPluginLandingPageDisabled(), ...plugins, enginePlugin],
     };
 }
 
@@ -199,6 +194,12 @@ setDefaults('routes.graphql.apolloEngine', {
     apiKey: null,
 
     /**
+     * Variant for GQL schema used by Apollo Graph Manager.
+     */
+    graphVariant: null,
+
+    /**
+     * DEPRECATED: Use graphVariant instead
      * Tag for GQL schema used by Apollo Graph Manager.
      */
     schemaTag: null,
@@ -214,10 +215,11 @@ setDefaults('routes.graphql.apolloEngine', {
     sendHeaders: null,
 });
 
-bind('routes.graphql', () => {
+bind('routes.graphql', async () => {
     const { terminal } = getContainer();
     const options = createApolloServerOptions();
     const server = new ApolloServer(options);
+    await server.start();
     terminal.enabled('graphql');
     return server.getMiddleware({ cors: false });
 });

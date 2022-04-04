@@ -1,8 +1,7 @@
-import jwt from 'express-jwt';
-import { get } from 'lodash';
-import { StatusCodes } from 'http-status-codes';
-
 import { getConfig, getMetadata, getContainer } from '@globality/nodule-config';
+import jwt from 'express-jwt';
+import { StatusCodes } from 'http-status-codes';
+import { get } from 'lodash';
 
 import sendUnauthorized from './errors';
 import negotiateKey from './negotiate';
@@ -28,19 +27,18 @@ export function chooseAudience(audience) {
     return audience;
 }
 
-export default function createValidateJWTMiddleware (options = { jwtSource: 'header' }) {
+export default function createValidateJWTMiddleware(options = { jwtSource: 'header' }) {
     const { jwtSource } = options;
 
-    return function middleware (req, res, next) {
+    return function middleware(req, res, next) {
         const config = getConfig('middleware.jwt') || {};
         const { audience, realm } = config;
         const matchingAudience = chooseAudience(audience);
 
-        const algorithms = get(config, 'algorithms', 'HS256,RS256').split(',').filter(
-            (algorithm) => !!algorithm,
-        ).map(
-            (algorithm) => algorithm.trim(),
-        );
+        const algorithms = get(config, 'algorithms', 'HS256,RS256')
+            .split(',')
+            .filter((algorithm) => !!algorithm)
+            .map((algorithm) => algorithm.trim());
 
         const jwtOptions = {
             secret: negotiateKey,

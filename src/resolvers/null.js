@@ -5,7 +5,9 @@ import { createResolver } from './types';
 /**
  * Register a default 'null' resolver.
  */
-bind('graphql.resolvers.null', () => createResolver({
-    aggregate: async () => null,
-    transform: () => null,
-}));
+bind('graphql.resolvers.null', () =>
+    createResolver({
+        aggregate: async () => null,
+        transform: () => null,
+    })
+);

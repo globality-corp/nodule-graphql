@@ -1,5 +1,5 @@
-import { flatten, indexOf, isFunction } from 'lodash';
 import { getContainer } from '@globality/nodule-config';
+import { flatten, indexOf, isFunction } from 'lodash';
 
 /**
  * Expand a key either into itself (if it's a string) or via a function call.
@@ -15,19 +15,16 @@ function expandKey(key, ...args) {
  * Build a mapping from keys to DI members with the given type.
  */
 function buildMapping(keys, type) {
-    return keys.map(
-        (key) => [key, getContainer(`graphql.${type}.${key}`)],
-    ).filter(
-        (pair) => !!pair[1],
-    ).reduce(
-        (acc, [key, value]) => Object.assign(
-            acc,
-            {
-                [key]: value,
-            },
-        ),
-        {},
-    );
+    return keys
+        .map((key) => [key, getContainer(`graphql.${type}.${key}`)])
+        .filter((pair) => !!pair[1])
+        .reduce(
+            (acc, [key, value]) =>
+                Object.assign(acc, {
+                    [key]: value,
+                }),
+            {}
+        );
 }
 
 /**
@@ -40,23 +37,15 @@ async function executePipeline(pipeline, args) {
     const resolver = pipeline.resolvers[resolverKey];
 
     // apply masks to the input arguments
-    const masked = pipeline.keys.filter(
-        (key, index) => index < resolverIndex,
-    ).reduce(
-        (acc, key) => pipeline.masks[key](...acc),
-        args,
-    );
+    const masked = pipeline.keys.filter((key, index) => index < resolverIndex).reduce((acc, key) => pipeline.masks[key](...acc), args);
 
     // apply the resolver to the masked input
     const result = await resolver.resolve(...masked);
 
     // transform the result and the masked input
-    return pipeline.keys.filter(
-        (key, index) => index > resolverIndex,
-    ).reduce(
-        (acc, key) => pipeline.transforms[key](acc, ...masked),
-        result,
-    );
+    return pipeline.keys
+        .filter((key, index) => index > resolverIndex)
+        .reduce((acc, key) => pipeline.transforms[key](acc, ...masked), result);
 }
 
 /**
@@ -75,26 +64,22 @@ function validatePipeline(pipeline) {
     const resolverIndex = indexOf(pipeline.keys, resolverKey);
 
     // Ensure all keys at the front of the pipeline are valid mask functions
-    pipeline.keys.filter(
-        (key, index) => index < resolverIndex,
-    ).forEach(
-        (key) => {
+    pipeline.keys
+        .filter((key, index) => index < resolverIndex)
+        .forEach((key) => {
             if (!pipeline.masks[key]) {
                 throw new Error(`No mask could be found for: ${key}`);
             }
-        },
-    );
+        });
 
     // Ensure that all keys at the back of the pipeline are valid transforms
-    pipeline.keys.filter(
-        (key, index) => index > resolverIndex,
-    ).forEach(
-        (key) => {
+    pipeline.keys
+        .filter((key, index) => index > resolverIndex)
+        .forEach((key) => {
             if (!pipeline.transforms[key]) {
                 throw new Error(`No transform could be found for: ${key}`);
             }
-        },
-    );
+        });
 }
 
 /**
@@ -118,16 +103,12 @@ export function getResolverPipeline(...keys) {
         const pipeline = {};
 
         // First, expand inputs keys in case they are actually functions
-        pipeline.keys = flatten(keys.map(
-            (key) => expandKey(key, ...args),
-        ));
+        pipeline.keys = flatten(keys.map((key) => expandKey(key, ...args)));
 
         // Next, map keys to resolvers, masks, and transfoms
-        ['resolvers', 'masks', 'transforms'].forEach(
-            (type) => {
-                pipeline[type] = buildMapping(pipeline.keys, type);
-            },
-        );
+        ['resolvers', 'masks', 'transforms'].forEach((type) => {
+            pipeline[type] = buildMapping(pipeline.keys, type);
+        });
         // Then, ensure we have a valid pipeline
         validatePipeline(pipeline);
 

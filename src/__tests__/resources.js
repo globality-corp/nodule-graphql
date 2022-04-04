@@ -1,9 +1,4 @@
-import {
-    GraphQLID,
-    GraphQLList,
-    GraphQLObjectType,
-    GraphQLString,
-} from 'graphql';
+import { GraphQLID, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
 import { getResolver } from 'index';
 

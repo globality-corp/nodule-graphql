@@ -1,6 +1,6 @@
-import { get } from 'lodash';
 import { getContainer } from '@globality/nodule-config';
 import { extractLoggingProperties } from '@globality/nodule-logging';
+import { get } from 'lodash';
 
 import { calculateExecuteTime } from '../../logging';
 
@@ -18,10 +18,7 @@ export default function logCacheUsage(spec, req, key, result, executeStartTime) 
         cacheTTL: spec.cacheTTL,
         resourceName: spec.resourceName,
         ...(spec.requireArgs ? { serviceRequestArgs: Object.keys(spec.requireArgs) } : {}),
-        ...extractLoggingProperties(
-            { params: spec.requireArgs },
-            get(config, 'logger.serviceRequestRules', []),
-        ),
+        ...extractLoggingProperties({ params: spec.requireArgs }, get(config, 'logger.serviceRequestRules', [])),
     };
     logger.info(req, 'CacheRequest', logs);
 }

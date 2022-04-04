@@ -1,6 +1,5 @@
-import { get } from 'lodash';
-
 import { getConfig, getMetadata } from '@globality/nodule-config';
+import { get } from 'lodash';
 
 import loadPublicKey from './publicKey';
 
@@ -44,11 +43,10 @@ export default function negotiateKey(req, header, payload, next) {
     const { alg } = header;
 
     const config = getConfig('middleware.jwt') || {};
-    const algorithms = get(config, 'algorithms', 'HS256,RS256').split(',').filter(
-        (algorithm) => !!algorithm,
-    ).map(
-        (algorithm) => algorithm.trim(),
-    );
+    const algorithms = get(config, 'algorithms', 'HS256,RS256')
+        .split(',')
+        .filter((algorithm) => !!algorithm)
+        .map((algorithm) => algorithm.trim());
 
     if (algorithms.indexOf(alg) === -1) {
         return next(new Error(`Unsupported algorithm: ${alg}`));

@@ -1,7 +1,6 @@
 import { Forbidden } from '@globality/nodule-express';
-import {
-    createResolver,
-} from 'index';
+
+import { createResolver } from 'index';
 
 describe('a resolver', () => {
     it('returns an aggregated value', async () => {

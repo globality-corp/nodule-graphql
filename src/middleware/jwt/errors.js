@@ -23,15 +23,14 @@ function addHeader(req, res, realm) {
     }
 
     // add header
-    return res.set('WWW-Authenticate', `Basic realm="${realm}"`);
+    res.set('WWW-Authenticate', `Basic realm="${realm}"`);
+    return res;
 }
 
 export default function sendUnauthorized(req, res, realm) {
-    return addHeader(
-        req,
-        res.status(StatusCodes.UNAUTHORIZED),
-        realm,
-    ).json({
-        message: 'Unauthorized',
-    }).end();
+    return addHeader(req, res.status(StatusCodes.UNAUTHORIZED), realm)
+        .json({
+            message: 'Unauthorized',
+        })
+        .end();
 }

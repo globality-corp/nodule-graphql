@@ -1,6 +1,6 @@
+import { getContainer } from '@globality/nodule-config';
 import { get, isObject, toPairs } from 'lodash';
 import { v5 as uuidv5 } from 'uuid';
-import { getContainer } from '@globality/nodule-config';
 
 function valueToString(value) {
     if (Array.isArray(value)) {
@@ -9,7 +9,9 @@ function valueToString(value) {
 
     if (isObject(value)) {
         // returns a string like: "bar:baz,qux:foo"
-        return toPairs(value).map((pair) => pair.join(':')).join(',');
+        return toPairs(value)
+            .map((pair) => pair.join(':'))
+            .join(',');
     }
 
     return value;
@@ -23,9 +25,10 @@ function valueToString(value) {
  */
 const createKey = (args, keyName = '') => {
     const namespace = get(getContainer('config.cache'), 'namespace', uuidv5.URL);
-    const argsString = Object.keys(args).sort().map(
-        (key) => `${key}=${valueToString(args[key])}`,
-    ).join('&');
+    const argsString = Object.keys(args)
+        .sort()
+        .map((key) => `${key}=${valueToString(args[key])}`)
+        .join('&');
     const keyString = `${keyName}?${argsString}`;
     return uuidv5(keyString, namespace);
 };
