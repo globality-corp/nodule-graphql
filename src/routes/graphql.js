@@ -1,5 +1,9 @@
 import { bind, getContainer, setDefaults } from '@globality/nodule-config';
-import { ApolloServerPluginUsageReporting, ApolloServerPluginUsageReportingDisabled } from 'apollo-server-core';
+import {
+    ApolloServerPluginUsageReporting,
+    ApolloServerPluginUsageReportingDisabled,
+    ApolloServerPluginLandingPageDisabled,
+} from 'apollo-server-core';
 import { ApolloServer } from 'apollo-server-express';
 import { get, includes, merge, pickBy } from 'lodash';
 
@@ -137,7 +141,7 @@ function createApolloServerOptions() {
             key: apiKey,
             graphVariant: graphVariant || schemaTag || undefined,
         },
-        plugins: [...plugins, enginePlugin],
+        plugins: [ApolloServerPluginLandingPageDisabled(), ...plugins, enginePlugin],
     };
 }
 

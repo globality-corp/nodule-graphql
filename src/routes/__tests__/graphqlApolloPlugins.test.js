@@ -33,6 +33,7 @@ describe('routes.graphql', () => {
         const mockApolloServerPluginUsageReportingDisabled = apolloServerCore.ApolloServerPluginUsageReportingDisabled.mockImplementation(
             () => 'ApolloServerPluginUsageReportingDisabled'
         );
+        apolloServerCore.ApolloServerPluginLandingPageDisabled.mockImplementation(() => 'ApolloServerPluginLandingPageDisabled');
 
         const plugins = [
             {
@@ -51,6 +52,10 @@ describe('routes.graphql', () => {
         expect(mockApolloServer.mock.calls[0]).toHaveLength(1);
         expect(mockApolloServerPluginUsageReportingDisabled).toHaveBeenCalledTimes(1);
         expect(mockApolloServerPluginUsageReportingDisabled).toHaveBeenCalledWith();
-        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', [plugins[0], 'ApolloServerPluginUsageReportingDisabled']);
+        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', [
+            'ApolloServerPluginLandingPageDisabled',
+            plugins[0],
+            'ApolloServerPluginUsageReportingDisabled',
+        ]);
     });
 });

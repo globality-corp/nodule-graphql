@@ -33,6 +33,7 @@ describe('routes.graphql', () => {
         const mockApolloServerPluginUsageReporting = apolloServerCore.ApolloServerPluginUsageReporting.mockImplementation(
             () => 'ApolloServerPluginUsageReporting'
         );
+        apolloServerCore.ApolloServerPluginLandingPageDisabled.mockImplementation(() => 'ApolloServerPluginLandingPageDisabled');
 
         const config = {
             enabled: true,
@@ -65,6 +66,9 @@ describe('routes.graphql', () => {
             sendVariableValues: config.sendVariableValues,
             sendHeaders: config.sendHeaders,
         });
-        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', ['ApolloServerPluginUsageReporting']);
+        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', [
+            'ApolloServerPluginLandingPageDisabled',
+            'ApolloServerPluginUsageReporting',
+        ]);
     });
 });

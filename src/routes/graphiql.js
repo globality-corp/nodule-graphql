@@ -1,5 +1,4 @@
 import { bind, getContainer, setDefaults } from '@globality/nodule-config';
-import { defaultPlaygroundOptions } from 'apollo-server-express';
 import expressPlayground from 'graphql-playground-middleware-express';
 
 function createMiddleware(config) {
@@ -16,7 +15,14 @@ function createMiddleware(config) {
         expressPlayground({
             endpoint: `${endpointUrl}?headers=${headers}`,
             settings: {
-                ...defaultPlaygroundOptions.settings,
+                'general.betaUpdates': false,
+                'editor.theme': 'dark',
+                'editor.cursorShape': 'line',
+                'editor.reuseHeaders': true,
+                'tracing.hideTracingResponse': true,
+                'queryPlan.hideQueryPlanResponse': true,
+                'editor.fontSize': 14,
+                'editor.fontFamily': `'Source Code Pro', 'Consolas', 'Inconsolata', 'Droid Sans Mono', 'Monaco', monospace`,
                 'request.credentials': 'include',
             },
         })(req, res, next);
