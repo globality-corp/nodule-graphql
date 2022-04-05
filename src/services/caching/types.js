@@ -13,7 +13,7 @@ export const ANY_SINGLE_ITEM_LIST = (value) => isArray(value) && value.length ==
 export const ANY_UUID = (value) => anyNonNil(value);
 
 export class CachingSpec {
-    constructor({ cacheTTL = null, loaderName = null, resourceName, requireArgs = null, supportNoCache = false }) {
+    constructor({ cacheTTL = null, loaderName = null, resourceName, requireArgs = null, supportNoCache = false, endpointName }) {
         if (!resourceName) {
             throw new Error('resourceName is required');
         }
@@ -28,6 +28,7 @@ export class CachingSpec {
 
         this.supportNoCache = supportNoCache;
         this.loaderName = loaderName;
+        this.endpointName = endpointName;
     }
 
     /* Should fetch from the cache
@@ -112,6 +113,10 @@ export class CachingSpec {
 
         // no required arg can be missing
         return Object.keys(requireArgs).every((key) => CachingSpec.validateArg(requireArgs, key, args[key]));
+    }
+
+    setEndpointName(endpointName) {
+        this.endpointName = endpointName;
     }
 
     static validateArg(arg, key, value) {
