@@ -63,7 +63,10 @@ describe('cache wrapper', () => {
         const spec = new CachingSpec({
             resourceName: CachedObjectType.plumbus.key,
         });
+        const spy = jest.spyOn(spec, 'setEndpointName');
+
         const wrapper = cached(plumbusRetrieve, spec);
+        expect(spy).toHaveBeenCalledWith(undefined);
         const plumbus = await wrapper(req, { id: 1 });
         expect(plumbus.id).toBe(1);
         expect(mockCacheGet).toHaveBeenCalledTimes(1);
@@ -79,7 +82,11 @@ describe('cache wrapper', () => {
             resourceName: CachedObjectType.plumbus.key,
             loaderName: 'plumbusLoader',
         });
-        const wrapper = cached(plumbusRetrieve, spec);
+        const spy = jest.spyOn(spec, 'setEndpointName');
+
+        const wrapper = cached(plumbusRetrieve, spec, 'plumbus_endpoint');
+        expect(spy).toHaveBeenCalledWith('plumbus_endpoint');
+
         let plumbus = await wrapper(req, { id: 1 });
         expect(plumbus.id).toBe(1);
         expect(mockCacheGet).toHaveBeenCalledTimes(1);
