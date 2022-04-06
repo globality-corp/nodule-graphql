@@ -19,6 +19,7 @@ const CachedObjectType = new Enum(['grumbo']);
 const CachingConfig = {
     'fleeb.grumbo.search': new CachingSpec({
         resourceName: CachedObjectType.grumbo.key,
+        endpointName: 'fleeb.grumbo.search',
         requireArgs: {
             blamfId: ANY_UUID,
             plumbusTypes: ['BlamfInvited', 'BlamfActivated', 'BlamfDeactivated'],
@@ -42,6 +43,14 @@ const CachingConfig = {
 describe('CachingSpec', () => {
     const spec = CachingConfig['fleeb.grumbo.search'];
     const doubleSpec = CachingConfig['fleeb.grumbo.retrieve'];
+
+    it('sets endpointName', () => {
+        expect(spec.endpointName).toEqual('fleeb.grumbo.search');
+        expect(doubleSpec.endpointName).toBeUndefined();
+
+        doubleSpec.setEndpointName('fleeb.grumbo.retrieve');
+        expect(doubleSpec.endpointName).toEqual('fleeb.grumbo.retrieve');
+    });
 
     it('creates keys', () => {
         expect(spec.createKey()).toEqual('35da012c-2f2d-53cb-9ed1-5d9f5d128071');

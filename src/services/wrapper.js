@@ -40,15 +40,15 @@ function buildWrappers() {
 /**
  * Wrap a service call if args are defined.
  */
-export function wrapIf(service, wrapper, args) {
-    return args ? wrapper(service, args) : service;
+export function wrapIf(service, wrapper, args, serviceName) {
+    return args ? wrapper(service, args, serviceName) : service;
 }
 
 /**
  * Wrap a single service call.
  */
 function wrap(wrappers, name) {
-    return wrappers.reduce((service, [config, wrapper]) => wrapIf(service, wrapper, config[name]), named(name));
+    return wrappers.reduce((service, [config, wrapper]) => wrapIf(service, wrapper, config[name], name), named(name));
 }
 
 function getServiceWrappers() {
