@@ -25,7 +25,7 @@ export type AuthorizerWithDataFunc<Args, Context, Object, AuthorizerData> = (
 export type TransformFunc<Data, TransformedData, MaskResult extends Array<unknown>> = (
     data: Data,
     ...masked: MaskResult
-) => Promise<TransformedData>;
+) => Promise<TransformedData> | TransformedData;
 export type MaskFunc<Args, Context, Object, Result> = (obj: Object, args: Args, context: Context, info: GraphQLResolveInfo) => Result;
 export type DefaultMaskResult<Args, Context, Object> = [Object, Args, Context, GraphQLResolveInfo];
 
