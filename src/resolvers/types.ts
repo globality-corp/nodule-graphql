@@ -92,7 +92,12 @@ export class Resolver<
         this.mask = mask ?? (defaultMask as unknown as MaskFunc<Args, Context, Object, MaskResult>);
     }
 
-    async resolve(obj: Object, args: Args, context: Context, info: GraphQLResolveInfo): Promise<TransformedResult extends void ? AggregateResult : TransformedResult>;
+    async resolve(
+        obj: Object,
+        args: Args,
+        context: Context,
+        info: GraphQLResolveInfo
+    ): Promise<TransformedResult extends void ? AggregateResult : TransformedResult>;
     async resolve(obj: Object, args: Args, context: Context, info: GraphQLResolveInfo): Promise<TransformedResult | AggregateResult> {
         if (this.authorize) {
             // allow authorizer to be looked up by name
