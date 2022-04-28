@@ -64,7 +64,7 @@ export class Resolver<
     Context,
     Object = void,
     MaskResult extends Array<unknown> = DefaultMaskResult<Args, Context, Object>,
-    TransformedResult = AggregateResult,
+    TransformedResult = void,
     AuthorizerData = void
 > {
     aggregate: AggregateFunc<MaskResult, AggregateResult>;
@@ -92,8 +92,8 @@ export class Resolver<
         this.mask = mask ?? (defaultMask as unknown as MaskFunc<Args, Context, Object, MaskResult>);
     }
 
-    // NB: async class methods were added to node in v8.x
-    async resolve(obj: Object, args: Args, context: Context, info: GraphQLResolveInfo) {
+    async resolve(obj: Object, args: Args, context: Context, info: GraphQLResolveInfo): Promise<TransformedResult extends void ? AggregateResult : TransformedResult>;
+    async resolve(obj: Object, args: Args, context: Context, info: GraphQLResolveInfo): Promise<TransformedResult | AggregateResult> {
         if (this.authorize) {
             // allow authorizer to be looked up by name
             const authorize = isFunction(this.authorize)
