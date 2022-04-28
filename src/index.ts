@@ -6,7 +6,7 @@ import './routes';
 import './terminal';
 
 export { createGraphQLEnumType } from './enums';
-export { createResolver, createStrictResolver, getResolver, getResolverPipeline } from './resolvers';
+export * from './resolvers';
 export { withArgs } from './modules';
 export { signSymmetric, signPrivate } from './testing';
 export { wrapResolvers } from './wrapper';

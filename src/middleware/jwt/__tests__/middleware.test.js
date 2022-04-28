@@ -27,15 +27,12 @@ describe('JWT middleware', () => {
                     authorization: 'Bearer token',
                 },
             };
-
             expect(() => createValidateJWTMiddleware()(req)).toThrow('JWT middleware requires `middleware.jwt.audience` to be configured');
         });
-
         it('validates a token', async () => {
             const email = 'first.last@example.com';
             const secret = 'secret';
             const audience = 'audience';
-
             await Nodule.testing()
                 .fromObject({
                     middleware: {
@@ -46,21 +43,18 @@ describe('JWT middleware', () => {
                     },
                 })
                 .load();
-
             const token = signSymmetric({ email }, secret, audience);
             const req = {
                 headers: {
                     authorization: `Bearer ${token}`,
                 },
             };
-
             createValidateJWTMiddleware()(req, res, (error) => {
                 expect(error).not.toBeDefined();
                 expect(req.locals.jwt.aud).toEqual(audience);
                 expect(req.locals.jwt.email).toEqual(email);
             });
         });
-
         it('validates a token with multiple audiences', async () => {
             const email = 'first.last@example.com';
             const audience = 'test-audience';
@@ -76,21 +70,18 @@ describe('JWT middleware', () => {
                     },
                 })
                 .load();
-
             const token = signSymmetric({ email }, secret, audience);
             const req = {
                 headers: {
                     authorization: `Bearer ${token}`,
                 },
             };
-
             createValidateJWTMiddleware()(req, res, (error) => {
                 expect(error).not.toBeDefined();
                 expect(req.locals.jwt.aud).toEqual(audience);
                 expect(req.locals.jwt.email).toEqual(email);
             });
         });
-
         it('validates a token with multiple audiences as string', async () => {
             const email = 'first.last@example.com';
             const audience = 'test-audience';
@@ -106,26 +97,23 @@ describe('JWT middleware', () => {
                     },
                 })
                 .load();
-
             const token = signSymmetric({ email }, secret, 'test-audience');
             const req = {
                 headers: {
                     authorization: `Bearer ${token}`,
                 },
             };
-
             createValidateJWTMiddleware()(req, res, (error) => {
                 expect(error).not.toBeDefined();
                 expect(req.locals.jwt.aud).toEqual('test-audience');
                 expect(req.locals.jwt.email).toEqual(email);
             });
         });
-
-        it('returns an error on an invalid signature', async () => {
+        it('returns an error on an invalid signature', (done) => {
             const email = 'first.last@example.com';
             const audience = 'test-audience';
             const secret = 'test-secret';
-            await Nodule.testing()
+            Nodule.testing()
                 .fromObject({
                     middleware: {
                         jwt: {
@@ -135,21 +123,19 @@ describe('JWT middleware', () => {
                     },
                 })
                 .load();
-
             const token = signSymmetric({ email }, 'wrong', 'audience');
             const req = {
                 headers: {
                     authorization: `Bearer ${token}`,
                 },
             };
-
             res.end = () => {
                 expect(res.status).toHaveBeenCalledTimes(1);
                 expect(res.status).toHaveBeenCalledWith(401);
                 expect(res.json).toHaveBeenCalledTimes(1);
                 expect(res.json).toHaveBeenCalledWith({ message: 'Unauthorized' });
+                done();
             };
-
             createValidateJWTMiddleware()(req, res);
         });
     });
@@ -185,11 +171,11 @@ describe('JWT middleware', () => {
             });
         });
 
-        it('returns an error on an invalid signature', async () => {
+        it('returns an error on an invalid signature', (done) => {
             const email = 'first.last@example.com';
             const audience = 'test-audience';
             const secret = 'test-secret';
-            await Nodule.testing()
+            Nodule.testing()
                 .fromObject({
                     middleware: {
                         jwt: {
@@ -212,6 +198,7 @@ describe('JWT middleware', () => {
                 expect(res.status).toHaveBeenCalledWith(401);
                 expect(res.json).toHaveBeenCalledTimes(1);
                 expect(res.json).toHaveBeenCalledWith({ message: 'Unauthorized' });
+                done();
             };
 
             createValidateJWTMiddleware({ jwtSource: 'header' })(req, res);
@@ -250,11 +237,11 @@ describe('JWT middleware', () => {
             });
         });
 
-        it('returns an error on an invalid signature', async () => {
+        it('returns an error on an invalid signature', (done) => {
             const email = 'first.last@example.com';
             const audience = 'test-audience';
             const secret = 'test-secret';
-            await Nodule.testing()
+            Nodule.testing()
                 .fromObject({
                     middleware: {
                         jwt: {
@@ -277,6 +264,7 @@ describe('JWT middleware', () => {
                 expect(res.status).toHaveBeenCalledTimes(1);
                 expect(res.status).toHaveBeenCalledWith(401);
                 expect(res.json).toHaveBeenCalledTimes(0);
+                done();
             };
 
             createValidateJWTMiddleware({ jwtSource: 'body' })(req, res);
@@ -315,11 +303,11 @@ describe('JWT middleware', () => {
             });
         });
 
-        it('returns an error on an invalid signature', async () => {
+        it('returns an error on an invalid signature', (done) => {
             const email = 'first.last@example.com';
             const audience = 'test-audience';
             const secret = 'test-secret';
-            await Nodule.testing()
+            Nodule.testing()
                 .fromObject({
                     middleware: {
                         jwt: {
@@ -342,6 +330,7 @@ describe('JWT middleware', () => {
                 expect(res.status).toHaveBeenCalledTimes(1);
                 expect(res.status).toHaveBeenCalledWith(401);
                 expect(res.json).toHaveBeenCalledTimes(0);
+                done();
             };
 
             createValidateJWTMiddleware({ jwtSource: 'cookie' })(req, res);
