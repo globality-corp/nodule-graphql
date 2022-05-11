@@ -124,7 +124,7 @@ function createApolloServerOptions() {
     const { apolloEngine, apolloPlugins } = config.routes.graphql;
     const plugins = apolloPlugins ? Object.keys(apolloPlugins).map((key) => apolloPlugins[key]) : [];
 
-    const { enabled: engineEnabled, schemaTag, graphVariant, apiKey, ...engineConfig } = apolloEngine;
+    const { enabled: engineEnabled, schemaTag, graphVariant, apiKey, graphId, ...engineConfig } = apolloEngine;
     const enginePlugin = engineEnabled
         ? ApolloServerPluginUsageReporting({
               ...engineConfig,
@@ -139,6 +139,7 @@ function createApolloServerOptions() {
         schema,
         apollo: {
             key: apiKey,
+            graphId,
             graphVariant: graphVariant || schemaTag || undefined,
         },
         plugins: [ApolloServerPluginLandingPageDisabled(), ...plugins, enginePlugin],
