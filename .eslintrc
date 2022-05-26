@@ -1,6 +1,6 @@
 {
     "root": true,
-    "extends": "./node_modules/@globality/gi-eslint-config/src/configs/eslint/.base.eslintrc",
+    "extends": "./node_modules/@globality/gi-eslint-config/src/configs/eslint/.typescript.eslintrc",
     "settings": {
         "import/resolver": {
             "node": {

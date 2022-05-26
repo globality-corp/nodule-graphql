@@ -1,0 +1,5 @@
+{
+    "extends": "./tsconfig.json",
+    "exclude": ["**/*.test.*", "**/*.spec.*"],
+    "$schema": "https://json.schemastore.org/tsconfig"
+}

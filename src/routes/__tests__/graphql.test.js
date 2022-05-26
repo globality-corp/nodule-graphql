@@ -50,7 +50,7 @@ describe('routes.graphql', () => {
 
         await Nodule.testing().load();
 
-        getContainer('routes').graphql; // eslint-disable-line no-unused-expressions
+        await getContainer('routes').graphql;
 
         expect(mockApolloServer.mock.calls).toHaveLength(1);
         expect(mockApolloServer.mock.calls[0]).toHaveLength(1);

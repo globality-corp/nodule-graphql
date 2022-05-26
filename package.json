@@ -8,11 +8,11 @@
     "license": "MIT",
     "scripts": {
         "clean": "rm -rf ./lib",
-        "build": "babel src --out-dir lib --ignore '**/__tests__/*,**/__mocks__/*'",
+        "build": "yarn tsc --declaration --declarationMap -p tsconfig.build.json",
         "lint": "gi-eslint-run lint",
         "lint:fix": "gi-eslint-run lint --fix",
         "pack:dev": "./scripts/pack-dev.sh",
-        "test": "jest",
+        "test": "jest --runInBand",
         "verify": "yarn lint && yarn test",
         "preyalc": "yarn clean && yarn build"
     },
@@ -43,28 +43,21 @@
         "graphql": "^15.5.0"
     },
     "devDependencies": {
-        "@babel/cli": "^7.17.6",
-        "@babel/core": "^7.17.8",
-        "@babel/node": "^7.16.8",
-        "@babel/preset-env": "^7.16.11",
         "@globality/gi-eslint-config": "^1.0.12",
-        "@globality/nodule-config": "2.13.3",
+        "@globality/nodule-config": "2.13.0-dev905",
         "@globality/nodule-express": "0.1.14",
         "@globality/nodule-logging": "1.5.2",
-        "@globality/nodule-openapi": "0.21.0",
+        "@globality/nodule-openapi": "0.21.0-dev1276",
+        "@types/lodash": "^4.14.182",
         "body-parser": "1.19.0",
-        "graphql": "^15.5.0",
-        "jest": "^27.5.1",
-        "supertest": "6.1.2"
+        "graphql": "15.8.0",
+        "jest": "27.x",
+        "supertest": "6.1.2",
+        "ts-jest": "^27.1.4",
+        "typescript": "^4.6.3"
     },
     "resolutions": {
-        "lodash": "^4.17.21"
-    },
-    "jest": {
-        "testRegex": "/__tests__/.*(test)\\.js",
-        "modulePaths": [
-            "<rootDir>/src"
-        ],
-        "testURL": "http://localhost"
+        "lodash": "^4.17.21",
+        "graphql": "15.8.0"
     }
 }
