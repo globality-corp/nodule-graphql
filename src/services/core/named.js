@@ -9,6 +9,6 @@ export default function named(serviceRequestName) {
     const clients = getContainer(clientsName || 'clients');
     return (req, args) =>
         get(clients, `${serviceRequestName}`, () => {
-            throw InternalServerError(`${serviceRequestName} not implemented`);
+            throw new InternalServerError(`${serviceRequestName} not implemented`);
         })(req, args);
 }
