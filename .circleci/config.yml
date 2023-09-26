@@ -103,6 +103,15 @@ jobs:
                   at: ~/repo
 
             - run:
+                name: Authenticate NPM
+                command: |
+                    echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
+
+            - restore_cache:
+                keys:
+                - v1-dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
+
+            - run:
                   name: Publish to NPM
                   command: npm publish
 
