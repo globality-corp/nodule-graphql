@@ -11,7 +11,7 @@ export { ANY_NOT_NULL, ANY_PARAMETER, ANY_SINGLE_ITEM_LIST, ANY_UUID, CachingSpe
 export function cloneClients(obj) {
     return cloneDeepWith(obj, (node) =>
         typeof node === 'function'
-            ? async (req, args) => node(req, args)
+            ? async (req, args, options) => node(req, args, options)
             : Object.keys(node).reduce((acc, key) => ({ ...acc, [key]: cloneClients(node[key]) }), {})
     );
 }
