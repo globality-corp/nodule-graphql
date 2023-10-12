@@ -12,6 +12,7 @@ const retrieveCompanyName = createResolver({
 });
 
 const retrieveUser = createResolver({
+    preAggregate: () => {},
     aggregate: ({ userId }) => {
         const { services } = getContainer();
         return services.user.retrieve(userId);

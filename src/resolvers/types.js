@@ -21,14 +21,18 @@ function defaultMask(obj, args, context, info) {
  *     the expected shape of the upstream resource.
  *  -  A synchronous `mask` function, which manipulates the standard GraphQL resolver
  *     arguments into a form supported by the other functions.
+ *  -  An async `preAggregate` function, which can be used to factor out some preliminary work,
+ *     that requires a network call. It can alter the arguments passed to the `aggregate` function,
+ *     but can't change their order. Note it gets arguments in the order they are returned by `mask`.
  */
 export class Resolver {
-    constructor({ aggregate, authorize, authorizeData, transform, mask }) {
+    constructor({ aggregate, authorize, authorizeData, transform, mask, preAggregate }) {
         this.aggregate = aggregate;
         this.authorize = authorize;
         this.authorizeData = authorizeData;
         this.transform = transform;
         this.mask = mask || defaultMask;
+        this.preAggregate = preAggregate || null;
     }
 
     // NB: async class methods were added to node in v8.x
@@ -47,6 +51,11 @@ export class Resolver {
 
         // apply mask function
         const masked = this.mask(obj, args, context, info);
+
+        // apply preAggregate
+        if (this.preAggregate) {
+            await this.preAggregate(...masked);
+        }
 
         // aggregate asynchronous requests over services.
         const aggregated = await this.aggregate(...masked);
