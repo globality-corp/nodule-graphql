@@ -17,8 +17,6 @@
         "preyalc": "yarn clean && yarn build"
     },
     "dependencies": {
-        "apollo-server-core": "^3.6.7",
-        "apollo-server-express": "^3.6.7",
         "axios": "0.26.1",
         "connect-requestid": "1.1.0",
         "cors": "2.8.5",
