@@ -52,7 +52,7 @@
         "@globality/nodule-logging": "1.5.2",
         "@globality/nodule-openapi": "0.21.0",
         "body-parser": "1.19.0",
-        "graphql": "^15.5.0",
+        "graphql": "^16.6.0",
         "jest": "^27.5.1",
         "supertest": "6.1.2"
     },
