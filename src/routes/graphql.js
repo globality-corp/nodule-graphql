@@ -1,9 +1,7 @@
-import {
-    ApolloServer,
-    ApolloServerPluginUsageReporting,
-    ApolloServerPluginUsageReportingDisabled,
-    ApolloServerPluginLandingPageDisabled,
-} from '@apollo/server';
+import { ApolloServer } from '@apollo/server';
+import { ApolloServerPluginLandingPageDisabled, ApolloServerPluginUsageReportingDisabled } from '@apollo/server/plugin/disabled';
+import { ApolloServerPluginUsageReporting } from '@apollo/server/plugin/usageReporting';
+
 import { bind, getContainer, setDefaults } from '@globality/nodule-config';
 import { get, includes, merge, pickBy } from 'lodash';
 
