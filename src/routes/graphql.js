@@ -1,10 +1,10 @@
-import { bind, getContainer, setDefaults } from '@globality/nodule-config';
 import {
+    ApolloServer,
     ApolloServerPluginUsageReporting,
     ApolloServerPluginUsageReportingDisabled,
     ApolloServerPluginLandingPageDisabled,
-} from 'apollo-server-core';
-import { ApolloServer } from 'apollo-server-express';
+} from '@apollo/server';
+import { bind, getContainer, setDefaults } from '@globality/nodule-config';
 import { get, includes, merge, pickBy } from 'lodash';
 
 /**
