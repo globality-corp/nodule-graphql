@@ -47,7 +47,7 @@
         "@babel/preset-env": "^7.16.11",
         "@globality/gi-eslint-config": "^1.0.12",
         "@globality/nodule-config": "^2.14.0",
-        "@globality/nodule-express": "0.1.14",
+        "@globality/nodule-express": "0.6.1",
         "@globality/nodule-logging": "1.5.2",
         "@globality/nodule-openapi": "0.21.0",
         "body-parser": "1.19.0",
