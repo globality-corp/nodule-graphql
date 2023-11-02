@@ -1,6 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
-import { ApolloServerPluginLandingPageDisabled, ApolloServerPluginUsageReportingDisabled } from '@apollo/server/plugin/disabled';
+import { ApolloServerPluginUsageReportingDisabled } from '@apollo/server/plugin/disabled';
 import { ApolloServerPluginUsageReporting } from '@apollo/server/plugin/usageReporting';
 
 import { bind, getContainer, setDefaults } from '@globality/nodule-config';
@@ -141,7 +141,7 @@ function createApolloServerOptions() {
             graphId,
             graphVariant: graphVariant || schemaTag || undefined,
         },
-        plugins: [ApolloServerPluginLandingPageDisabled(), ...plugins, enginePlugin],
+        plugins: [...plugins, enginePlugin],
     };
 }
 
