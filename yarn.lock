@@ -1537,14 +1537,14 @@
     prettier "2.5.1"
     typescript "^4.5.4"
 
-"@globality/nodule-config@2.13.3":
-  version "2.13.3"
-  resolved "https://registry.yarnpkg.com/@globality/nodule-config/-/nodule-config-2.13.3.tgz#4995d6f035405c856be7d9cc97ea7eba5d099126"
-  integrity sha512-i3DGTzkTKH9Jq+3MB5Of9PSSXCD/nX9ZvHWbowjG4D9x/NntTD88FT/SXusOVUh0xV1wG7ROKc9PZTmNoM7F+A==
+"@globality/nodule-config@^2.14.0":
+  version "2.14.0"
+  resolved "https://globality.jfrog.io/globality/api/npm/npm/@globality/nodule-config/-/@globality/nodule-config-2.14.0.tgz#13789d325bf7aad1d22df6a6ec3d9a44644de7d3"
+  integrity sha512-oF3jwj0Ntd3ykQw5LEpAA/C5I8tEUtxy52BQ3BVGOTGZg8uLeQ8XxqolT3Sq1GXSnevGTnWJTqqC931AFEvuRQ==
   dependencies:
     aws-sdk "2.829.0"
     bottlejs "1.7.2"
-    lodash "4.17.20"
+    lodash "^4.17.21"
 
 "@globality/nodule-config@^2.3.0":
   version "2.13.5"
