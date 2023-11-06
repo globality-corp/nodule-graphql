@@ -1,5 +1,4 @@
 import * as apolloServer from '@apollo/server';
-import { ApolloServerPluginLandingPageDisabled } from '@apollo/server/plugin/disabled';
 import { ApolloServerPluginUsageReporting } from '@apollo/server/plugin/usageReporting';
 import { bind, setDefaults, getContainer, Nodule } from '@globality/nodule-config';
 import { GraphQLObjectType, GraphQLString, GraphQLSchema } from 'graphql';
@@ -35,7 +34,6 @@ describe('routes.graphql', () => {
         const mockApolloServerPluginUsageReporting = ApolloServerPluginUsageReporting.mockImplementation(
             () => 'ApolloServerPluginUsageReporting'
         );
-        ApolloServerPluginLandingPageDisabled.mockImplementation(() => 'ApolloServerPluginLandingPageDisabled');
 
         const config = {
             enabled: true,
@@ -68,9 +66,6 @@ describe('routes.graphql', () => {
             sendVariableValues: config.sendVariableValues,
             sendHeaders: config.sendHeaders,
         });
-        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', [
-            'ApolloServerPluginLandingPageDisabled',
-            'ApolloServerPluginUsageReporting',
-        ]);
+        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', ['ApolloServerPluginUsageReporting']);
     });
 });

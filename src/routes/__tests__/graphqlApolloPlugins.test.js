@@ -1,5 +1,5 @@
 import * as apolloServer from '@apollo/server';
-import { ApolloServerPluginLandingPageDisabled, ApolloServerPluginUsageReportingDisabled } from '@apollo/server/plugin/disabled';
+import { ApolloServerPluginUsageReportingDisabled } from '@apollo/server/plugin/disabled';
 import { bind, setDefaults, getContainer, Nodule } from '@globality/nodule-config';
 import { GraphQLObjectType, GraphQLString, GraphQLSchema } from 'graphql';
 
@@ -34,7 +34,6 @@ describe('routes.graphql', () => {
         const mockApolloServerPluginUsageReportingDisabled = ApolloServerPluginUsageReportingDisabled.mockImplementation(
             () => 'ApolloServerPluginUsageReportingDisabled'
         );
-        ApolloServerPluginLandingPageDisabled.mockImplementation(() => 'ApolloServerPluginLandingPageDisabled');
 
         const plugins = [
             {
@@ -53,10 +52,6 @@ describe('routes.graphql', () => {
         expect(mockApolloServer.mock.calls[0]).toHaveLength(1);
         expect(mockApolloServerPluginUsageReportingDisabled).toHaveBeenCalledTimes(1);
         expect(mockApolloServerPluginUsageReportingDisabled).toHaveBeenCalledWith();
-        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', [
-            'ApolloServerPluginLandingPageDisabled',
-            plugins[0],
-            'ApolloServerPluginUsageReportingDisabled',
-        ]);
+        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', [plugins[0], 'ApolloServerPluginUsageReportingDisabled']);
     });
 });
