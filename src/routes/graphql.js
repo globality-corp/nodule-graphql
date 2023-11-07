@@ -1,4 +1,5 @@
 import { ApolloServer } from '@apollo/server';
+import { unwrapResolverError } from '@apollo/server/errors';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginUsageReportingDisabled } from '@apollo/server/plugin/disabled';
 import { ApolloServerPluginUsageReporting } from '@apollo/server/plugin/usageReporting';
@@ -56,9 +57,9 @@ function determineErrorMessage(error) {
 /**
  * Format the given error before it is serialized and sent to the client
  */
-function formatError(error) {
-    const extensions = error.extensions || {};
-    const originalError = error.originalError || {};
+function formatError(formattedError, error) {
+    const extensions = formattedError.extensions || {};
+    const originalError = unwrapResolverError(error);
     const code = extensions.code || originalError.code;
     const headers = originalError.headers || {};
     const traceId = extensions.traceId || originalError.traceId || headers['x-trace-id'];
@@ -77,11 +78,11 @@ function formatError(error) {
 
     // According to section 7.1.2 of the GraphQL specification, fields `message`, and `path` are
     // required. The `locations` field may be included.
-    newError.message = determineErrorMessage(error);
-    newError.path = error.path;
+    newError.message = determineErrorMessage(formattedError);
+    newError.path = formattedError.path;
 
-    if (error.locations) {
-        newError.locations = error.locations;
+    if (formattedError.locations) {
+        newError.locations = formattedError.locations;
     }
 
     const newExts = {};
