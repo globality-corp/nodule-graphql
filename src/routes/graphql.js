@@ -222,5 +222,7 @@ bind('routes.graphql', async () => {
     const server = new ApolloServer(options);
     await server.start();
     terminal.enabled('graphql');
-    return expressMiddleware(server);
+    return expressMiddleware(server, {
+        context: async ({ req }) => req,
+    });
 });
