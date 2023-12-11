@@ -42,7 +42,7 @@ export const UserListType = new GraphQLObjectType({
     name: 'UserListType',
     fields: {
         items: {
-            type: GraphQLList(UserType),
+            type: new GraphQLList(UserType),
         },
     },
 });

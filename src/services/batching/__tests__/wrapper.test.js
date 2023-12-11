@@ -34,6 +34,9 @@ jest.mock('@globality/nodule-config', () => {
                         enabled: false,
                     },
                 },
+                cors: {
+                    reflectOrigin: true,
+                },
             },
             createKey,
             metadata: {},

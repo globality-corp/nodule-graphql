@@ -1,10 +1,11 @@
+import * as apolloServer from '@apollo/server';
+import { ApolloServerPluginUsageReporting } from '@apollo/server/plugin/usageReporting';
 import { bind, setDefaults, getContainer, Nodule } from '@globality/nodule-config';
-import * as apolloServerCore from 'apollo-server-core';
-import * as apolloServerExpress from 'apollo-server-express';
 import { GraphQLObjectType, GraphQLString, GraphQLSchema } from 'graphql';
 
-jest.mock('apollo-server-express');
-jest.mock('apollo-server-core');
+jest.mock('@apollo/server');
+jest.mock('@apollo/server/plugin/disabled');
+jest.mock('@apollo/server/plugin/usageReporting');
 
 import '../graphql'; // eslint-disable-line import/first
 import '../../terminal'; // eslint-disable-line import/first
@@ -29,11 +30,10 @@ bind('graphql.schema', () => schema);
 describe('routes.graphql', () => {
     it('will supply apollo engine configs to apollo server instance', async () => {
         const mockApolloServer = jest.fn();
-        apolloServerExpress.ApolloServer.mockImplementation(mockApolloServer.mockReturnThis());
-        const mockApolloServerPluginUsageReporting = apolloServerCore.ApolloServerPluginUsageReporting.mockImplementation(
+        apolloServer.ApolloServer.mockImplementation(mockApolloServer.mockReturnThis());
+        const mockApolloServerPluginUsageReporting = ApolloServerPluginUsageReporting.mockImplementation(
             () => 'ApolloServerPluginUsageReporting'
         );
-        apolloServerCore.ApolloServerPluginLandingPageDisabled.mockImplementation(() => 'ApolloServerPluginLandingPageDisabled');
 
         const config = {
             enabled: true,
@@ -66,9 +66,6 @@ describe('routes.graphql', () => {
             sendVariableValues: config.sendVariableValues,
             sendHeaders: config.sendHeaders,
         });
-        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', [
-            'ApolloServerPluginLandingPageDisabled',
-            'ApolloServerPluginUsageReporting',
-        ]);
+        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', ['ApolloServerPluginUsageReporting']);
     });
 });

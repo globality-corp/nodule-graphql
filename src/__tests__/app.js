@@ -8,14 +8,16 @@ import './services';
 import './schema';
 
 export default async function createApp() {
-    const { express, graphiql, graphql, health, notFound } = getContainer('routes');
+    const { express, graphql: graphqlRoute, health, notFound } = getContainer('routes');
+
+    const graphql = await graphqlRoute;
 
     express.get('/health', health);
 
-    express.post('/graphql', bodyParser.json(), await graphql);
-
-    if (graphiql) {
-        express.get('/graphiql', bodyParser.json(), graphiql);
+    if (process.NODE_ENV !== 'production') {
+        express.use('/graphql', bodyParser.json(), graphql);
+    } else {
+        express.post('/graphql', bodyParser.json(), graphql);
     }
 
     express.all('/*', notFound);

@@ -1,10 +1,11 @@
+import * as apolloServer from '@apollo/server';
+import { ApolloServerPluginUsageReportingDisabled } from '@apollo/server/plugin/disabled';
 import { bind, setDefaults, getContainer, Nodule } from '@globality/nodule-config';
-import * as apolloServerCore from 'apollo-server-core';
-import * as apolloServerExpress from 'apollo-server-express';
 import { GraphQLObjectType, GraphQLString, GraphQLSchema } from 'graphql';
 
-jest.mock('apollo-server-express');
-jest.mock('apollo-server-core');
+jest.mock('@apollo/server');
+jest.mock('@apollo/server/plugin/disabled');
+jest.mock('@apollo/server/plugin/usageReporting');
 
 import '../graphql'; // eslint-disable-line import/first
 import '../../terminal'; // eslint-disable-line import/first
@@ -29,11 +30,10 @@ bind('graphql.schema', () => schema);
 describe('routes.graphql', () => {
     it('will supply apollo plugins configs to apollo server instance', async () => {
         const mockApolloServer = jest.fn();
-        apolloServerExpress.ApolloServer.mockImplementation(mockApolloServer.mockReturnThis());
-        const mockApolloServerPluginUsageReportingDisabled = apolloServerCore.ApolloServerPluginUsageReportingDisabled.mockImplementation(
+        apolloServer.ApolloServer.mockImplementation(mockApolloServer.mockReturnThis());
+        const mockApolloServerPluginUsageReportingDisabled = ApolloServerPluginUsageReportingDisabled.mockImplementation(
             () => 'ApolloServerPluginUsageReportingDisabled'
         );
-        apolloServerCore.ApolloServerPluginLandingPageDisabled.mockImplementation(() => 'ApolloServerPluginLandingPageDisabled');
 
         const plugins = [
             {
@@ -52,10 +52,6 @@ describe('routes.graphql', () => {
         expect(mockApolloServer.mock.calls[0]).toHaveLength(1);
         expect(mockApolloServerPluginUsageReportingDisabled).toHaveBeenCalledTimes(1);
         expect(mockApolloServerPluginUsageReportingDisabled).toHaveBeenCalledWith();
-        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', [
-            'ApolloServerPluginLandingPageDisabled',
-            plugins[0],
-            'ApolloServerPluginUsageReportingDisabled',
-        ]);
+        expect(mockApolloServer.mock.calls[0][0]).toHaveProperty('plugins', [plugins[0], 'ApolloServerPluginUsageReportingDisabled']);
     });
 });
