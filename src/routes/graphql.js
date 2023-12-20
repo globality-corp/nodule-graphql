@@ -143,6 +143,7 @@ function createApolloServerOptions() {
             graphVariant: graphVariant || schemaTag || undefined,
         },
         plugins: [ApolloServerPluginLandingPageDisabled(), ...plugins, enginePlugin],
+        introspection: false,
     };
 }
 
@@ -219,6 +220,7 @@ setDefaults('routes.graphql.apolloEngine', {
 bind('routes.graphql', async () => {
     const { terminal } = getContainer();
     const options = createApolloServerOptions();
+    console.log('----', options, process.env.NODE_ENV);
     const server = new ApolloServer(options);
     await server.start();
     terminal.enabled('graphql');
