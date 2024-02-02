@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { memoize } from 'lodash';
 
 /**
@@ -9,7 +10,7 @@ import { memoize } from 'lodash';
  *
  * See: https://github.com/auth0/node-jwks-rsa/blob/master/src/utils.js
  */
-function prepadSigned(hexStr) {
+function prepadSigned(hexStr: any) {
     const msb = hexStr[0];
     if (msb < '0' || msb > '7') {
         return `00${hexStr}`;
@@ -17,7 +18,7 @@ function prepadSigned(hexStr) {
     return hexStr;
 }
 
-function toHex(number) {
+function toHex(number: any) {
     const nstr = number.toString(16);
     if (nstr.length % 2) {
         return `0${nstr}`;
@@ -25,7 +26,7 @@ function toHex(number) {
     return nstr;
 }
 
-function encodeLengthHex(n) {
+function encodeLengthHex(n: any) {
     if (n <= 127) {
         return toHex(n);
     }
@@ -37,7 +38,7 @@ function encodeLengthHex(n) {
 /*
  * Source: http://stackoverflow.com/questions/18835132/xml-to-pem-in-node-js
  */
-const rsaPublicKeyToPEM = (modulusB64, exponentB64) => {
+const rsaPublicKeyToPEM = (modulusB64: any, exponentB64: any) => {
     const modulus = Buffer.from(modulusB64, 'base64');
     const exponent = Buffer.from(exponentB64, 'base64');
     const modulusHex = prepadSigned(modulus.toString('hex'));
@@ -53,6 +54,7 @@ const rsaPublicKeyToPEM = (modulusB64, exponentB64) => {
     const der = Buffer.from(encodedPubkey, 'hex').toString('base64');
 
     let pem = '-----BEGIN RSA PUBLIC KEY-----\n';
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
     pem += `${der.match(/.{1,64}/g).join('\n')}`;
     pem += '\n-----END RSA PUBLIC KEY-----\n';
     return pem;
@@ -68,11 +70,11 @@ const rsaPublicKeyToPEM = (modulusB64, exponentB64) => {
  *
  *    https://{domain}/auth0.com/.well-known/jwks.json
  */
-export default function loadPublicKey(domain, kid, publicKeyRootPath) {
+export default function loadPublicKey(domain: any, kid: any, publicKeyRootPath: any) {
     const path = `${publicKeyRootPath}/${domain}.jwks`;
     // NB: don't load the file more than once
     const jwks = JSON.parse(memoize(readFileSync)(path));
-    const signingKeys = jwks.keys.filter((key) => key.kid === kid);
+    const signingKeys = jwks.keys.filter((key: any) => key.kid === kid);
     const signingKey = signingKeys[0];
     if (!signingKey) {
         throw new Error(`No key matches: ${kid}`);

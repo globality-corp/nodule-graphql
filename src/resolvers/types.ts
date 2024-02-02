@@ -1,10 +1,11 @@
 import { getContainer } from '@globality/nodule-config';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { isFunction, isNil } from 'lodash';
 
 /**
  * Default mask function: preserves standard arguments
  */
-function defaultMask(obj, args, context, info) {
+function defaultMask(obj: any, args: any, context: any, info: any) {
     return [obj, args, context, info];
 }
 
@@ -26,7 +27,20 @@ function defaultMask(obj, args, context, info) {
  *     but can't change their order. Note it gets arguments in the order they are returned by `mask`.
  */
 export class Resolver {
-    constructor({ aggregate, authorize, authorizeData, transform, mask, preAggregate }) {
+    aggregate: any;
+    authorize: any;
+    authorizeData: any;
+    mask: any;
+    preAggregate: any;
+    transform: any;
+    constructor({
+        aggregate,
+        authorize,
+        authorizeData,
+        transform,
+        mask,
+        preAggregate
+    }: any) {
         this.aggregate = aggregate;
         this.authorize = authorize;
         this.authorizeData = authorizeData;
@@ -36,7 +50,7 @@ export class Resolver {
     }
 
     // NB: async class methods were added to node in v8.x
-    async resolve(obj, args, context, info) {
+    async resolve(obj: any, args: any, context: any, info: any) {
         if (this.authorize) {
             // allow authorizer to be looked up by name
             const authorize = isFunction(this.authorize) ? this.authorize : getContainer(`graphql.authorizers.${this.authorize}`);
@@ -72,7 +86,7 @@ export class Resolver {
 /**
  * Create a resolver.
  */
-export function createResolver(options) {
+export function createResolver(options: any) {
     return new Resolver(options);
 }
 
@@ -81,7 +95,7 @@ export function createResolver(options) {
  *
  * A strict resolver must define an authorize and a mask function.
  */
-export function createStrictResolver(options) {
+export function createStrictResolver(options: any) {
     if (!options.aggregate) {
         throw new Error('Strict resolver must define an `aggregate` option');
     }

@@ -3,8 +3,11 @@
  *  This utility will reduce the amount of queries that styx creates by batching similar queries
  */
 import { getContainer } from '@globality/nodule-config';
+// @ts-expect-error TS(7016): Could not find a declaration file for module '@glo... Remove this comment to see the full error message
 import { NotFound, InternalServerError } from '@globality/nodule-express';
+// @ts-expect-error TS(7016): Could not find a declaration file for module '@glo... Remove this comment to see the full error message
 import { concurrentPaginate, all } from '@globality/nodule-openapi';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { assign, chunk, chain, flatten, get, groupBy, omit, uniq } from 'lodash';
 
 /* Checks that a service request can be batched:
@@ -12,7 +15,7 @@ import { assign, chunk, chain, flatten, get, groupBy, omit, uniq } from 'lodash'
  * 2. Does not contain offset parameter
  * 3. Does not contain limit>1 parameter
  */
-function canArgsBeBatched(args, accumulateBy) {
+function canArgsBeBatched(args: any, accumulateBy: any) {
     return args[accumulateBy] !== undefined && args.offset === undefined && (args.limit === undefined || args.limit === 1);
 }
 
@@ -20,10 +23,10 @@ function canArgsBeBatched(args, accumulateBy) {
  * List of args that can be batched (based on canArgsBeBatched)
  * List of args that cannot be batched
  */
-function filterArgsToBatch(argsList, accumulateBy) {
-    const batchableArgsList = [];
-    const unBatchableArgsList = [];
-    argsList.forEach((args) => {
+function filterArgsToBatch(argsList: any, accumulateBy: any) {
+    const batchableArgsList: any = [];
+    const unBatchableArgsList: any = [];
+    argsList.forEach((args: any) => {
         if (canArgsBeBatched(args, accumulateBy)) {
             batchableArgsList.push(args);
         } else {
@@ -59,9 +62,9 @@ function filterArgsToBatch(argsList, accumulateBy) {
  *     ],
  * ]
  */
-function getArgsChunksList(req, argsList, accumulateBy) {
+function getArgsChunksList(req: any, argsList: any, accumulateBy: any) {
     const { createKey, config } = getContainer();
-    const argsGroups = groupBy(argsList, (args) => createKey(omit(args, accumulateBy)));
+    const argsGroups = groupBy(argsList, (args: any) => createKey(omit(args, accumulateBy)));
     const batchLimit = get(config, 'performance.batchLimit', 30);
     return flatten(Object.keys(argsGroups).map((key) => chunk(argsGroups[key], batchLimit)));
 }
@@ -75,10 +78,12 @@ function getArgsChunksList(req, argsList, accumulateBy) {
  *          "{ userId: 1, event: FooEvent }": { count: 1, items: [...] }
  *          }
  */
-async function resolveSimpleRequest(req, serviceRequest, args) {
+async function resolveSimpleRequest(req: any, serviceRequest: any, args: any) {
     const { createKey } = getContainer();
     const key = createKey(args);
-    const res = await serviceRequest(req, args).catch((error) => ({ error }));
+    const res = await serviceRequest(req, args).catch((error: any) => ({
+        error
+    }));
     return { [key]: res };
 }
 
@@ -102,15 +107,19 @@ async function resolveSimpleRequest(req, serviceRequest, args) {
  *          { userIds: [1], event: BarEvent, sourceType: unknown },
  *      ]
  */
-function batchRequestsArgs(argsList, { accumulateBy, accumulateInto, assignArgs = [{}] }) {
+function batchRequestsArgs(argsList: any, {
+    accumulateBy,
+    accumulateInto,
+    assignArgs = [{}]
+}: any) {
     const batchedArgs = {
-        [accumulateInto]: uniq(flatten(argsList.map((args) => args[accumulateBy]))),
+        [accumulateInto]: uniq(flatten(argsList.map((args: any) => args[accumulateBy]))),
         ...omit(argsList[0], [accumulateBy, 'limit']),
     };
     return assign(batchedArgs, ...assignArgs);
 }
 
-function fakeResponse(items, fakeSearchResponse) {
+function fakeResponse(items: any, fakeSearchResponse: any) {
     if (fakeSearchResponse) {
         if (!items) {
             return {
@@ -158,8 +167,16 @@ function fakeResponse(items, fakeSearchResponse) {
  *         }
  */
 async function resolveBatchRequest(
-    req,
-    { requestsArgs, searchRequest, accumulateBy, accumulateInto, splitResponseBy, assignArgs, fakeSearchResponse }
+    req: any,
+    {
+        requestsArgs,
+        searchRequest,
+        accumulateBy,
+        accumulateInto,
+        splitResponseBy,
+        assignArgs,
+        fakeSearchResponse
+    }: any
 ) {
     /* Batch many requests to a single search request
      */
@@ -172,26 +189,27 @@ async function resolveBatchRequest(
     /* Resolve it
      * If error is raised, create many { error, id } items
      */
-    const allResults = await all(req, { searchRequest, args: batchedArgs }).catch((error) =>
-        batchedArgs[accumulateInto].map((id) => ({
-            error,
-            [splitResponseBy]: id,
-        }))
+    const allResults = await all(req, { searchRequest, args: batchedArgs }).catch((error: any) => batchedArgs[accumulateInto].map((id: any) => ({
+        error,
+        [splitResponseBy]: id
+    }))
     );
     // Split the response by 'splitResponseBy'
     const groupedResults = groupBy(allResults, splitResponseBy);
     const { createKey } = getContainer();
     // Match the response items to the requests
     const resultsBuckets = requestsArgs.reduce(
+        // @ts-expect-error TS(7006): Parameter 'acc' implicitly has an 'any' type.
         (acc, requestArgs) => ({
             [createKey(requestArgs)]: chain([requestArgs[accumulateBy]])
                 .flatten()
-                .map((accumulateArg) => groupedResults[accumulateArg])
+                .map((accumulateArg: any) => groupedResults[accumulateArg])
                 .concat()
                 .flatten()
                 .compact()
                 .value(),
-            ...acc,
+
+            ...acc
         }),
         {}
     );
@@ -217,7 +235,7 @@ async function resolveBatchRequest(
  * error key and value that should be thrown.
  */
 export default async function batchRequests(
-    req,
+    req: any,
     {
         argsList,
         serviceRequest,
@@ -226,8 +244,8 @@ export default async function batchRequests(
         splitResponseBy = null,
         assignArgs = [],
         batchSearchRequest = null,
-        fakeSearchResponse = false,
-    }
+        fakeSearchResponse = false
+    }: any
 ) {
     const { batchableArgsList, unBatchableArgsList } = filterArgsToBatch(argsList, accumulateBy);
     const argsChunksList = getArgsChunksList(req, batchableArgsList, accumulateBy);
@@ -237,11 +255,11 @@ export default async function batchRequests(
     // * Requests that can be batched but with length 1
     const argsListNotToBatch = [
         ...unBatchableArgsList,
-        ...argsChunksList.filter((argsChunks) => argsChunks.length === 1).map((argsChunks) => argsChunks[0]),
+        ...argsChunksList.filter((argsChunks: any) => argsChunks.length === 1).map((argsChunks: any) => argsChunks[0]),
     ];
 
     // Batch
-    const argsListToBatch = argsChunksList.filter((argsChunks) => argsChunks.length > 1);
+    const argsListToBatch = argsChunksList.filter((argsChunks: any) => argsChunks.length > 1);
 
     /* Create a search request promises based on argsList.
      * Every promise will return an object with (str(args): response) items
@@ -252,22 +270,22 @@ export default async function batchRequests(
      */
     const requestPromises = [
         ...argsListNotToBatch.map((args) => resolveSimpleRequest(req, serviceRequest, args)),
-        ...argsListToBatch.map((argsChunks) =>
-            resolveBatchRequest(req, {
-                requestsArgs: argsChunks,
-                searchRequest: batchSearchRequest || serviceRequest,
-                accumulateBy,
-                accumulateInto,
-                splitResponseBy: splitResponseBy || accumulateBy,
-                assignArgs,
-                fakeSearchResponse,
-            })
+        ...argsListToBatch.map((argsChunks: any) => resolveBatchRequest(req, {
+            requestsArgs: argsChunks,
+            searchRequest: batchSearchRequest || serviceRequest,
+            accumulateBy,
+            accumulateInto,
+            splitResponseBy: splitResponseBy || accumulateBy,
+            assignArgs,
+            fakeSearchResponse,
+        })
         ),
     ];
 
     const resonseObjects = await concurrentPaginate(requestPromises);
     const { createKey } = getContainer();
     // Merge all responses to one (str(args) => response) object and arrange the response
+    // @ts-expect-error TS(2556): A spread argument must either have a tuple type or... Remove this comment to see the full error message
     const responsesObject = Object.assign(...resonseObjects);
-    return argsList.map((args) => responsesObject[createKey(args)]);
+    return argsList.map((args: any) => responsesObject[createKey(args)]);
 }

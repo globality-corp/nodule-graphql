@@ -15,7 +15,7 @@ import batchRequests from './batchRequests';
  * loaderName: allows to access the DataLoader loader object with req.loaders.{loaderName}
  */
 export default function batched(
-    serviceRequest,
+    serviceRequest: any,
     {
         accumulateBy,
         accumulateInto,
@@ -23,11 +23,11 @@ export default function batched(
         assignArgs = [],
         batchSearchRequest = null,
         isSearchRequest = null,
-        loaderName = null,
-    }
+        loaderName = null
+    }: any
 ) {
     const fakeSearchResponse = isSearchRequest === null ? batchSearchRequest === null : isSearchRequest;
-    const wrapper = (req, argsList) =>
+    const wrapper = (req: any, argsList: any) =>
         argsList.length === 1
             ? Promise.all([serviceRequest(req, argsList[0])])
             : batchRequests(req, {

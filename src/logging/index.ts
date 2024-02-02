@@ -3,15 +3,17 @@
  */
 
 import { bind, getContainer } from '@globality/nodule-config';
+// @ts-expect-error TS(7016): Could not find a declaration file for module '@glo... Remove this comment to see the full error message
 import { extractLoggingProperties } from '@globality/nodule-logging';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { assign, get } from 'lodash';
 
-export function calculateExecuteTime(executeStartTime) {
+export function calculateExecuteTime(executeStartTime: any) {
     const executeTime = process.hrtime(executeStartTime);
     return executeTime[0] * 1e3 + executeTime[1] * 1e-6;
 }
 
-export function getElapsedTime(req) {
+export function getElapsedTime(req: any) {
     if (!req._startAt) {
         return 0;
     }
@@ -19,7 +21,7 @@ export function getElapsedTime(req) {
     return diff[0] * 1e3 + diff[1] * 1e-6;
 }
 
-export function buildRequestLogs(req, serviceName, operationName, request) {
+export function buildRequestLogs(req: any, serviceName: any, operationName: any, request: any) {
     const { config } = getContainer();
     const { data, params } = request;
     const args = assign({}, params, data);
@@ -31,7 +33,7 @@ export function buildRequestLogs(req, serviceName, operationName, request) {
     };
 }
 
-export function logSuccess(req, request, response, requestLogs, executeStartTime) {
+export function logSuccess(req: any, request: any, response: any, requestLogs: any, executeStartTime: any) {
     const { method, url } = request;
     const { config, logger } = getContainer();
     const executeTime = calculateExecuteTime(executeStartTime);
@@ -52,7 +54,7 @@ export function logSuccess(req, request, response, requestLogs, executeStartTime
     }
 }
 
-export function extractErrorData(error) {
+export function extractErrorData(error: any) {
     const response = get(error, 'response');
 
     if (response) {
@@ -62,7 +64,7 @@ export function extractErrorData(error) {
     return get(error, 'data');
 }
 
-export function extractErrorMessage(error) {
+export function extractErrorMessage(error: any) {
     const responseData = get(error, 'response.data');
 
     if (responseData) {
@@ -72,7 +74,7 @@ export function extractErrorMessage(error) {
     return get(error, 'message');
 }
 
-export function extractErrorStatus(error) {
+export function extractErrorStatus(error: any) {
     const response = get(error, 'response');
 
     if (response) {
@@ -82,7 +84,7 @@ export function extractErrorStatus(error) {
     return get(error, 'status') || get(error, 'code');
 }
 
-export function logFailure(req, request, error, requestLogs) {
+export function logFailure(req: any, request: any, error: any, requestLogs: any) {
     const { method, url } = request;
     const { config, logger } = getContainer();
     const errorData = extractErrorData(error);

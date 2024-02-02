@@ -1,12 +1,16 @@
 import { getConfig, getMetadata } from '@globality/nodule-config';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { get } from 'lodash';
 
 import loadPublicKey from './publicKey';
 
 export const ALGORITHMS = {
-    HS256: ({ secret }) => {
+    HS256: ({
+        secret
+    }: any) => {
         if (!secret) {
             const metadata = getMetadata();
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             if (!metadata || !metadata.testing) {
                 throw new Error('HS256 signing requires `middleware.jwt.secret` to be configured');
             }
@@ -16,7 +20,12 @@ export const ALGORITHMS = {
         }
         return Buffer.from(secret, 'base64');
     },
-    RS256: ({ domain, publicKeyRootPath }, { kid }) => {
+    RS256: ({
+        domain,
+        publicKeyRootPath
+    }: any, {
+        kid
+    }: any) => {
         if (!domain) {
             throw new Error('RS256 signing requires `middleware.jwt.domain` to be configured');
         }
@@ -35,7 +44,7 @@ export const ALGORITHMS = {
  *
  * Implements an `express-jwt` secret callback.
  */
-export default function negotiateKey(req, header, payload, next) {
+export default function negotiateKey(req: any, header: any, payload: any, next: any) {
     if (!header) {
         return next(new Error('Could not parse JWT header; token may be invalid or expired'));
     }
@@ -45,13 +54,14 @@ export default function negotiateKey(req, header, payload, next) {
     const config = getConfig('middleware.jwt') || {};
     const algorithms = get(config, 'algorithms', 'HS256,RS256')
         .split(',')
-        .filter((algorithm) => !!algorithm)
-        .map((algorithm) => algorithm.trim());
+        .filter((algorithm: any) => !!algorithm)
+        .map((algorithm: any) => algorithm.trim());
 
     if (algorithms.indexOf(alg) === -1) {
         return next(new Error(`Unsupported algorithm: ${alg}`));
     }
 
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     const keyFunction = ALGORITHMS[alg];
 
     if (!keyFunction) {

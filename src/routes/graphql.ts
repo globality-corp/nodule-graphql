@@ -5,6 +5,7 @@ import { ApolloServerPluginUsageReportingDisabled } from '@apollo/server/plugin/
 import { ApolloServerPluginUsageReporting } from '@apollo/server/plugin/usageReporting';
 
 import { bind, getContainer, setDefaults } from '@globality/nodule-config';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { get, includes, merge, pickBy } from 'lodash';
 
 /**
@@ -12,20 +13,20 @@ import { get, includes, merge, pickBy } from 'lodash';
  *
  * Includes extension data from `req.locals.extensions.foo` if requested.
  */
-function injectExtensions(response, req) {
+function injectExtensions(response: any, req: any) {
     // ensure that req.locals.extensions exists
     merge(req, { locals: { extensions: {} } });
 
     const requested = get(req, 'body.extensions', {});
     // merge in all local extensions that were requested
-    const extensions = pickBy(req.locals.extensions, (value, key) => key in requested);
+    const extensions = pickBy(req.locals.extensions, (value: any, key: any) => key in requested);
     return Object.keys(extensions).length ? merge(response, { extensions }) : response;
 }
 
 /**
  * Check error message whitelist to determine which errors are safe to return
  */
-function checkErrorMessageWhitelist(error) {
+function checkErrorMessageWhitelist(error: any) {
     return includes(
         [
             // Persisted queries require these specific error messages to function correctly
@@ -42,7 +43,7 @@ function checkErrorMessageWhitelist(error) {
  *
  * Hides error messages based on a catch-all config.
  */
-function determineErrorMessage(error) {
+function determineErrorMessage(error: any) {
     const { config } = getContainer();
     const graphqlConfig = config.routes.graphql;
     const { hideErrors } = graphqlConfig;
@@ -57,12 +58,16 @@ function determineErrorMessage(error) {
 /**
  * Format the given error before it is serialized and sent to the client
  */
-function formatError(formattedError, error) {
+function formatError(formattedError: any, error: any) {
     const extensions = formattedError.extensions || {};
     const originalError = unwrapResolverError(error);
+    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     const code = extensions.code || originalError.code;
+    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     const headers = originalError.headers || {};
+    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     const traceId = extensions.traceId || originalError.traceId || headers['x-trace-id'];
+    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     const requestId = extensions.requestId || originalError.requestId || headers['x-request-id'];
 
     // Include the HTTP status code, trace ID and request ID if they exist. These can come from
@@ -79,24 +84,30 @@ function formatError(formattedError, error) {
     // According to section 7.1.2 of the GraphQL specification, fields `message`, and `path` are
     // required. The `locations` field may be included.
     newError.message = determineErrorMessage(formattedError);
+    // @ts-expect-error TS(2339): Property 'path' does not exist on type 'Error'.
     newError.path = formattedError.path;
 
     if (formattedError.locations) {
+        // @ts-expect-error TS(2339): Property 'locations' does not exist on type 'Error... Remove this comment to see the full error message
         newError.locations = formattedError.locations;
     }
 
     const newExts = {};
+    // @ts-expect-error TS(2339): Property 'extensions' does not exist on type 'Erro... Remove this comment to see the full error message
     newError.extensions = newExts;
 
     if (code) {
+        // @ts-expect-error TS(2339): Property 'code' does not exist on type '{}'.
         newExts.code = code;
     }
 
     if (traceId) {
+        // @ts-expect-error TS(2339): Property 'traceId' does not exist on type '{}'.
         newExts.traceId = traceId;
     }
 
     if (requestId) {
+        // @ts-expect-error TS(2339): Property 'requestId' does not exist on type '{}'.
         newExts.requestId = requestId;
     }
 
@@ -132,7 +143,9 @@ function createApolloServerOptions() {
         : ApolloServerPluginUsageReportingDisabled();
 
     return {
-        context: ({ req }) => req,
+        context: ({
+            req
+        }: any) => req,
         formatError,
         formatResponse: injectExtensions,
         rootValue: null,

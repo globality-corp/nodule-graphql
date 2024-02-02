@@ -8,7 +8,7 @@ import { getConfig, getContainer } from '@globality/nodule-config';
 
 import sendUnauthorized from './errors';
 
-export default function passBasicAuth(req, res, next) {
+export default function passBasicAuth(req: any, res: any, next: any) {
     const { logger } = getContainer();
 
     const realm = getConfig('middleware.jwt.realm');

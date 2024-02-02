@@ -1,4 +1,5 @@
 import { bind } from '@globality/nodule-config';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import padEnd from 'lodash/padEnd';
 
 const PAD = 20;
@@ -12,23 +13,25 @@ export function newline() {
     global.console.log();
 }
 
-export function show(label, value, color = CYAN) {
+export function show(label: any, value: any, color = CYAN) {
     const left = `${label}:`;
     const right = `${color}${value}${RESET}`;
     global.console.log(`${padEnd(left, PAD)} ${right}`);
 }
 
-export function disabled(service) {
+export function disabled(service: any) {
     show(service, 'disabled', RED);
 }
 
-export function enabled(service) {
+export function enabled(service: any) {
     show(service, 'enabled', GREEN);
 }
 
 function noop() {}
 
-bind('terminal', ({ metadata }) => ({
+bind('terminal', ({
+    metadata
+}: any) => ({
     disabled: metadata.testing ? noop : disabled,
     enabled: metadata.testing ? noop : enabled,
     newline,

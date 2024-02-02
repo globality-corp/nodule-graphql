@@ -1,6 +1,8 @@
 import { getContainer } from '@globality/nodule-config';
 import DataLoader from 'dataloader';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'enum... Remove this comment to see the full error message
 import Enum from 'enum';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { get, set } from 'lodash';
 
 import dedup from '../dedup/wrapper';
@@ -25,7 +27,7 @@ export const CacheResult = new Enum({
  * Using a data loader allows us to dedup and aggregate cache requests,
  * which is especially useful with memached's `Multi-Get` operation.
  */
-export function getCacheLoader(req, spec) {
+export function getCacheLoader(req: any, spec: any) {
     // Get a DataLoader for cache operations
     // Create it if it's the first use of it for the req.
     const { cache } = getContainer();
@@ -42,7 +44,7 @@ export function getCacheLoader(req, spec) {
     return loader;
 }
 
-export function getCacheAction(req, cacheData, spec) {
+export function getCacheAction(req: any, cacheData: any, spec: any) {
     // not in cache - update the cache cache
     if (!cacheData) {
         return CacheResult.noop;
@@ -60,7 +62,7 @@ export function getCacheAction(req, cacheData, spec) {
 /**
  * First fetch a resource from memached, then fallback to the service.
  */
-async function getFromCacheThenService(wrapped, spec, req, args, key) {
+async function getFromCacheThenService(wrapped: any, spec: any, req: any, args: any, key: any) {
     const { config, logger, cache } = getContainer();
     try {
         const cacheData = await getCacheLoader(req, spec).load(key);
@@ -88,6 +90,7 @@ async function getFromCacheThenService(wrapped, spec, req, args, key) {
         return [serviceData, CacheResult.noop];
     } catch (err) {
         const result = CacheResult.error;
+        // @ts-expect-error TS(2571): Object is of type 'unknown'.
         logger.warning(req, err.message, {
             error: err,
             key,
@@ -105,15 +108,16 @@ async function getFromCacheThenService(wrapped, spec, req, args, key) {
  *
  * `spec` is an instance of `CachingSpec`
  */
-export default function wrap(wrapped, spec, serviceName) {
+export default function wrap(wrapped: any, spec: any, serviceName: any) {
     spec.setEndpointName(serviceName);
-    const wrapper = async (req, args) => {
+    const wrapper = async (req: any, args: any) => {
         if (spec.shouldSkipCache(req, args)) {
             return wrapped(req, args);
         }
         const key = spec.createKey(args);
         const executeStartTime = process.hrtime();
         const [res, result] = await getFromCacheThenService(wrapped, spec, req, args, key);
+        // @ts-expect-error TS(2554): Expected 6 arguments, but got 5.
         traceCacheCall(spec, req, args, key, result);
         logCacheUsage(spec, req, key, result, executeStartTime);
         return res;

@@ -8,9 +8,12 @@
  * Our own batching and caching are necessary in many cases.
  */
 import { getContainer } from '@globality/nodule-config';
+// @ts-expect-error TS(7016): Could not find a declaration file for module '@glo... Remove this comment to see the full error message
 import { concurrentPaginate } from '@globality/nodule-openapi';
 import DataLoader from 'dataloader';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { get, set } from 'lodash';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'uuid... Remove this comment to see the full error message
 import { v4 as uuidv4 } from 'uuid';
 
 /**
@@ -20,7 +23,7 @@ import { v4 as uuidv4 } from 'uuid';
  * across requests because of potential to violate access control policies
  * between concurrent users.
  */
-function getLoader(req, loaderId, loadMany, allowBatch) {
+function getLoader(req: any, loaderId: any, loadMany: any, allowBatch: any) {
     const { createKey } = getContainer();
     let loader = get(req, `loaders.${loaderId}`);
 
@@ -43,20 +46,23 @@ function getLoader(req, loaderId, loadMany, allowBatch) {
  *   1. An error key (with Error as value)
  *   2. An (optional) id key (such as id, userId, etc) and value
  */
-function isError(object) {
+function isError(object: any) {
     return object.error && Object.keys(object).length <= 2;
 }
 
 /**
  * Wrapper that uses DataLoader for in-request de-duplication.
  */
-export function dedupMany(loadMany, { loaderName, allowBatch = false }) {
+export function dedupMany(loadMany: any, {
+    loaderName,
+    allowBatch = false
+}: any) {
     const loaderId = loaderName || uuidv4();
     // Fetch the loader in call time - (and in the req init)
-    return async (req, args) =>
+    return async (req: any, args: any) =>
         getLoader(req, loaderId, loadMany, allowBatch)
             .load(args)
-            .then((res) => {
+            .then((res: any) => {
                 // special case - batch wrapper can an object with an error key to raise
                 if (isError(res)) {
                     throw res.error;
@@ -68,8 +74,10 @@ export function dedupMany(loadMany, { loaderName, allowBatch = false }) {
 /**
  * Wrapper that uses DataLoader for in-request de-duplication.
  */
-export default function dedup(load, { loaderName }) {
-    const loadMany = async (req, argsList = []) => concurrentPaginate(argsList.map((args) => load(req, args)));
+export default function dedup(load: any, {
+    loaderName
+}: any) {
+    const loadMany = async (req: any, argsList = []) => concurrentPaginate(argsList.map((args) => load(req, args)));
 
     return dedupMany(loadMany, { loaderName });
 }

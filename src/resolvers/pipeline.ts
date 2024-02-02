@@ -1,4 +1,5 @@
 import { getContainer } from '@globality/nodule-config';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { flatten, indexOf, isFunction } from 'lodash';
 
 /**
@@ -7,19 +8,20 @@ import { flatten, indexOf, isFunction } from 'lodash';
  * Allowing keys to be functions allows resolver selection to be dynamic,
  * based on runtime arguments.
  */
-function expandKey(key, ...args) {
+function expandKey(key: any, ...args: any[]) {
     return isFunction(key) ? key(...args) : key;
 }
 
 /**
  * Build a mapping from keys to DI members with the given type.
  */
-function buildMapping(keys, type) {
+function buildMapping(keys: any, type: any) {
     return keys
-        .map((key) => [key, getContainer(`graphql.${type}.${key}`)])
-        .filter((pair) => !!pair[1])
+        .map((key: any) => [key, getContainer(`graphql.${type}.${key}`)])
+        .filter((pair: any) => !!pair[1])
         .reduce(
-            (acc, [key, value]) =>
+            // @ts-expect-error TS(7031): Binding element 'key' implicitly has an 'any' type... Remove this comment to see the full error message
+            (acc: any, [key, value]) =>
                 Object.assign(acc, {
                     [key]: value,
                 }),
@@ -30,28 +32,28 @@ function buildMapping(keys, type) {
 /**
  * Execute a pipeline.
  */
-async function executePipeline(pipeline, args) {
+async function executePipeline(pipeline: any, args: any) {
     // we expect exactly one resolver
     const resolverKey = Object.keys(pipeline.resolvers)[0];
     const resolverIndex = indexOf(pipeline.keys, resolverKey);
     const resolver = pipeline.resolvers[resolverKey];
 
     // apply masks to the input arguments
-    const masked = pipeline.keys.filter((key, index) => index < resolverIndex).reduce((acc, key) => pipeline.masks[key](...acc), args);
+    const masked = pipeline.keys.filter((key: any, index: any) => index < resolverIndex).reduce((acc: any, key: any) => pipeline.masks[key](...acc), args);
 
     // apply the resolver to the masked input
     const result = await resolver.resolve(...masked);
 
     // transform the result and the masked input
     return pipeline.keys
-        .filter((key, index) => index > resolverIndex)
-        .reduce((acc, key) => pipeline.transforms[key](acc, ...masked), result);
+        .filter((key: any, index: any) => index > resolverIndex)
+        .reduce((acc: any, key: any) => pipeline.transforms[key](acc, ...masked), result);
 }
 
 /**
  * Validate a pipeline.
  */
-function validatePipeline(pipeline) {
+function validatePipeline(pipeline: any) {
     // Ensure we have *exactly* one resolver
     if (Object.keys(pipeline.resolvers).length === 0) {
         throw new Error(`No resolver could be found for: ${pipeline.keys.join(', ')}`);
@@ -65,8 +67,8 @@ function validatePipeline(pipeline) {
 
     // Ensure all keys at the front of the pipeline are valid mask functions
     pipeline.keys
-        .filter((key, index) => index < resolverIndex)
-        .forEach((key) => {
+        .filter((key: any, index: any) => index < resolverIndex)
+        .forEach((key: any) => {
             if (!pipeline.masks[key]) {
                 throw new Error(`No mask could be found for: ${key}`);
             }
@@ -74,8 +76,8 @@ function validatePipeline(pipeline) {
 
     // Ensure that all keys at the back of the pipeline are valid transforms
     pipeline.keys
-        .filter((key, index) => index > resolverIndex)
-        .forEach((key) => {
+        .filter((key: any, index: any) => index > resolverIndex)
+        .forEach((key: any) => {
             if (!pipeline.transforms[key]) {
                 throw new Error(`No transform could be found for: ${key}`);
             }
@@ -94,19 +96,21 @@ function validatePipeline(pipeline) {
  *
  *     resolve: getResolverPipeline('maskFunctionName', 'resolverName', 'transformName'),
  */
-export function getResolverPipeline(...keys) {
+export function getResolverPipeline(...keys: any[]) {
     if (!keys.length) {
         throw new Error('Resolver pipeline requires a least one input');
     }
 
-    return async (...args) => {
+    return async (...args: any[]) => {
         const pipeline = {};
 
         // First, expand inputs keys in case they are actually functions
+        // @ts-expect-error TS(2339): Property 'keys' does not exist on type '{}'.
         pipeline.keys = flatten(keys.map((key) => expandKey(key, ...args)));
 
         // Next, map keys to resolvers, masks, and transfoms
         ['resolvers', 'masks', 'transforms'].forEach((type) => {
+            // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
             pipeline[type] = buildMapping(pipeline.keys, type);
         });
         // Then, ensure we have a valid pipeline
@@ -120,7 +124,7 @@ export function getResolverPipeline(...keys) {
 /**
  * Look up a single resolver by key.
  */
-export function getResolver(key) {
+export function getResolver(key: any) {
     // we just want a degenerate pipeline
     return getResolverPipeline(key);
 }

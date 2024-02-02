@@ -1,5 +1,7 @@
 import { getContainer } from '@globality/nodule-config';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'is-u... Remove this comment to see the full error message
 import { anyNonNil } from 'is-uuid';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { get, includes, isArray, isEqual, isFunction, isNil, isUndefined } from 'lodash';
 
 import createKey from '../core/keys';
@@ -7,13 +9,26 @@ import createKey from '../core/keys';
 import JSONStringify from './JSONStringify';
 import spooky128 from './spooky128';
 
-export const ANY_NOT_NULL = (value) => !isNil(value);
-export const ANY_PARAMETER = (value) => !isUndefined(value);
-export const ANY_SINGLE_ITEM_LIST = (value) => isArray(value) && value.length === 1;
-export const ANY_UUID = (value) => anyNonNil(value);
+export const ANY_NOT_NULL = (value: any) => !isNil(value);
+export const ANY_PARAMETER = (value: any) => !isUndefined(value);
+export const ANY_SINGLE_ITEM_LIST = (value: any) => isArray(value) && value.length === 1;
+export const ANY_UUID = (value: any) => anyNonNil(value);
 
 export class CachingSpec {
-    constructor({ cacheTTL = null, loaderName = null, resourceName, requireArgs = null, supportNoCache = false, endpointName }) {
+    cacheTTL: any;
+    endpointName: any;
+    loaderName: any;
+    requireArgs: any;
+    resourceName: any;
+    supportNoCache: any;
+    constructor({
+        cacheTTL = null,
+        loaderName = null,
+        resourceName,
+        requireArgs = null,
+        supportNoCache = false,
+        endpointName
+    }: any) {
         if (!resourceName) {
             throw new Error('resourceName is required');
         }
@@ -33,7 +48,7 @@ export class CachingSpec {
 
     /* Should fetch from the cache
      */
-    shouldSkipCache(req, args = {}) {
+    shouldSkipCache(req: any, args = {}) {
         const { config } = getContainer();
         const enabled = get(config, 'cache.enabled', false);
         const disableCache = get(req, 'cacheControl.disableCache');
@@ -52,14 +67,14 @@ export class CachingSpec {
         }
 
         if (this.requireArgs.length) {
-            return !this.requireArgs.some((reqArgs) => this.validateArgs(args, reqArgs));
+            return !this.requireArgs.some((reqArgs: any) => this.validateArgs(args, reqArgs));
         }
         return false;
     }
 
     /* validate that the returned etag matches the requested one
      */
-    validateEtag(req, cacheData) {
+    validateEtag(req: any, cacheData: any) {
         const requestedEtags = get(req, `cacheControl.etags.${this.resourceName}`);
         const { config } = getContainer();
 
@@ -91,7 +106,7 @@ export class CachingSpec {
 
     /* Should use/ignore cached resource - after they're fetched
      */
-    shouldIgnoreCache(req, cacheData) {
+    shouldIgnoreCache(req: any, cacheData: any) {
         if (!this.validateEtag(req, cacheData)) {
             return true;
         }
@@ -112,14 +127,15 @@ export class CachingSpec {
         }
 
         // no required arg can be missing
+        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         return Object.keys(requireArgs).every((key) => CachingSpec.validateArg(requireArgs, key, args[key]));
     }
 
-    setEndpointName(endpointName) {
+    setEndpointName(endpointName: any) {
         this.endpointName = endpointName;
     }
 
-    static validateArg(arg, key, value) {
+    static validateArg(arg: any, key: any, value: any) {
         const requiredValue = arg[key];
 
         if (isFunction(requiredValue) && requiredValue(value)) {
