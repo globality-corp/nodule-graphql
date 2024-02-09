@@ -55,7 +55,7 @@ describe('routes.graphql', () => {
         await Nodule.testing().load();
 
         // @ts-expect-error TS(2571): Object is of type 'unknown'.
-        getContainer('routes').graphql; // eslint-disable-line no-unused-expressions
+        getContainer('routes').graphql; // eslint-disable-line @typescript-eslint/no-unused-expressions
 
         // @ts-expect-error TS(2304): Cannot find name 'expect'.
         expect(mockApolloServer.mock.calls).toHaveLength(1);

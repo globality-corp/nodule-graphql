@@ -53,10 +53,7 @@ function isError(object: any) {
 /**
  * Wrapper that uses DataLoader for in-request de-duplication.
  */
-export function dedupMany(loadMany: any, {
-    loaderName,
-    allowBatch = false
-}: any) {
+export function dedupMany(loadMany: any, { loaderName, allowBatch = false }: any) {
     const loaderId = loaderName || uuidv4();
     // Fetch the loader in call time - (and in the req init)
     return async (req: any, args: any) =>
@@ -74,9 +71,7 @@ export function dedupMany(loadMany: any, {
 /**
  * Wrapper that uses DataLoader for in-request de-duplication.
  */
-export default function dedup(load: any, {
-    loaderName
-}: any) {
+export default function dedup(load: any, { loaderName }: any) {
     const loadMany = async (req: any, argsList = []) => concurrentPaginate(argsList.map((args) => load(req, args)));
 
     return dedupMany(loadMany, { loaderName });

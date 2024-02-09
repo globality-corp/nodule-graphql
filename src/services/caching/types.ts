@@ -16,19 +16,18 @@ export const ANY_UUID = (value: any) => anyNonNil(value);
 
 export class CachingSpec {
     cacheTTL: any;
+
     endpointName: any;
+
     loaderName: any;
+
     requireArgs: any;
+
     resourceName: any;
+
     supportNoCache: any;
-    constructor({
-        cacheTTL = null,
-        loaderName = null,
-        resourceName,
-        requireArgs = null,
-        supportNoCache = false,
-        endpointName
-    }: any) {
+
+    constructor({ cacheTTL = null, loaderName = null, resourceName, requireArgs = null, supportNoCache = false, endpointName }: any) {
         if (!resourceName) {
             throw new Error('resourceName is required');
         }

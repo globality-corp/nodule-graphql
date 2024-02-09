@@ -25,15 +25,15 @@ describe('dataLoader wrapper', () => {
     // @ts-expect-error TS(2304): Cannot find name 'beforeEach'.
     beforeEach(() => {
         // @ts-expect-error TS(2304): Cannot find name 'jest'.
-        companyRetrieve = jest.fn(async (
-            // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
-            _,
-            {
-                id
-            }: any
-        ) => ({
-            id
-        }));
+        companyRetrieve = jest.fn(
+            async (
+                // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
+                _,
+                { id }: any
+            ) => ({
+                id,
+            })
+        );
         req = {
             app: {
                 config: {},

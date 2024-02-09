@@ -5,9 +5,7 @@ import { get } from 'lodash';
 import loadPublicKey from './publicKey';
 
 export const ALGORITHMS = {
-    HS256: ({
-        secret
-    }: any) => {
+    HS256: ({ secret }: any) => {
         if (!secret) {
             const metadata = getMetadata();
             // @ts-expect-error TS(2571): Object is of type 'unknown'.
@@ -20,12 +18,7 @@ export const ALGORITHMS = {
         }
         return Buffer.from(secret, 'base64');
     },
-    RS256: ({
-        domain,
-        publicKeyRootPath
-    }: any, {
-        kid
-    }: any) => {
+    RS256: ({ domain, publicKeyRootPath }: any, { kid }: any) => {
         if (!domain) {
             throw new Error('RS256 signing requires `middleware.jwt.domain` to be configured');
         }

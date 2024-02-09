@@ -23,7 +23,7 @@ export default function batched(
         assignArgs = [],
         batchSearchRequest = null,
         isSearchRequest = null,
-        loaderName = null
+        loaderName = null,
     }: any
 ) {
     const fakeSearchResponse = isSearchRequest === null ? batchSearchRequest === null : isSearchRequest;

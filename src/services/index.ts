@@ -10,9 +10,10 @@ export { default as named } from './core/named';
 export { ANY_NOT_NULL, ANY_PARAMETER, ANY_SINGLE_ITEM_LIST, ANY_UUID, CachingSpec } from './caching/types';
 
 export function cloneClients(obj: any) {
-    return cloneDeepWith(obj, (node: any) => typeof node === 'function'
-        ? async (req: any, args: any, options: any) => node(req, args, options)
-        : Object.keys(node).reduce((acc, key) => ({ ...acc, [key]: cloneClients(node[key]) }), {})
+    return cloneDeepWith(obj, (node: any) =>
+        typeof node === 'function'
+            ? async (req: any, args: any, options: any) => node(req, args, options)
+            : Object.keys(node).reduce((acc, key) => ({ ...acc, [key]: cloneClients(node[key]) }), {})
     );
 }
 

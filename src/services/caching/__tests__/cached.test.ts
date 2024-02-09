@@ -54,20 +54,17 @@ describe('cache wrapper', () => {
     // @ts-expect-error TS(2304): Cannot find name 'beforeEach'.
     beforeEach(() => {
         // @ts-expect-error TS(2304): Cannot find name 'jest'.
-        plumbusRetrieve = jest.fn(async (
-            // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
-            _,
-            {
-                id,
-                idx
-            }: any
-        ) => ({
-            id: id || idx
-        }));
+        plumbusRetrieve = jest.fn(
+            async (
+                // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
+                _,
+                { id, idx }: any
+            ) => ({
+                id: id || idx,
+            })
+        );
         // @ts-expect-error TS(2304): Cannot find name 'jest'.
-        dinglebopSearch = jest.fn(async (_: any, {
-            ids
-        }: any) => [{ id: ids[0] }]);
+        dinglebopSearch = jest.fn(async (_: any, { ids }: any) => [{ id: ids[0] }]);
         req = {
             cacheControl: {},
         };
@@ -227,15 +224,15 @@ describe('cache wrapper', () => {
     // @ts-expect-error TS(2582): Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it('should skip cache if dont have requireArgs - ANY_NOT_NULL', async () => {
         // @ts-expect-error TS(2304): Cannot find name 'jest'.
-        plumbusRetrieve = jest.fn(async (
-            // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
-            _,
-            {
-                id
-            }: any
-        ) => ({
-            id: id || -1
-        }));
+        plumbusRetrieve = jest.fn(
+            async (
+                // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
+                _,
+                { id }: any
+            ) => ({
+                id: id || -1,
+            })
+        );
         mockCacheGet.mockReturnValueOnce({ id: 1 });
 
         const spec = new CachingSpec({

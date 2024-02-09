@@ -82,7 +82,7 @@ async function resolveSimpleRequest(req: any, serviceRequest: any, args: any) {
     const { createKey } = getContainer();
     const key = createKey(args);
     const res = await serviceRequest(req, args).catch((error: any) => ({
-        error
+        error,
     }));
     return { [key]: res };
 }
@@ -107,11 +107,7 @@ async function resolveSimpleRequest(req: any, serviceRequest: any, args: any) {
  *          { userIds: [1], event: BarEvent, sourceType: unknown },
  *      ]
  */
-function batchRequestsArgs(argsList: any, {
-    accumulateBy,
-    accumulateInto,
-    assignArgs = [{}]
-}: any) {
+function batchRequestsArgs(argsList: any, { accumulateBy, accumulateInto, assignArgs = [{}] }: any) {
     const batchedArgs = {
         [accumulateInto]: uniq(flatten(argsList.map((args: any) => args[accumulateBy]))),
         ...omit(argsList[0], [accumulateBy, 'limit']),
@@ -168,15 +164,7 @@ function fakeResponse(items: any, fakeSearchResponse: any) {
  */
 async function resolveBatchRequest(
     req: any,
-    {
-        requestsArgs,
-        searchRequest,
-        accumulateBy,
-        accumulateInto,
-        splitResponseBy,
-        assignArgs,
-        fakeSearchResponse
-    }: any
+    { requestsArgs, searchRequest, accumulateBy, accumulateInto, splitResponseBy, assignArgs, fakeSearchResponse }: any
 ) {
     /* Batch many requests to a single search request
      */
@@ -189,10 +177,11 @@ async function resolveBatchRequest(
     /* Resolve it
      * If error is raised, create many { error, id } items
      */
-    const allResults = await all(req, { searchRequest, args: batchedArgs }).catch((error: any) => batchedArgs[accumulateInto].map((id: any) => ({
-        error,
-        [splitResponseBy]: id
-    }))
+    const allResults = await all(req, { searchRequest, args: batchedArgs }).catch((error: any) =>
+        batchedArgs[accumulateInto].map((id: any) => ({
+            error,
+            [splitResponseBy]: id,
+        }))
     );
     // Split the response by 'splitResponseBy'
     const groupedResults = groupBy(allResults, splitResponseBy);
@@ -209,7 +198,7 @@ async function resolveBatchRequest(
                 .compact()
                 .value(),
 
-            ...acc
+            ...acc,
         }),
         {}
     );
@@ -244,7 +233,7 @@ export default async function batchRequests(
         splitResponseBy = null,
         assignArgs = [],
         batchSearchRequest = null,
-        fakeSearchResponse = false
+        fakeSearchResponse = false,
     }: any
 ) {
     const { batchableArgsList, unBatchableArgsList } = filterArgsToBatch(argsList, accumulateBy);
@@ -270,15 +259,16 @@ export default async function batchRequests(
      */
     const requestPromises = [
         ...argsListNotToBatch.map((args) => resolveSimpleRequest(req, serviceRequest, args)),
-        ...argsListToBatch.map((argsChunks: any) => resolveBatchRequest(req, {
-            requestsArgs: argsChunks,
-            searchRequest: batchSearchRequest || serviceRequest,
-            accumulateBy,
-            accumulateInto,
-            splitResponseBy: splitResponseBy || accumulateBy,
-            assignArgs,
-            fakeSearchResponse,
-        })
+        ...argsListToBatch.map((argsChunks: any) =>
+            resolveBatchRequest(req, {
+                requestsArgs: argsChunks,
+                searchRequest: batchSearchRequest || serviceRequest,
+                accumulateBy,
+                accumulateInto,
+                splitResponseBy: splitResponseBy || accumulateBy,
+                assignArgs,
+                fakeSearchResponse,
+            })
         ),
     ];
 

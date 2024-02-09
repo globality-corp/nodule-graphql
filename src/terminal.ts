@@ -29,9 +29,7 @@ export function enabled(service: any) {
 
 function noop() {}
 
-bind('terminal', ({
-    metadata
-}: any) => ({
+bind('terminal', ({ metadata }: any) => ({
     disabled: metadata.testing ? noop : disabled,
     enabled: metadata.testing ? noop : enabled,
     newline,

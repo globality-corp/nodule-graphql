@@ -66,31 +66,31 @@ describe('dataLoader requestWrapper', () => {
     // @ts-expect-error TS(2304): Cannot find name 'beforeEach'.
     beforeEach(() => {
         // @ts-expect-error TS(2304): Cannot find name 'jest'.
-        companyRetrieve = jest.fn(async (
-            // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
-            _,
-            {
-                id
-            }: any
-        ) => ({
-            id
-        }));
+        companyRetrieve = jest.fn(
+            async (
+                // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
+                _,
+                { id }: any
+            ) => ({
+                id,
+            })
+        );
         // @ts-expect-error TS(2304): Cannot find name 'jest'.
-        companySearch = jest.fn(async (
-            // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
-            _,
-            {
-                companyIds
-            }: any
-        ) => ({
-            items: companyIds.map((id: any) => ({
-                id
-            })),
+        companySearch = jest.fn(
+            async (
+                // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
+                _,
+                { companyIds }: any
+            ) => ({
+                items: companyIds.map((id: any) => ({
+                    id,
+                })),
 
-            count: companyIds.length,
-            offset: 0,
-            limit: 20
-        }));
+                count: companyIds.length,
+                offset: 0,
+                limit: 20,
+            })
+        );
         req = {
             app: {},
         };
@@ -282,21 +282,24 @@ describe('dataLoader requestWrapper', () => {
     // @ts-expect-error TS(2582): Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it('should raise for too many results', async () => {
         // @ts-expect-error TS(2304): Cannot find name 'jest'.
-        companySearch = jest.fn(async (
-            // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
-            _,
-            {
-                companyIds
-            }: any
-        ) => ({
-            items: [...companyIds.map((id: any) => ({
-                id
-            })), { id: 999 }],
+        companySearch = jest.fn(
+            async (
+                // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
+                _,
+                { companyIds }: any
+            ) => ({
+                items: [
+                    ...companyIds.map((id: any) => ({
+                        id,
+                    })),
+                    { id: 999 },
+                ],
 
-            count: companyIds.length + 1,
-            offset: 0,
-            limit: 20
-        }));
+                count: companyIds.length + 1,
+                offset: 0,
+                limit: 20,
+            })
+        );
         requestWrapper = batched(companyRetrieve, {
             accumulateBy: 'id',
             accumulateInto: 'companyIds',
@@ -326,21 +329,23 @@ describe('dataLoader requestWrapper', () => {
     // @ts-expect-error TS(2582): Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it('should raise for no results', async () => {
         // @ts-expect-error TS(2304): Cannot find name 'jest'.
-        companySearch = jest.fn(async (
-            // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
-            _,
-            {
-                companyIds
-            }: any
-        ) => ({
-            items: companyIds.filter((id: any) => id !== -999).map((id: any) => ({
-                id
-            })),
+        companySearch = jest.fn(
+            async (
+                // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
+                _,
+                { companyIds }: any
+            ) => ({
+                items: companyIds
+                    .filter((id: any) => id !== -999)
+                    .map((id: any) => ({
+                        id,
+                    })),
 
-            count: companyIds.length - 1,
-            offset: 0,
-            limit: 20
-        }));
+                count: companyIds.length - 1,
+                offset: 0,
+                limit: 20,
+            })
+        );
         requestWrapper = batched(companyRetrieve, {
             accumulateBy: 'id',
             accumulateInto: 'companyIds',
@@ -420,21 +425,24 @@ describe('dataLoader requestWrapper', () => {
     // @ts-expect-error TS(2582): Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it('should handle many search results', async () => {
         // @ts-expect-error TS(2304): Cannot find name 'jest'.
-        companySearch = jest.fn(async (
-            // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
-            _,
-            {
-                companyIds
-            }: any
-        ) => ({
-            items: [...companyIds.map((id: any) => ({
-                id
-            })), { id: 999 }],
+        companySearch = jest.fn(
+            async (
+                // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
+                _,
+                { companyIds }: any
+            ) => ({
+                items: [
+                    ...companyIds.map((id: any) => ({
+                        id,
+                    })),
+                    { id: 999 },
+                ],
 
-            count: companyIds.length + 1,
-            offset: 0,
-            limit: 20
-        }));
+                count: companyIds.length + 1,
+                offset: 0,
+                limit: 20,
+            })
+        );
         searchWrapper = batched(companySearch, {
             accumulateBy: 'companyIds',
             accumulateInto: 'companyIds',
@@ -464,21 +472,23 @@ describe('dataLoader requestWrapper', () => {
     // @ts-expect-error TS(2582): Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it('should batch handle missing search call', async () => {
         // @ts-expect-error TS(2304): Cannot find name 'jest'.
-        companySearch = jest.fn(async (
-            // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
-            _,
-            {
-                companyIds
-            }: any
-        ) => ({
-            items: companyIds.filter((id: any) => id !== -999).map((id: any) => ({
-                id
-            })),
+        companySearch = jest.fn(
+            async (
+                // @ts-expect-error TS(7006): Parameter '_' implicitly has an 'any' type.
+                _,
+                { companyIds }: any
+            ) => ({
+                items: companyIds
+                    .filter((id: any) => id !== -999)
+                    .map((id: any) => ({
+                        id,
+                    })),
 
-            count: companyIds.length - 1,
-            offset: 0,
-            limit: 20
-        }));
+                count: companyIds.length - 1,
+                offset: 0,
+                limit: 20,
+            })
+        );
         searchWrapper = batched(companySearch, {
             accumulateBy: 'companyIds',
             accumulateInto: 'companyIds',

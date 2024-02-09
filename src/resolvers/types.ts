@@ -28,19 +28,18 @@ function defaultMask(obj: any, args: any, context: any, info: any) {
  */
 export class Resolver {
     aggregate: any;
+
     authorize: any;
+
     authorizeData: any;
+
     mask: any;
+
     preAggregate: any;
+
     transform: any;
-    constructor({
-        aggregate,
-        authorize,
-        authorizeData,
-        transform,
-        mask,
-        preAggregate
-    }: any) {
+
+    constructor({ aggregate, authorize, authorizeData, transform, mask, preAggregate }: any) {
         this.aggregate = aggregate;
         this.authorize = authorize;
         this.authorizeData = authorizeData;

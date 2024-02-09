@@ -143,9 +143,7 @@ function createApolloServerOptions() {
         : ApolloServerPluginUsageReportingDisabled();
 
     return {
-        context: ({
-            req
-        }: any) => req,
+        context: ({ req }: any) => req,
         formatError,
         formatResponse: injectExtensions,
         rootValue: null,

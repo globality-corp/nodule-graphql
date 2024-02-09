@@ -6,9 +6,7 @@ import { Forbidden } from '@globality/nodule-express';
 import { createResolver } from 'index';
 
 const retrieveCompanyName = createResolver({
-    aggregate: ({
-        companyId
-    }: any) => {
+    aggregate: ({ companyId }: any) => {
         const { services } = getContainer();
         return services.company.retrieve(companyId);
     },
@@ -17,25 +15,19 @@ const retrieveCompanyName = createResolver({
 
 const retrieveUser = createResolver({
     preAggregate: () => {},
-    aggregate: ({
-        userId
-    }: any) => {
+    aggregate: ({ userId }: any) => {
         const { services } = getContainer();
         return services.user.retrieve(userId);
     },
-    authorize: (obj: any, {
-        id
-    }: any) => {
+    authorize: (obj: any, { id }: any) => {
         if (id === '23') {
             throw new Forbidden('Not Authorized');
         }
         return true;
     },
-    mask: (obj: any, {
-        id
-    }: any) => [{ userId: id }],
+    mask: (obj: any, { id }: any) => [{ userId: id }],
     transform: (user: any) => ({
-        items: [user]
+        items: [user],
     }),
 });
 

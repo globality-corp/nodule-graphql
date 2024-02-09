@@ -39,7 +39,9 @@ async function executePipeline(pipeline: any, args: any) {
     const resolver = pipeline.resolvers[resolverKey];
 
     // apply masks to the input arguments
-    const masked = pipeline.keys.filter((key: any, index: any) => index < resolverIndex).reduce((acc: any, key: any) => pipeline.masks[key](...acc), args);
+    const masked = pipeline.keys
+        .filter((key: any, index: any) => index < resolverIndex)
+        .reduce((acc: any, key: any) => pipeline.masks[key](...acc), args);
 
     // apply the resolver to the masked input
     const result = await resolver.resolve(...masked);
