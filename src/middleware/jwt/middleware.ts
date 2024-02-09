@@ -1,8 +1,8 @@
 import { getConfig, getMetadata, getContainer } from '@globality/nodule-config';
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'expr... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'expr... Remove this comment to see the full error message
 import jwt from 'express-jwt';
 import { StatusCodes } from 'http-status-codes';
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { get } from 'lodash';
 
 import sendUnauthorized from './errors';
@@ -11,7 +11,7 @@ import negotiateKey from './negotiate';
 export function chooseAudience(audience: any) {
     if (!audience) {
         const metadata = getMetadata();
-        // @ts-expect-error TS(2571): Object is of type 'unknown'.
+        // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
         if (!metadata || !metadata.testing) {
             throw new Error('JWT middleware requires `middleware.jwt.audience` to be configured');
         }
@@ -35,7 +35,7 @@ export default function createValidateJWTMiddleware(options = { jwtSource: 'head
 
     return function middleware(req: any, res: any, next: any) {
         const config = getConfig('middleware.jwt') || {};
-        // @ts-expect-error TS(2339): Property 'audience' does not exist on type 'unknow... Remove this comment to see the full error message
+        // @ts-expect-error TS(2339) FIXME: Property 'audience' does not exist on type 'unknow... Remove this comment to see the full error message
         const { audience, realm } = config;
         const matchingAudience = chooseAudience(audience);
 
@@ -56,14 +56,14 @@ export default function createValidateJWTMiddleware(options = { jwtSource: 'head
                 if (!req.body.idToken) {
                     return res.status(StatusCodes.UNAUTHORIZED).end();
                 }
-                // @ts-expect-error TS(2339): Property 'getToken' does not exist on type '{ secr... Remove this comment to see the full error message
+                // @ts-expect-error TS(2339) FIXME: Property 'getToken' does not exist on type '{ secr... Remove this comment to see the full error message
                 jwtOptions.getToken = (request: any) => request.body.idToken;
                 break;
             case 'cookie':
                 if (!req.cookies.idToken) {
                     return res.status(StatusCodes.UNAUTHORIZED).end();
                 }
-                // @ts-expect-error TS(2339): Property 'getToken' does not exist on type '{ secr... Remove this comment to see the full error message
+                // @ts-expect-error TS(2339) FIXME: Property 'getToken' does not exist on type '{ secr... Remove this comment to see the full error message
                 jwtOptions.getToken = (request: any) => request.cookies.idToken;
                 break;
             case 'header':

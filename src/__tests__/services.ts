@@ -1,6 +1,6 @@
 import { bind } from '@globality/nodule-config';
 
-// @ts-expect-error TS(7016): Could not find a declaration file for module '@glo... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module '@glo... Remove this comment to see the full error message
 import { NotFound } from '@globality/nodule-express';
 
 async function retrieveCompany(companyId: any) {
@@ -17,9 +17,9 @@ async function retrieveCompany(companyId: any) {
 async function retrieveUser(userId: any) {
     if (userId && userId === '999') {
         const error = new Error('Custom error');
-        // @ts-expect-error TS(2339): Property 'code' does not exist on type 'Error'.
+        // @ts-expect-error TS(2339) FIXME: Property 'code' does not exist on type 'Error'.
         error.code = 503;
-        // @ts-expect-error TS(2339): Property 'headers' does not exist on type 'Error'.
+        // @ts-expect-error TS(2339) FIXME: Property 'headers' does not exist on type 'Error'.
         error.headers = {
             'x-request-id': '1234',
             'x-trace-id': '5432',

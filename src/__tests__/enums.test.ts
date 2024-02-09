@@ -1,4 +1,4 @@
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'enum... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'enum... Remove this comment to see the full error message
 import Enum from 'enum';
 import { GraphQLEnumType } from 'graphql';
 
@@ -29,11 +29,8 @@ const compareStandardAndGraphQL = (standardEnum: any, graphqlEnum: any) => {
     return gqlEnumValues.every((item: any) => standardEnum[item.name].value === graphqlEnum.getValue(item.name).value);
 };
 
-// @ts-expect-error TS(2582): Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe('Enum utilities', () => {
-    // @ts-expect-error TS(2582): Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
     describe('createGraphQLEnumType', () => {
-        // @ts-expect-error TS(2582): Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
         it('should work as expected', () => {
             const standardEnum = new Enum({
                 FOO: 'FOO',
@@ -51,11 +48,8 @@ describe('Enum utilities', () => {
 
             const convertedEnum = createGraphQLEnumType(standardEnum, 'graphqlEnum', 'Foo and bar');
 
-            // @ts-expect-error TS(2304): Cannot find name 'expect'.
             expect(compareStandardAndGraphQL(standardEnum, graphqlEnum)).toBe(true);
-            // @ts-expect-error TS(2304): Cannot find name 'expect'.
             expect(compareStandardAndGraphQL(standardEnum, convertedEnum)).toBe(true);
-            // @ts-expect-error TS(2304): Cannot find name 'expect'.
             expect(compareGraphQLAndGraphQL(graphqlEnum, convertedEnum)).toBe(true);
         });
     });

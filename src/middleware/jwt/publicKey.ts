@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { memoize } from 'lodash';
 
 /**
@@ -54,7 +54,7 @@ const rsaPublicKeyToPEM = (modulusB64: any, exponentB64: any) => {
     const der = Buffer.from(encodedPubkey, 'hex').toString('base64');
 
     let pem = '-----BEGIN RSA PUBLIC KEY-----\n';
-    // @ts-expect-error TS(2531): Object is possibly 'null'.
+    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
     pem += `${der.match(/.{1,64}/g).join('\n')}`;
     pem += '\n-----END RSA PUBLIC KEY-----\n';
     return pem;

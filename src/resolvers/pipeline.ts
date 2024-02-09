@@ -1,5 +1,5 @@
 import { getContainer } from '@globality/nodule-config';
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { flatten, indexOf, isFunction } from 'lodash';
 
 /**
@@ -20,7 +20,7 @@ function buildMapping(keys: any, type: any) {
         .map((key: any) => [key, getContainer(`graphql.${type}.${key}`)])
         .filter((pair: any) => !!pair[1])
         .reduce(
-            // @ts-expect-error TS(7031): Binding element 'key' implicitly has an 'any' type... Remove this comment to see the full error message
+            // @ts-expect-error TS(7031) FIXME: Binding element 'key' implicitly has an 'any' type... Remove this comment to see the full error message
             (acc: any, [key, value]) =>
                 Object.assign(acc, {
                     [key]: value,
@@ -107,12 +107,12 @@ export function getResolverPipeline(...keys: any[]) {
         const pipeline = {};
 
         // First, expand inputs keys in case they are actually functions
-        // @ts-expect-error TS(2339): Property 'keys' does not exist on type '{}'.
+        // @ts-expect-error TS(2339) FIXME: Property 'keys' does not exist on type '{}'.
         pipeline.keys = flatten(keys.map((key) => expandKey(key, ...args)));
 
         // Next, map keys to resolvers, masks, and transfoms
         ['resolvers', 'masks', 'transforms'].forEach((type) => {
-            // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+            // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
             pipeline[type] = buildMapping(pipeline.keys, type);
         });
         // Then, ensure we have a valid pipeline

@@ -5,7 +5,7 @@ import { ApolloServerPluginUsageReportingDisabled } from '@apollo/server/plugin/
 import { ApolloServerPluginUsageReporting } from '@apollo/server/plugin/usageReporting';
 
 import { bind, getContainer, setDefaults } from '@globality/nodule-config';
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { get, includes, merge, pickBy } from 'lodash';
 
 /**
@@ -61,13 +61,13 @@ function determineErrorMessage(error: any) {
 function formatError(formattedError: any, error: any) {
     const extensions = formattedError.extensions || {};
     const originalError = unwrapResolverError(error);
-    // @ts-expect-error TS(2571): Object is of type 'unknown'.
+    // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
     const code = extensions.code || originalError.code;
-    // @ts-expect-error TS(2571): Object is of type 'unknown'.
+    // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
     const headers = originalError.headers || {};
-    // @ts-expect-error TS(2571): Object is of type 'unknown'.
+    // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
     const traceId = extensions.traceId || originalError.traceId || headers['x-trace-id'];
-    // @ts-expect-error TS(2571): Object is of type 'unknown'.
+    // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
     const requestId = extensions.requestId || originalError.requestId || headers['x-request-id'];
 
     // Include the HTTP status code, trace ID and request ID if they exist. These can come from
@@ -84,30 +84,30 @@ function formatError(formattedError: any, error: any) {
     // According to section 7.1.2 of the GraphQL specification, fields `message`, and `path` are
     // required. The `locations` field may be included.
     newError.message = determineErrorMessage(formattedError);
-    // @ts-expect-error TS(2339): Property 'path' does not exist on type 'Error'.
+    // @ts-expect-error TS(2339) FIXME: Property 'path' does not exist on type 'Error'.
     newError.path = formattedError.path;
 
     if (formattedError.locations) {
-        // @ts-expect-error TS(2339): Property 'locations' does not exist on type 'Error... Remove this comment to see the full error message
+        // @ts-expect-error TS(2339) FIXME: Property 'locations' does not exist on type 'Error... Remove this comment to see the full error message
         newError.locations = formattedError.locations;
     }
 
     const newExts = {};
-    // @ts-expect-error TS(2339): Property 'extensions' does not exist on type 'Erro... Remove this comment to see the full error message
+    // @ts-expect-error TS(2339) FIXME: Property 'extensions' does not exist on type 'Erro... Remove this comment to see the full error message
     newError.extensions = newExts;
 
     if (code) {
-        // @ts-expect-error TS(2339): Property 'code' does not exist on type '{}'.
+        // @ts-expect-error TS(2339) FIXME: Property 'code' does not exist on type '{}'.
         newExts.code = code;
     }
 
     if (traceId) {
-        // @ts-expect-error TS(2339): Property 'traceId' does not exist on type '{}'.
+        // @ts-expect-error TS(2339) FIXME: Property 'traceId' does not exist on type '{}'.
         newExts.traceId = traceId;
     }
 
     if (requestId) {
-        // @ts-expect-error TS(2339): Property 'requestId' does not exist on type '{}'.
+        // @ts-expect-error TS(2339) FIXME: Property 'requestId' does not exist on type '{}'.
         newExts.requestId = requestId;
     }
 

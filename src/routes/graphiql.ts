@@ -20,7 +20,7 @@ function createMiddleware(config: any) {
                 'editor.cursorShape': 'line',
                 'editor.reuseHeaders': true,
                 'tracing.hideTracingResponse': true,
-                // @ts-expect-error TS(2322): Type '{ 'general.betaUpdates': false; 'editor.them... Remove this comment to see the full error message
+                // @ts-expect-error TS(2322) FIXME: Type '{ 'general.betaUpdates': false; 'editor.them... Remove this comment to see the full error message
                 'queryPlan.hideQueryPlanResponse': true,
                 'editor.fontSize': 14,
                 'editor.fontFamily': `'Source Code Pro', 'Consolas', 'Inconsolata', 'Droid Sans Mono', 'Monaco', monospace`,

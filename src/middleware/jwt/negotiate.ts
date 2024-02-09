@@ -1,5 +1,5 @@
 import { getConfig, getMetadata } from '@globality/nodule-config';
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { get } from 'lodash';
 
 import loadPublicKey from './publicKey';
@@ -8,7 +8,7 @@ export const ALGORITHMS = {
     HS256: ({ secret }: any) => {
         if (!secret) {
             const metadata = getMetadata();
-            // @ts-expect-error TS(2571): Object is of type 'unknown'.
+            // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
             if (!metadata || !metadata.testing) {
                 throw new Error('HS256 signing requires `middleware.jwt.secret` to be configured');
             }
@@ -54,7 +54,7 @@ export default function negotiateKey(req: any, header: any, payload: any, next: 
         return next(new Error(`Unsupported algorithm: ${alg}`));
     }
 
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+    // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     const keyFunction = ALGORITHMS[alg];
 
     if (!keyFunction) {

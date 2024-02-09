@@ -1,6 +1,6 @@
 import { GraphQLID, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
-// @ts-expect-error TS(2307): Cannot find module 'index' or its corresponding ty... Remove this comment to see the full error message
+// @ts-expect-error TS(2307) FIXME: Cannot find module 'index' or its corresponding ty... Remove this comment to see the full error message
 import { getResolver } from 'index';
 
 export const CompanyType = new GraphQLObjectType({

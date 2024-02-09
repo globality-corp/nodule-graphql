@@ -14,7 +14,7 @@ export default async function createApp() {
 
     express.get('/health', health);
 
-    // @ts-expect-error TS(2339): Property 'NODE_ENV' does not exist on type 'Proces... Remove this comment to see the full error message
+    // @ts-expect-error TS(2339) FIXME: Property 'NODE_ENV' does not exist on type 'Proces... Remove this comment to see the full error message
     if (process.NODE_ENV !== 'production') {
         express.use('/graphql', bodyParser.json(), graphql);
     } else {

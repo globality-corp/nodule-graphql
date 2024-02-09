@@ -1,8 +1,8 @@
 import { getContainer } from '@globality/nodule-config';
 import DataLoader from 'dataloader';
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'enum... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'enum... Remove this comment to see the full error message
 import Enum from 'enum';
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { get, set } from 'lodash';
 
 import dedup from '../dedup/wrapper';
@@ -90,7 +90,7 @@ async function getFromCacheThenService(wrapped: any, spec: any, req: any, args: 
         return [serviceData, CacheResult.noop];
     } catch (err) {
         const result = CacheResult.error;
-        // @ts-expect-error TS(2571): Object is of type 'unknown'.
+        // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
         logger.warning(req, err.message, {
             error: err,
             key,
@@ -117,7 +117,7 @@ export default function wrap(wrapped: any, spec: any, serviceName: any) {
         const key = spec.createKey(args);
         const executeStartTime = process.hrtime();
         const [res, result] = await getFromCacheThenService(wrapped, spec, req, args, key);
-        // @ts-expect-error TS(2554): Expected 6 arguments, but got 5.
+        // @ts-expect-error TS(2554) FIXME: Expected 6 arguments, but got 5.
         traceCacheCall(spec, req, args, key, result);
         logCacheUsage(spec, req, key, result, executeStartTime);
         return res;

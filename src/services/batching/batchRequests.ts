@@ -3,11 +3,11 @@
  *  This utility will reduce the amount of queries that styx creates by batching similar queries
  */
 import { getContainer } from '@globality/nodule-config';
-// @ts-expect-error TS(7016): Could not find a declaration file for module '@glo... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module '@glo... Remove this comment to see the full error message
 import { NotFound, InternalServerError } from '@globality/nodule-express';
-// @ts-expect-error TS(7016): Could not find a declaration file for module '@glo... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module '@glo... Remove this comment to see the full error message
 import { concurrentPaginate, all } from '@globality/nodule-openapi';
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { assign, chunk, chain, flatten, get, groupBy, omit, uniq } from 'lodash';
 
 /* Checks that a service request can be batched:
@@ -188,7 +188,7 @@ async function resolveBatchRequest(
     const { createKey } = getContainer();
     // Match the response items to the requests
     const resultsBuckets = requestsArgs.reduce(
-        // @ts-expect-error TS(7006): Parameter 'acc' implicitly has an 'any' type.
+        // @ts-expect-error TS(7006) FIXME: Parameter 'acc' implicitly has an 'any' type.
         (acc, requestArgs) => ({
             [createKey(requestArgs)]: chain([requestArgs[accumulateBy]])
                 .flatten()
@@ -275,7 +275,7 @@ export default async function batchRequests(
     const resonseObjects = await concurrentPaginate(requestPromises);
     const { createKey } = getContainer();
     // Merge all responses to one (str(args) => response) object and arrange the response
-    // @ts-expect-error TS(2556): A spread argument must either have a tuple type or... Remove this comment to see the full error message
+    // @ts-expect-error TS(2556) FIXME: A spread argument must either have a tuple type or... Remove this comment to see the full error message
     const responsesObject = Object.assign(...resonseObjects);
     return argsList.map((args: any) => responsesObject[createKey(args)]);
 }

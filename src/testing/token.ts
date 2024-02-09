@@ -2,7 +2,7 @@
  * Token generation functions (intended for testing).
  */
 
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'json... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'json... Remove this comment to see the full error message
 import jwt from 'jsonwebtoken';
 
 export function signSymmetric(assertions: any, key = 'secret', audience = 'audience', expiresIn = 36000) {

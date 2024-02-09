@@ -8,12 +8,12 @@
  * Our own batching and caching are necessary in many cases.
  */
 import { getContainer } from '@globality/nodule-config';
-// @ts-expect-error TS(7016): Could not find a declaration file for module '@glo... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module '@glo... Remove this comment to see the full error message
 import { concurrentPaginate } from '@globality/nodule-openapi';
 import DataLoader from 'dataloader';
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { get, set } from 'lodash';
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'uuid... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'uuid... Remove this comment to see the full error message
 import { v4 as uuidv4 } from 'uuid';
 
 /**

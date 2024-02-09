@@ -1,7 +1,7 @@
 import { getContainer } from '@globality/nodule-config';
-// @ts-expect-error TS(7016): Could not find a declaration file for module '@glo... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module '@glo... Remove this comment to see the full error message
 import { extractLoggingProperties } from '@globality/nodule-logging';
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'loda... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'loda... Remove this comment to see the full error message
 import { get } from 'lodash';
 
 import { calculateExecuteTime } from '../../logging';
