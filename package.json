@@ -45,7 +45,7 @@
         "@babel/core": "^7.17.8",
         "@babel/node": "^7.16.8",
         "@babel/preset-env": "^7.16.11",
-        "@globality/gi-eslint-config": "^1.0.12",
+        "@globality/gi-eslint-config": "^2.0.0",
         "@globality/nodule-config": "^2.14.0",
         "@globality/nodule-express": "0.6.1",
         "@globality/nodule-logging": "1.5.2",
