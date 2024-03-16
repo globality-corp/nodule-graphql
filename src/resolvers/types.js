@@ -1,5 +1,6 @@
 import { getContainer } from '@globality/nodule-config';
 import { isFunction, isNil } from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Default mask function: preserves standard arguments
@@ -24,19 +25,40 @@ function defaultMask(obj, args, context, info) {
  *  -  An async `preAggregate` function, which can be used to factor out some preliminary work,
  *     that requires a network call. It can alter the arguments passed to the `aggregate` function,
  *     but can't change their order. Note it gets arguments in the order they are returned by `mask`.
+ *  -  A `maxCallsPerRequest` integer, which limits the number of times the resolver can be called
+ *     within a single request. This is to prevent overfetching by API clients, when it's known that
+ *     given resolver should be triggered only once, for a single parent object.
  */
 export class Resolver {
-    constructor({ aggregate, authorize, authorizeData, transform, mask, preAggregate }) {
+    constructor({ aggregate, authorize, authorizeData, transform, mask, preAggregate, maxCallsPerRequest }) {
         this.aggregate = aggregate;
         this.authorize = authorize;
         this.authorizeData = authorizeData;
         this.transform = transform;
         this.mask = mask || defaultMask;
         this.preAggregate = preAggregate || null;
+        this.maxCallsPerRequest = maxCallsPerRequest || null;
+        this.resolverId = uuidv4();
     }
 
     // NB: async class methods were added to node in v8.x
     async resolve(obj, args, context, info) {
+        // enforce overfetching guard
+        if (this.maxCallsPerRequest && !isNil(context)) {
+            if (isNil(context.callCounts)) {
+                context.callCounts = {};
+            }
+            if (isNil(context.callCounts[this.resolverId])) {
+                context.callCounts[this.resolverId] = 0;
+            }
+            const callCount = ++context.callCounts[this.resolverId]; // eslint-disable-line no-plusplus
+            if (callCount > this.maxCallsPerRequest) {
+                throw new Error(
+                    `Exceeded maximum number of resolver calls per request: ${this.maxCallsPerRequest}, called ${callCount} times.`
+                );
+            }
+        }
+
         if (this.authorize) {
             // allow authorizer to be looked up by name
             const authorize = isFunction(this.authorize) ? this.authorize : getContainer(`graphql.authorizers.${this.authorize}`);
