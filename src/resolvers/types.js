@@ -12,22 +12,21 @@ function defaultMask(obj, args, context, info) {
 /**
  * A resolver is a structured abstraction around a GraphQL resolver function.
  *
- * It includes:
- *
- *  -  An async `aggregate` function, which queries/mutates data from one or more services.
- *  -  An async `authorize` function, which throws an error if the resolver should not run.
- *  -  A user-defined `authorizedData` payload, which is passed to the `authorize` function
- *     (if provided).
- *  -  A synchronous `transform` function, which presents the result of the aggregation in
- *     the expected shape of the upstream resource.
- *  -  A synchronous `mask` function, which manipulates the standard GraphQL resolver
- *     arguments into a form supported by the other functions.
- *  -  An async `preAggregate` function, which can be used to factor out some preliminary work,
- *     that requires a network call. It can alter the arguments passed to the `aggregate` function,
- *     but can't change their order. Note it gets arguments in the order they are returned by `mask`.
- *  -  A `maxCallsPerRequest` integer, which limits the number of times the resolver can be called
- *     within a single request. This is to prevent overfetching by API clients, when it's known that
- *     given resolver should be triggered only once, for a single parent object.
+ * @param {Object} options
+ * @param {Function} options.aggregate An async function, which queries/mutates data from one or more services.
+ * @param {Function} options.authorize An async function, which throws an error if the resolver should not run.
+ * @param {Function} options.authorizeData A user-defined payload, which is passed to the `authorize` function
+ * (if provided).
+ * @param {Function} options.transform A synchronous function, which presents the result of the aggregation in
+ * the expected shape of the upstream resource.
+ * @param {Function} options.mask A synchronous function, which manipulates the standard GraphQL resolver arguments
+ * into a form supported by the other functions.
+ * @param {Function} options.preAggregate An async function, which can be used to factor out some preliminary work,
+ * that requires a network call. It can alter the arguments passed to the `aggregate` function, but can't change their order.
+ * Note it gets arguments in the order they are returned by `mask`.
+ * @param {Number} options.maxCallsPerRequest An integer, which specifies the number of times the resolver can be called
+ * within a single request. More calls will rsult in logging a warning, that can be used for alerting. This is to prevent
+ * overfetching by API clients, when it's known that a given resolver should be triggered only once, for a single parent object.
  */
 export class Resolver {
     constructor({ aggregate, authorize, authorizeData, transform, mask, preAggregate, maxCallsPerRequest }) {
@@ -53,9 +52,9 @@ export class Resolver {
             }
             const callCount = ++context.callCounts[this.resolverId]; // eslint-disable-line no-plusplus
             if (callCount > this.maxCallsPerRequest) {
-                throw new Error(
-                    `Exceeded maximum number of resolver calls per request: ${this.maxCallsPerRequest}, called ${callCount} times.`
-                );
+                const { logger } = getContainer();
+                const msg = `Exceeded maximum number of resolver calls per request: ${this.maxCallsPerRequest}, called ${callCount} times.`;
+                logger.warning(context, msg);
             }
         }
 

@@ -123,9 +123,7 @@ describe('a resolver', () => {
             maxCallsPerRequest: 1,
         });
         expect(await resolver.resolve(undefined, undefined, context)).toEqual(42);
-        await expect(resolver.resolve(undefined, undefined, context)).rejects.toThrow(
-            'Exceeded maximum number of resolver calls per request: 1, called 2 times.'
-        );
+        expect(await resolver.resolve(undefined, undefined, context)).toEqual(42);
         expect(context.callCounts[resolver.resolverId]).toEqual(2);
     });
 });
