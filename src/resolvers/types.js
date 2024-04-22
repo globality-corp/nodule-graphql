@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
  * @template T
  * @typedef {Object} Options
  * @prop {T} aggregate An async function, which queries/mutates data from one or more services.
- * @prop {Function=} authorize An async function, which throws an error if the resolver should not run.
+ * @prop {(Function | string)=} authorize An async function, which throws an error if the resolver should not run.
  * @prop {Function=} authorizeData A user-defined payload, which is passed to the `authorize` function
  * (if provided).
  * @prop {Function=} transform A synchronous function, which presents the result of the aggregation in
