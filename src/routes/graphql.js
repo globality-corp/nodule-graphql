@@ -136,6 +136,7 @@ function createApolloServerOptions() {
         formatError,
         formatResponse: injectExtensions,
         rootValue: null,
+        introspection: process.env.NODE_ENV !== 'production',
         schema,
         apollo: {
             key: apiKey,
