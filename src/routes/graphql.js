@@ -136,7 +136,8 @@ function createApolloServerOptions() {
         formatError,
         formatResponse: injectExtensions,
         rootValue: null,
-        introspection: process.env.NODE_ENV !== 'production',
+        // disable introspection for production styx environments
+        introspection: process.env.STYX__ENVIRONMENT !== 'prod' && process.env.STYX__ENVIRONMENT !== 'prod_eu',
         schema,
         apollo: {
             key: apiKey,
