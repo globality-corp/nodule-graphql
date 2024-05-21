@@ -10,8 +10,6 @@ import { v4 as uuidv4 } from 'uuid';
 /**
  * @template {Aggregate} T
  * @typedef {Object} Options
- * @prop {Function=} mask A synchronous function, which manipulates the standard GraphQL resolver arguments into
- * a form supported by the other functions.
  * @prop {T} aggregate An async function which queries/mutates data from one or more services.
  * @prop {(Function | string)=} authorize An async function which throws an error if the resolver should not run.
  * @prop {Function=} authorizeData A user-defined payload which is passed to the `authorize` function (if provided).
@@ -29,7 +27,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class ResolverV2 {
     /**
      * @constructor
-     * @param {Options<T>}
+     * @param {Options<T>} options
      */
     constructor({ aggregate, authorize, authorizeData, preAggregate, maxCallsPerRequest }) {
         this.aggregate = aggregate;
