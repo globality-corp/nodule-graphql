@@ -43,7 +43,7 @@ function withContextOnly(closure) {
 // but in TypeScript we can just pass the generic to the function directly.
 createResolver({
     /** @type {FakeAggregate} */
-    aggregate: moreArgs((args) => args.id),
+    aggregate: moreArgs((args) => args.prop),
 });
 
 createResolver({
