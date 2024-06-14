@@ -84,6 +84,6 @@ export class ResolverV2 {
  * @template {Aggregate} T
  * @param {Options<T>} options
  */
-export function createResolver(options) {
+export function createResolverV2(options) {
     return new ResolverV2(options);
 }
