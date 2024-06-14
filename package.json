@@ -6,7 +6,7 @@
     "repository": "git@github.com:globality-corp/nodule-graphql",
     "author": "Globality Engineering",
     "license": "MIT",
-    "types": "./lib/src/index.d.ts",
+    "types": "./lib/index.d.ts",
     "scripts": {
         "clean": "rm -rf ./lib",
         "build": "yarn clean && yarn build:types && yarn build:transpile",
