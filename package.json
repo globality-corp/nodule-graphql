@@ -6,9 +6,10 @@
     "repository": "git@github.com:globality-corp/nodule-graphql",
     "author": "Globality Engineering",
     "license": "MIT",
+    "types": "./lib/src/index.d.ts",
     "scripts": {
         "clean": "rm -rf ./lib",
-        "build": "yarn clean && yarn build:transpile && yarn build:types",
+        "build": "yarn clean && yarn build:types && yarn build:transpile",
         "build:transpile": "babel src --out-dir lib --ignore '**/__tests__/*,**/__mocks__/*,*/**/*.d.ts' --extensions '.js,.ts'",
         "build:types": "tsc -p tsconfig.build.json",
         "lint": "gi-eslint-run lint",
