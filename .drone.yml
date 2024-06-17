@@ -1,0 +1,122 @@
+---
+kind: pipeline
+type: kubernetes
+name: default
+
+# Common step to inject the Docker image for the required Node version.
+# Override by setting `builder_node_version` in `.globality/build.json`.
+image: &image
+  image: node:18.20.3
+
+steps:
+
+  # Add JFrog credentials to `.npmrc` so that:
+  # - we can access other private dependencies stored there
+  # - we can publish the package (modules shouldn't be publicly shared on NPM)
+  - name: authenticate-jfrog
+    <<: *image
+    environment:
+      ARTIFACTORY_USERNAME:
+        from_secret: ARTIFACTORY_USERNAME
+      ARTIFACTORY_PASSWORD:
+        from_secret: ARTIFACTORY_PASSWORD
+    commands:
+        - curl -u$ARTIFACTORY_USERNAME:$ARTIFACTORY_PASSWORD https://globality.jfrog.io/globality/api/npm/auth > .npmrc
+        - echo "registry=https://globality.jfrog.io/globality/api/npm/npm" >> .npmrc
+
+  # Install dependencies (first and third party) from NPM and JFrog
+  - name: install-node-dependencies
+    <<: *image
+    commands:
+      - yarn install
+    depends_on:
+      - authenticate-jfrog
+
+  # Next three steps run in parallel
+  #               ↓
+  #     ┌─────────┼──────────┐
+  #  ╔══╧═══╗  ╔══╧═══╗  ╔═══╧═══╗
+  #  ║ lint ║  ║ test ║  ║ build ║
+  #  ╚══╤═══╝  ╚══╤═══╝  ╚═══╤═══╝
+  #     └─────────┼──────────┘
+  #               ↓
+
+  - name: lint
+    <<: *image
+    commands:
+      - yarn lint
+    depends_on:
+      - install-node-dependencies
+
+  - name: test
+    <<: *image
+    commands:
+      - yarn test
+    depends_on:
+      - install-node-dependencies
+
+  - name: build
+    <<: *image
+    commands:
+      - yarn build
+    depends_on:
+      - install-node-dependencies
+
+  # We now have a choice:
+  # - (normally) publish a `dev` build with the build number in the version
+  # - we can optionally publish a `latest` (release) build from a git tag
+  #          ↓
+  #     ┏━━━━┹─────┐
+  #  ╔══╧══╗  ╔════╧════╗
+  #  ║ dev ║  ║ release ║
+  #  ╚═════╝  ╚═════════╝
+
+  - name: publish-repository-dev
+    <<: *image
+    when:
+      event:
+        exclude:
+          - tag
+    commands:
+      - npm config fix
+      # Mangle the `version` in `package.json` to append `-dev.nnn` where `nnn`
+      # is the build number.
+      - sed -i "/version/s/\",/-dev.${DRONE_BUILD_NUMBER}\",/" package.json
+      # Development builds are published with the `dev` tag.
+      # https://docs.npmjs.com/cli/v7/commands/npm-dist-tag
+      - npm publish --tag dev
+    depends_on:
+      - lint
+      - test
+      - build
+
+  - name: publish-repository-release
+    <<: *image
+    when:
+      event:
+        - tag
+    commands:
+      - npm config fix
+      # Releases are published with the `latest` tag.
+      # https://docs.npmjs.com/cli/v7/commands/npm-dist-tag
+      # > By default, the `latest` tag is used by npm to identify the current
+      # > version of a package.
+      - npm publish --tag latest
+    depends_on:
+      - lint
+      - test
+      - build
+
+---
+kind: secret
+name: ARTIFACTORY_USERNAME
+get:
+  path: secrets/dev/drone
+  name: DRONE_ARTIFACTORY_USERNAME
+
+---
+kind: secret
+name: ARTIFACTORY_PASSWORD
+get:
+  path: secrets/dev/drone
+  name: DRONE_ARTIFACTORY_PASSWORD
