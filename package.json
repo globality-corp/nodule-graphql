@@ -67,7 +67,6 @@
     "resolutions": {
         "express": "^4.19.2",
         "lodash": "^4.17.21",
-        "semver": "^5.7.2",
         "xss": "1.0.10"
     },
     "jest": {
