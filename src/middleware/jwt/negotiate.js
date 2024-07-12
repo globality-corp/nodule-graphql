@@ -35,9 +35,10 @@ export const ALGORITHMS = {
  *
  * Implements an `express-jwt` secret callback.
  */
-export default function negotiateKey(req, header, payload, next) {
+export default async function negotiateKey(req, token) {
+    const { header } = token;
     if (!header) {
-        return next(new Error('Could not parse JWT header; token may be invalid or expired'));
+        throw new Error('Could not parse JWT header; token may be invalid or expired');
     }
 
     const { alg } = header;
@@ -49,19 +50,15 @@ export default function negotiateKey(req, header, payload, next) {
         .map((algorithm) => algorithm.trim());
 
     if (algorithms.indexOf(alg) === -1) {
-        return next(new Error(`Unsupported algorithm: ${alg}`));
+        throw new Error(`Unsupported algorithm: ${alg}`);
     }
 
     const keyFunction = ALGORITHMS[alg];
 
     if (!keyFunction) {
-        return next(new Error(`Unimplemented algorithm: ${alg}`));
+        throw new Error(`Unimplemented algorithm: ${alg}`);
     }
 
-    try {
-        const key = keyFunction(config, header);
-        return next(null, key);
-    } catch (error) {
-        return next(error);
-    }
+    const key = keyFunction(config, header);
+    return key;
 }

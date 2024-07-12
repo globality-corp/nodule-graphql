@@ -34,7 +34,7 @@
         "uuid": "8.3.2"
     },
     "peerDependencies": {
-        "@globality/nodule-config": ">= 2.13.3 < 3",
+        "@globality/nodule-config": ">= 2.15.4 < 3",
         "@globality/nodule-express": ">= 0.1.14 < 1",
         "@globality/nodule-logging": ">= 1.5.2 < 2",
         "@globality/nodule-openapi": ">= 0.21.0 < 1",
@@ -47,7 +47,7 @@
         "@babel/preset-env": "^7.16.11",
         "@babel/preset-typescript": "^7.23.3",
         "@globality/gi-eslint-config": "^2.0.0",
-        "@globality/nodule-config": "^2.14.0",
+        "@globality/nodule-config": "^2.15.4",
         "@globality/nodule-express": "^0.7.0",
         "@globality/nodule-logging": "^1.6.0",
         "@globality/nodule-openapi": "0.21.0",
