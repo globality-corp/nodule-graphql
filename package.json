@@ -76,6 +76,9 @@
         "modulePaths": [
             "<rootDir>/src"
         ],
+        "moduleNameMapper": {
+            "^axios$": "axios/dist/node/axios.cjs"
+        },
         "testURL": "http://localhost"
     }
 }
