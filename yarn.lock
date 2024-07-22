@@ -1728,10 +1728,10 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.56.0.tgz#ef20350fec605a7f7035a01764731b2de0f3782b"
   integrity sha512-gMsVel9D7f2HLkBma9VbtzZRehRogVRfbr++f06nL2vnCGCNlzOD+/MUov/F4p8myyAHspEhVobgjpX64q5m6A==
 
-"@globality/gi-eslint-config@2.0.2-dev.263":
-  version "2.0.2-dev.263"
-  resolved "https://globality.jfrog.io/globality/api/npm/npm/@globality/gi-eslint-config/-/@globality/gi-eslint-config-2.0.2-dev.263.tgz#e1154df205f455f35c55576bc45ba7014db0de14"
-  integrity sha512-8YyBhDRBaMnFSqfYllJ3J27ie4wJt330K4P/XyvzrHhyrgLfYGtTq/7vcglM/OM/SWtvJF5dzClb7rD6E1PQRQ==
+"@globality/gi-eslint-config@^2.0.2":
+  version "2.0.2"
+  resolved "https://globality.jfrog.io/globality/api/npm/npm/@globality/gi-eslint-config/-/@globality/gi-eslint-config-2.0.2.tgz#43ac655dad689d3ed9541b289c12254b9d7b0ea1"
+  integrity sha512-FYH6YgxdUSxQiqJB4Gqtp4D5oqD4TVhbqiToYBx9XX9mpKA2GpgwXAPYVZmBZSyu95wNO+fBnf+FjarbyPKweg==
   dependencies:
     "@babel/eslint-parser" "^7.24.7"
     "@babel/runtime" "^7.24.7"
