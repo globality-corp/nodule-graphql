@@ -10,13 +10,12 @@ describe('negotiateKey', () => {
 
     it('requires a payload header', () => {
         const req = {};
-        const payload = {};
-        const next = jest.fn();
+        const token = {};
 
-        negotiateKey(req, null, payload, next);
-
-        expect(next).toHaveBeenCalledTimes(1);
-        expect(next).toHaveBeenCalledWith(new Error('Could not parse JWT header; token may be invalid or expired'));
+        expect.assertions(1);
+        negotiateKey(req, token).catch((err) => {
+            expect(err.message).toMatch('Could not parse JWT header; token may be invalid or expired');
+        });
     });
 
     it('requires a supported signing algorithm', () => {
@@ -24,13 +23,12 @@ describe('negotiateKey', () => {
         const header = {
             alg: 'FOO256',
         };
-        const payload = {};
-        const next = jest.fn();
+        const token = { header };
 
-        negotiateKey(req, header, payload, next);
-
-        expect(next).toHaveBeenCalledTimes(1);
-        expect(next).toHaveBeenCalledWith(new Error('Unsupported algorithm: FOO256'));
+        expect.assertions(1);
+        negotiateKey(req, token).catch((err) => {
+            expect(err.message).toMatch('Unsupported algorithm: FOO256');
+        });
     });
 
     it('requires an implemented algorithm', async () => {
@@ -48,13 +46,12 @@ describe('negotiateKey', () => {
         const header = {
             alg: 'BAR256',
         };
-        const payload = {};
-        const next = jest.fn();
+        const token = { header };
 
-        negotiateKey(req, header, payload, next);
-
-        expect(next).toHaveBeenCalledTimes(1);
-        expect(next).toHaveBeenCalledWith(new Error('Unimplemented algorithm: BAR256'));
+        expect.assertions(1);
+        negotiateKey(req, token).catch((err) => {
+            expect(err.message).toMatch('Unimplemented algorithm: BAR256');
+        });
     });
 
     it('returns a symmetric private key', async () => {
@@ -72,14 +69,10 @@ describe('negotiateKey', () => {
         const header = {
             alg: 'HS256',
         };
-        const payload = {};
-        const next = jest.fn();
+        const token = { header };
 
-        negotiateKey(req, header, payload, next);
-
-        expect(next).toHaveBeenCalledTimes(1);
-        expect(next.mock.calls[0][0]).toBe(null);
-        expect(next.mock.calls[0][1]).toBeInstanceOf(Buffer);
+        const key = await negotiateKey(req, token);
+        expect(key).toBeInstanceOf(Buffer);
     });
 
     it('handles symmetric private key configuration errors', async () => {
@@ -89,13 +82,12 @@ describe('negotiateKey', () => {
         const header = {
             alg: 'HS256',
         };
-        const payload = {};
-        const next = jest.fn();
+        const token = { header };
 
-        negotiateKey(req, header, payload, next);
-
-        expect(next).toHaveBeenCalledTimes(1);
-        expect(next).toHaveBeenCalledWith(new Error('HS256 signing requires `middleware.jwt.secret` to be configured'));
+        expect.assertions(1);
+        negotiateKey(req, token).catch((err) => {
+            expect(err.message).toMatch('HS256 signing requires `middleware.jwt.secret` to be configured');
+        });
     });
 
     it('handles public key lookup errors', async () => {
@@ -103,12 +95,11 @@ describe('negotiateKey', () => {
         const header = {
             alg: 'RS256',
         };
-        const payload = {};
-        const next = jest.fn();
+        const token = { header };
 
-        negotiateKey(req, header, payload, next);
-
-        expect(next).toHaveBeenCalledTimes(1);
-        expect(next).toHaveBeenCalledWith(new Error('RS256 signing requires `middleware.jwt.domain` to be configured'));
+        expect.assertions(1);
+        negotiateKey(req, token).catch((err) => {
+            expect(err.message).toMatch('RS256 signing requires `middleware.jwt.domain` to be configured');
+        });
     });
 });

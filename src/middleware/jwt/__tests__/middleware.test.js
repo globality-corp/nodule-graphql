@@ -4,6 +4,8 @@ import { signSymmetric } from 'index';
 
 import createValidateJWTMiddleware from '../middleware';
 
+const flushPromises = () => new Promise(setImmediate);
+
 describe('JWT middleware', () => {
     let res;
 
@@ -207,14 +209,14 @@ describe('JWT middleware', () => {
                 },
             };
 
-            res.end = () => {
-                expect(res.status).toHaveBeenCalledTimes(1);
-                expect(res.status).toHaveBeenCalledWith(401);
-                expect(res.json).toHaveBeenCalledTimes(1);
-                expect(res.json).toHaveBeenCalledWith({ message: 'Unauthorized' });
-            };
+            const middleware = createValidateJWTMiddleware({ jwtSource: 'header' });
+            await middleware(req, res);
+            await flushPromises();
 
-            createValidateJWTMiddleware({ jwtSource: 'header' })(req, res);
+            expect(res.status).toHaveBeenCalledTimes(1);
+            expect(res.status).toHaveBeenCalledWith(401);
+            expect(res.json).toHaveBeenCalledTimes(2);
+            expect(res.json).toHaveBeenCalledWith({ message: 'Unauthorized' });
         });
     });
 
@@ -273,13 +275,13 @@ describe('JWT middleware', () => {
                 },
             };
 
-            res.end = () => {
-                expect(res.status).toHaveBeenCalledTimes(1);
-                expect(res.status).toHaveBeenCalledWith(401);
-                expect(res.json).toHaveBeenCalledTimes(0);
-            };
+            const middleware = createValidateJWTMiddleware({ jwtSource: 'body' });
+            await middleware(req, res);
+            await flushPromises();
 
-            createValidateJWTMiddleware({ jwtSource: 'body' })(req, res);
+            expect(res.status).toHaveBeenCalledTimes(1);
+            expect(res.status).toHaveBeenCalledWith(401);
+            expect(res.json).toHaveBeenCalledTimes(0);
         });
     });
 
@@ -338,13 +340,13 @@ describe('JWT middleware', () => {
                 },
             };
 
-            res.end = () => {
-                expect(res.status).toHaveBeenCalledTimes(1);
-                expect(res.status).toHaveBeenCalledWith(401);
-                expect(res.json).toHaveBeenCalledTimes(0);
-            };
+            const middleware = createValidateJWTMiddleware({ jwtSource: 'cookie' });
+            await middleware(req, res);
+            await flushPromises();
 
-            createValidateJWTMiddleware({ jwtSource: 'cookie' })(req, res);
+            expect(res.status).toHaveBeenCalledTimes(1);
+            expect(res.status).toHaveBeenCalledWith(401);
+            expect(res.json).toHaveBeenCalledTimes(0);
         });
     });
 });

@@ -1,5 +1,5 @@
 import { getConfig, getMetadata, getContainer } from '@globality/nodule-config';
-import jwt from 'express-jwt';
+import { expressjwt as jwt } from 'express-jwt';
 import { StatusCodes } from 'http-status-codes';
 import { get } from 'lodash';
 
