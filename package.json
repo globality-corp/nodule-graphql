@@ -56,7 +56,7 @@
         "@typescript-eslint/eslint-plugin": "^7.15.0",
         "@typescript-eslint/parser": "^7.15.0",
         "body-parser": "1.19.0",
-        "eslint": "^8.6.0",
+        "eslint": "^8.57.0",
         "eslint-plugin-import": "^2.25.4",
         "eslint-plugin-jest": "^28.6.0",
         "eslint-plugin-jsx-a11y": "^6.5.1",
