@@ -2,6 +2,8 @@ import { getContainer } from '@globality/nodule-config';
 import { isFunction, isNil } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
+import { requestContext } from './context'
+
 /**
  * Default mask function: preserves standard arguments
  */
@@ -79,8 +81,7 @@ export class Resolver {
         }
 
         // aggregate asynchronous requests over services.
-        const aggregated = await this.aggregate(...masked);
-
+        const aggregated = await requestContext.run(context, () => this.aggregate(...masked));
         if (!this.transform) {
             return aggregated;
         }
