@@ -17,7 +17,7 @@ import { requestContext } from './context';
  * (if provided).
  * @prop {((...args: any[]) => unknown)=} transform A synchronous function, which presents the result of the aggregation in
  * the expected shape of the upstream resource.
- * @prop {((...args: any[]) => [unknown, unknown, unknown, unknown])=} mask A synchronous function, which manipulates the standard GraphQL resolver arguments
+ * @prop {((...args: any[]) => unknown)=} mask A synchronous function, which manipulates the standard GraphQL resolver arguments
  * into a form supported by the other functions.
  * @prop {((...args: any[]) => Promise<unknown>)=} preAggregate An async function, which can be used to factor out some preliminary work,
  * that requires a network call. It can alter the arguments passed to the `aggregate` function, but can't change their order.
