@@ -5,6 +5,9 @@
     "main": "lib/",
     "repository": "git@github.com:globality-corp/nodule-graphql",
     "author": "Globality Engineering",
+    "files": [
+        "lib/"
+    ],
     "license": "MIT",
     "scripts": {
         "clean": "rm -rf ./lib",
