@@ -28,27 +28,6 @@ import { requestContext } from './context';
  */
 
 /**
- * A resolver is a structured abstraction around a GraphQL resolver function.
- *
- * @template T
- * @typedef {Object} Options
- * @prop {T} aggregate An async function, which queries/mutates data from one or more services.
- * @prop {(Function | string)=} authorize An async function, which throws an error if the resolver should not run.
- * @prop {Function=} authorizeData A user-defined payload, which is passed to the `authorize` function
- * (if provided).
- * @prop {Function=} transform A synchronous function, which presents the result of the aggregation in
- * the expected shape of the upstream resource.
- * @prop {Function=} mask A synchronous function, which manipulates the standard GraphQL resolver arguments
- * into a form supported by the other functions.
- * @prop {Function=} preAggregate An async function, which can be used to factor out some preliminary work,
- * that requires a network call. It can alter the arguments passed to the `aggregate` function, but can't change their order.
- * Note it gets arguments in the order they are returned by `mask`.
- * @prop {Number=} maxCallsPerRequest An integer, which specifies the number of times the resolver can be called
- * within a single request. More calls will rsult in logging a warning, that can be used for alerting. This is to prevent
- * overfetching by API clients, when it's known that a given resolver should be triggered only once, for a single parent object.
- */
-
-/**
  * Default mask function: preserves standard arguments
  * @param {unknown} obj
  * @param {unknown} args
@@ -60,7 +39,6 @@ function defaultMask(obj, args, context, info) {
     return [obj, args, context, info];
 }
 
-/** @template T */
 export class Resolver {
     /**
      * A resolver is a structured abstraction around a GraphQL resolver function.
