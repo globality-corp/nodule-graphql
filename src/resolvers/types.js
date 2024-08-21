@@ -11,7 +11,7 @@ import { requestContext } from './context';
 
 /**
  * @typedef {object} Options
- * @prop {(...args: any[]) => Promise<unknown>} aggregate An async function, which queries/mutates data from one or more services.
+ * @prop {(...args: any[]) => unknown} aggregate An (optionally async) function, which queries/mutates data from one or more services.
  * @prop {(((...args: any[]) => Promise<unknown>) | string)=} authorize An async function, which throws an error if the resolver should not run.
  * @prop {unknown=} authorizeData A user-defined payload, which is passed to the `authorize` function
  * (if provided).
