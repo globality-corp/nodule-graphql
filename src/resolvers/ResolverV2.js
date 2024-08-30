@@ -64,8 +64,10 @@ export class ResolverV2 {
 
             // always invoke authorizers with standard resolver arguments
             if (!this.authorizeData) {
+                // @ts-ignore
                 await authorize(obj, args, context, info);
             } else {
+                // @ts-ignore
                 await authorize(this.authorizeData, obj, args, context, info);
             }
         }
