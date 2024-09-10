@@ -56,7 +56,7 @@
         "@globality/nodule-config": "^2.15.4",
         "@globality/nodule-express": "^0.7.0",
         "@globality/nodule-logging": "^1.6.0",
-        "@globality/nodule-openapi": "0.21.0",
+        "@globality/nodule-openapi": "0.27.0",
         "@types/jest": "^29.5.12",
         "@types/node": "20.16.x",
         "@typescript-eslint/eslint-plugin": "^7.15.0",

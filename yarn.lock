@@ -1562,7 +1562,7 @@
     object.entries "^1.1.8"
     pkg-dir "^4.2.0"
 
-"@globality/nodule-config@^2.15.4":
+"@globality/nodule-config@^2.15.4", "@globality/nodule-config@^2.3.0":
   version "2.15.4"
   resolved "https://globality.jfrog.io/globality/api/npm/npm/@globality/nodule-config/-/@globality/nodule-config-2.15.4.tgz#a25eff11af5c07faefaacd69c45ece9a09c4e77f"
   integrity sha512-URK2PdbBBcLYBsCQDvLTbprI/vsyrHf1rOHvpfDFA2/LqwTM8fhOUhSfGhsnjeKbhXMz5jWGjMRxnP4+TCK0cg==
@@ -1570,15 +1570,6 @@
     aws-sdk "^2.1658.0"
     bottlejs "1.7.2"
     lodash "^4.17.21"
-
-"@globality/nodule-config@^2.3.0":
-  version "2.13.5"
-  resolved "https://registry.yarnpkg.com/@globality/nodule-config/-/nodule-config-2.13.5.tgz#33d0c57f30f38fb60dc8d31353f46d61a5952066"
-  integrity sha512-uoVGI0fV7aJjA4MNVBnnfoOLxuMPRSCPUPVmlKNq9YpR5Hj66sGzjhASJ2x/M5oA4d1P9Sy+6APtl6W/bnpW9A==
-  dependencies:
-    aws-sdk "2.829.0"
-    bottlejs "1.7.2"
-    lodash "4.17.20"
 
 "@globality/nodule-express@^0.7.0":
   version "0.7.0"
@@ -1608,10 +1599,10 @@
     on-finished "~2.3.0"
     on-headers "~1.0.1"
 
-"@globality/nodule-openapi@0.21.0":
-  version "0.21.0"
-  resolved "https://registry.yarnpkg.com/@globality/nodule-openapi/-/nodule-openapi-0.21.0.tgz#275b2c06ad7e852d8822bc41bf1c9e0038f71d22"
-  integrity sha512-Pw1mo8r/nQw++Vb1ElN/0Ki67Dkco4R1CJ/kLQwSeeVo2b4/eyUTPgem7SZBUPN4MFyJoSmM03mYb3pM+D9EtA==
+"@globality/nodule-openapi@0.27.0":
+  version "0.27.0"
+  resolved "https://globality.jfrog.io/globality/api/npm/npm/@globality/nodule-openapi/-/@globality/nodule-openapi-0.27.0.tgz#ec9d94ef272f7d4a7ac0919ec83b68d3a812a958"
+  integrity sha512-3khLkKsxjaXx9RwGLBJ1Q1A/RWrJqDzU6tWBV2w0YA9s9On87gcl4l858+PoFFWeRIHTmz9awNpLvUXFUZ2OcA==
   dependencies:
     "@globality/nodule-config" "^2.3.0"
     axios "^0.26.1"
@@ -2607,21 +2598,6 @@ available-typed-arrays@^1.0.7:
   integrity sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==
   dependencies:
     possible-typed-array-names "^1.0.0"
-
-aws-sdk@2.829.0:
-  version "2.829.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.829.0.tgz#da70407a8bddc21b1dc1c9ba61ac3daea39b9364"
-  integrity sha512-0LV0argbcE1HhOeCeCZWUbpP4rWzwqe+0WmnR+jCJPY0w0n/ntGU/GW8obzhhhUej8pS4AkuAJNgzbwlTnxUmw==
-  dependencies:
-    buffer "4.9.2"
-    events "1.1.1"
-    ieee754 "1.1.13"
-    jmespath "0.15.0"
-    querystring "0.2.0"
-    sax "1.2.1"
-    url "0.10.3"
-    uuid "3.3.2"
-    xml2js "0.4.19"
 
 aws-sdk@^2.1658.0:
   version "2.1659.0"
@@ -4175,9 +4151,9 @@ flatted@^3.2.9:
   integrity sha512-36yxDn5H7OFZQla0/jFJmbIKTdZAQHngCedGxiMmpNfEZM0sdEeT+WczLQrjK6D7o2aiyLYDnkw0R3JK0Qv1RQ==
 
 follow-redirects@^1.14.8:
-  version "1.14.9"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.9.tgz#dd4ea157de7bfaf9ea9b3fbd85aa16951f78d8d7"
-  integrity sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==
+  version "1.15.9"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.9.tgz#a604fa10e443bf98ca94228d9eebcc2e8a2c8ee1"
+  integrity sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==
 
 follow-redirects@^1.15.0, follow-redirects@^1.15.6:
   version "1.15.6"
@@ -5393,11 +5369,6 @@ jest@^29.7.0:
     import-local "^3.0.2"
     jest-cli "^29.7.0"
 
-jmespath@0.15.0:
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/jmespath/-/jmespath-0.15.0.tgz#a3f222a9aae9f966f5d27c796510e28091764217"
-  integrity sha1-o/Iiqarp+Wb10nx5ZRDigJF2Qhc=
-
 jmespath@0.16.0:
   version "0.16.0"
   resolved "https://registry.yarnpkg.com/jmespath/-/jmespath-0.16.0.tgz#b15b0a85dfd4d930d43e69ed605943c802785076"
@@ -5644,7 +5615,7 @@ lodash.sortby@^4.7.0:
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
   integrity sha1-7dFMgk4sycHgsKG0K7UhBRakJDg=
 
-lodash@4.17.20, lodash@4.17.21, lodash@^4.17.19, lodash@^4.17.21, lodash@^4.17.4, lodash@^4.17.5:
+lodash@4.17.21, lodash@^4.17.19, lodash@^4.17.21, lodash@^4.17.4, lodash@^4.17.5:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -7218,11 +7189,6 @@ uuid@10.0.0:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-10.0.0.tgz#5a95aa454e6e002725c79055fd42aaba30ca6294"
   integrity sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==
 
-uuid@3.3.2:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
-  integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
-
 uuid@8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.0.0.tgz#bc6ccf91b5ff0ac07bbcdbf1c7c4e150db4dbb6c"
@@ -7393,14 +7359,6 @@ x-xss-protection@1.3.0:
   resolved "https://registry.yarnpkg.com/x-xss-protection/-/x-xss-protection-1.3.0.tgz#3e3a8dd638da80421b0e9fff11a2dbe168f6d52c"
   integrity sha512-kpyBI9TlVipZO4diReZMAHWtS0MMa/7Kgx8hwG/EuZLiA6sg4Ah/4TRdASHhRRN3boobzcYgFRUFSgHRge6Qhg==
 
-xml2js@0.4.19:
-  version "0.4.19"
-  resolved "https://registry.yarnpkg.com/xml2js/-/xml2js-0.4.19.tgz#686c20f213209e94abf0d1bcf1efaa291c7827a7"
-  integrity sha512-esZnJZJOiJR9wWKMyuvSE1y6Dq5LCuJanqhxslH2bxM6duahNZ+HMpCLhBQGZkbX6xRf8x1Y2eJlgt2q3qo49Q==
-  dependencies:
-    sax ">=0.6.0"
-    xmlbuilder "~9.0.1"
-
 xml2js@0.6.2:
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/xml2js/-/xml2js-0.6.2.tgz#dd0b630083aa09c161e25a4d0901e2b2a929b499"
@@ -7413,11 +7371,6 @@ xmlbuilder@~11.0.0:
   version "11.0.1"
   resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-11.0.1.tgz#be9bae1c8a046e76b31127726347d0ad7002beb3"
   integrity sha512-fDlsI/kFEx7gLvbecc0/ohLG50fugQp8ryHzMTuW9vSa1GJ0XYWKnhsUx7oie3G98+r56aTQIUB4kht42R3JvA==
-
-xmlbuilder@~9.0.1:
-  version "9.0.7"
-  resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-9.0.7.tgz#132ee63d2ec5565c557e20f4c22df9aca686b10d"
-  integrity sha1-Ey7mPS7FVlxVfiD0wi35rKaGsQ0=
 
 xss@1.0.10, xss@^1.0.6:
   version "1.0.10"
