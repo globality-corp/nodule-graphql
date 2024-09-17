@@ -1,4 +1,4 @@
-import { set as mockSet } from 'lodash';
+import { set as mockSet } from 'lodash-es';
 
 import mockCreateKey from '../../core/keys.js';
 import dedup from '../wrapper.js';

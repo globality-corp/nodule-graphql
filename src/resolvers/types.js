@@ -1,5 +1,5 @@
 import { getContainer } from '@globality/nodule-config';
-import { isFunction, isNil } from 'lodash';
+import { isFunction, isNil } from 'lodash-es';
 import { v4 as uuidv4 } from 'uuid';
 
 import { requestContext } from './context.js';

@@ -1,5 +1,5 @@
 import { getConfig, getMetadata } from '@globality/nodule-config';
-import { get } from 'lodash';
+import { get } from 'lodash-es';
 
 import loadPublicKey from './publicKey.js';
 

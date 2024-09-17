@@ -1,5 +1,5 @@
 import { bind } from '@globality/nodule-config';
-import padEnd from 'lodash/padEnd.js';
+import padEnd from 'lodash-es/padEnd.js';
 
 const PAD = 20;
 

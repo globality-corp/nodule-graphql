@@ -1,4 +1,4 @@
-import { get as mockGet, set as mockSet } from 'lodash';
+import { get as mockGet, set as mockSet } from 'lodash-es';
 
 import batched from '../wrapper.js';
 

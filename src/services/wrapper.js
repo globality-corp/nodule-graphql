@@ -5,7 +5,7 @@
  */
 
 import { getContainer } from '@globality/nodule-config';
-import { flatten } from 'lodash';
+import { flatten } from 'lodash-es';
 
 import batched from './batching/wrapper.js';
 import cached from './caching/wrapper.js';

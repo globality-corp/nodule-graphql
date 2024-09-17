@@ -1,6 +1,6 @@
 import { getContainer } from '@globality/nodule-config';
 import { anyNonNil } from 'is-uuid';
-import { get, includes, isArray, isEqual, isFunction, isNil, isUndefined } from 'lodash';
+import { get, includes, isArray, isEqual, isFunction, isNil, isUndefined } from 'lodash-es';
 
 import createKey from '../core/keys.js';
 

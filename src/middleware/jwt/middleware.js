@@ -1,7 +1,7 @@
 import { getConfig, getMetadata, getContainer } from '@globality/nodule-config';
 import { expressjwt as jwt } from 'express-jwt';
 import { StatusCodes } from 'http-status-codes';
-import { get } from 'lodash';
+import { get } from 'lodash-es';
 
 import sendUnauthorized from './errors.js';
 import negotiateKey from './negotiate.js';

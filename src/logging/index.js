@@ -4,7 +4,7 @@
 
 import { bind, getContainer } from '@globality/nodule-config';
 import { extractLoggingProperties } from '@globality/nodule-logging';
-import { assign, get } from 'lodash';
+import { assign, get } from 'lodash-es';
 
 export function calculateExecuteTime(executeStartTime) {
     const executeTime = process.hrtime(executeStartTime);

@@ -1,7 +1,7 @@
 import { getContainer } from '@globality/nodule-config';
 import DataLoader from 'dataloader';
 import Enum from 'enum';
-import { get, set } from 'lodash';
+import { get, set } from 'lodash-es';
 
 import dedup from '../dedup/wrapper.js';
 

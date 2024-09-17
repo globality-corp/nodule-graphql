@@ -5,7 +5,7 @@ import { ApolloServerPluginUsageReportingDisabled } from '@apollo/server/plugin/
 import { ApolloServerPluginUsageReporting } from '@apollo/server/plugin/usageReporting';
 
 import { bind, getContainer, setDefaults } from '@globality/nodule-config';
-import { get, includes, merge, pickBy } from 'lodash';
+import { get, includes, merge, pickBy } from 'lodash-es';
 
 /**
  * Inject custom extensions in the graphql response.

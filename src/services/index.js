@@ -1,5 +1,5 @@
 import { bind, getContainer } from '@globality/nodule-config';
-import { cloneDeepWith, set } from 'lodash';
+import { cloneDeepWith, set } from 'lodash-es';
 
 import createKeyFunc from './core/keys.js';
 import getServiceWrappers from './wrapper.js';

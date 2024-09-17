@@ -1,6 +1,6 @@
 import { getContainer } from '@globality/nodule-config';
 import { extractLoggingProperties } from '@globality/nodule-logging';
-import { get } from 'lodash';
+import { get } from 'lodash-es';
 
 import { calculateExecuteTime } from '../../logging/index.js';
 

@@ -1,6 +1,6 @@
 import { getContainer } from '@globality/nodule-config';
 import { InternalServerError } from '@globality/nodule-express';
-import { get } from 'lodash';
+import { get } from 'lodash-es';
 
 /* Invoke a service via a named client.
  */

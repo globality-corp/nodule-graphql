@@ -1,5 +1,5 @@
 import { getContainer } from '@globality/nodule-config';
-import { flatten, indexOf, isFunction } from 'lodash';
+import { flatten, indexOf, isFunction } from 'lodash-es';
 
 /**
  * Expand a key either into itself (if it's a string) or via a function call.

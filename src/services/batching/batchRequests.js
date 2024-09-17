@@ -5,7 +5,7 @@
 import { getContainer } from '@globality/nodule-config';
 import { NotFound, InternalServerError } from '@globality/nodule-express';
 import { concurrentPaginate, all } from '@globality/nodule-openapi';
-import { assign, chunk, chain, flatten, get, groupBy, omit, uniq } from 'lodash';
+import { assign, chunk, chain, flatten, get, groupBy, omit, uniq } from 'lodash-es';
 
 /* Checks that a service request can be batched:
  * 1. Contains an accumulateBy value (such as userId)
