@@ -1,14 +1,13 @@
 {
-    "extends": "@globality/gi-eslint-config/src/configs/typescript/base.json",
+    "extends": "@total-typescript/tsconfig/tsc/no-dom/library",
     "compilerOptions": {
         "baseUrl": "./src",
         "outDir": "lib",
-        "declaration": true,
-        "emitDeclarationOnly": true,
-        "isolatedModules": true,
-        "allowJs": true,
+        "checkJs": true,
+        "noImplicitAny": false,
         "types": ["node", "jest"],
         "typeRoots": ["src/types", "node_modules/@types"]
     },
+    "include": ["src"],
     "exclude": ["lib"]
 }

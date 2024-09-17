@@ -1,12 +1,12 @@
 import { bind, getContainer } from '@globality/nodule-config';
-import { cloneDeepWith, set } from 'lodash';
+import { cloneDeepWith, set } from 'lodash-es';
 
-import createKeyFunc from './core/keys';
-import getServiceWrappers from './wrapper';
+import createKeyFunc from './core/keys.js';
+import getServiceWrappers from './wrapper.js';
 
-export { default as named } from './core/named';
+export { default as named } from './core/named.js';
 
-export { ANY_NOT_NULL, ANY_PARAMETER, ANY_SINGLE_ITEM_LIST, ANY_UUID, CachingSpec } from './caching/types';
+export { ANY_NOT_NULL, ANY_PARAMETER, ANY_SINGLE_ITEM_LIST, ANY_UUID, CachingSpec } from './caching/types.js';
 
 export function cloneClients(obj) {
     return cloneDeepWith(obj, (node) =>

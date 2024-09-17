@@ -1,1 +1,1 @@
-export { signSymmetric, signPrivate } from './token';
+export { signSymmetric, signPrivate } from './token.js';

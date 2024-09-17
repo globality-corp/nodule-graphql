@@ -10,7 +10,7 @@
 import { getContainer } from '@globality/nodule-config';
 import { concurrentPaginate } from '@globality/nodule-openapi';
 import DataLoader from 'dataloader';
-import { get, set } from 'lodash';
+import { get, set } from 'lodash-es';
 import { v4 as uuidv4 } from 'uuid';
 
 /**

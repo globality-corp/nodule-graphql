@@ -1,5 +1,5 @@
 import { getContainer } from '@globality/nodule-config';
-import { flatten, indexOf, isFunction } from 'lodash';
+import { flatten, indexOf, isFunction } from 'lodash-es';
 
 /**
  * Expand a key either into itself (if it's a string) or via a function call.
@@ -34,6 +34,7 @@ async function executePipeline(pipeline, args) {
     // we expect exactly one resolver
     const resolverKey = Object.keys(pipeline.resolvers)[0];
     const resolverIndex = indexOf(pipeline.keys, resolverKey);
+    // @ts-ignore
     const resolver = pipeline.resolvers[resolverKey];
 
     // apply masks to the input arguments

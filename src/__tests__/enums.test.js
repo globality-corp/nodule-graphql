@@ -1,7 +1,7 @@
 import Enum from 'enum';
 import { GraphQLEnumType } from 'graphql';
 
-import { createGraphQLEnumType } from '../enums';
+import { createGraphQLEnumType } from '../enums/index.js';
 
 const compareGraphQLAndGraphQL = (graphqlEnum1, graphqlEnum2) => {
     if (!(graphqlEnum1.name === graphqlEnum2.name && graphqlEnum1.description === graphqlEnum2.description)) {

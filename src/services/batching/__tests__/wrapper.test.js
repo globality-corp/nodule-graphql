@@ -1,13 +1,13 @@
-import { get as mockGet, set as mockSet } from 'lodash';
+import { get as mockGet, set as mockSet } from 'lodash-es';
 
-import batched from '../wrapper';
+import batched from '../wrapper.js';
 
 jest.mock('@globality/nodule-config', () => {
     // NB: require here is necessary as scoping in jest 24 requires you to
     // import mocked functions in the same context where the mock is defined
     // and imports can only be used at the top level.
     // eslint-disable-next-line global-require
-    const { default: createKey } = require('../../core/keys');
+    const { default: createKey } = require('../../core/keys.js');
 
     const mockConfig = {
         config: {
@@ -74,11 +74,13 @@ describe('dataLoader requestWrapper', () => {
         requestWrapper = batched(companyRetrieve, {
             accumulateBy: 'id',
             accumulateInto: 'companyIds',
+            // @ts-ignore
             batchSearchRequest: companySearch,
         });
         searchWrapper = batched(companySearch, {
             accumulateBy: 'companyIds',
             accumulateInto: 'companyIds',
+            // @ts-ignore
             splitResponseBy: 'id',
         });
     });
@@ -217,6 +219,7 @@ describe('dataLoader requestWrapper', () => {
         requestWrapper = batched(companyRetrieve, {
             accumulateBy: 'id',
             accumulateInto: 'companyIds',
+            // @ts-ignore
             batchSearchRequest: companySearch,
         });
         let caughtError;
@@ -225,6 +228,7 @@ describe('dataLoader requestWrapper', () => {
         } catch (thrownError) {
             caughtError = thrownError;
         }
+        // @ts-ignore
         expect(caughtError.message).toBe('Batching failed: expected to get one item but got too many results');
         expect(companyRetrieve).toHaveBeenCalledTimes(0);
         expect(companySearch).toHaveBeenCalledTimes(1);
@@ -245,6 +249,7 @@ describe('dataLoader requestWrapper', () => {
         requestWrapper = batched(companyRetrieve, {
             accumulateBy: 'id',
             accumulateInto: 'companyIds',
+            // @ts-ignore
             batchSearchRequest: companySearch,
         });
         let caughtError;
@@ -253,6 +258,7 @@ describe('dataLoader requestWrapper', () => {
         } catch (thrownError) {
             caughtError = thrownError;
         }
+        // @ts-ignore
         expect(caughtError.message).toBe('Batching failed: expected to get one item but got none');
         expect(companyRetrieve).toHaveBeenCalledTimes(0);
         expect(companySearch).toHaveBeenCalledTimes(1);
@@ -268,6 +274,7 @@ describe('dataLoader requestWrapper', () => {
             accumulateBy: 'idx',
             accumulateInto: 'companyIds',
             batchSearchRequest: companySearch,
+            // @ts-ignore
             splitResponseBy: 'id',
         });
         const companies = await Promise.all([requestWrapper(req, { idx: 1 }), requestWrapper(req, { idx: 2 })]);
@@ -308,6 +315,7 @@ describe('dataLoader requestWrapper', () => {
         searchWrapper = batched(companySearch, {
             accumulateBy: 'companyIds',
             accumulateInto: 'companyIds',
+            // @ts-ignore
             splitResponseBy: 'id',
         });
         const companies = await Promise.all([searchWrapper(req, { companyIds: [999] }), searchWrapper(req, { companyIds: [1] })]);
@@ -334,6 +342,7 @@ describe('dataLoader requestWrapper', () => {
         searchWrapper = batched(companySearch, {
             accumulateBy: 'companyIds',
             accumulateInto: 'companyIds',
+            // @ts-ignore
             splitResponseBy: 'id',
         });
         const companies = await Promise.all([searchWrapper(req, { companyIds: [1] }), searchWrapper(req, { companyIds: [-999] })]);

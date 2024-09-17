@@ -1,7 +1,7 @@
-import { set as mockSet } from 'lodash';
+import { set as mockSet } from 'lodash-es';
 
-import mockCreateKey from '../../core/keys';
-import dedup from '../wrapper';
+import mockCreateKey from '../../core/keys.js';
+import dedup from '../wrapper.js';
 
 const mockConfig = {
     createKey: mockCreateKey,
@@ -29,6 +29,7 @@ describe('dataLoader wrapper', () => {
     });
 
     it('should use in-req cache', async () => {
+        // @ts-ignore
         const wrapper = dedup(companyRetrieve, {});
         let company = await wrapper(req, { id: 1 });
         expect(company.id).toBe(1);

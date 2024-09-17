@@ -1,7 +1,7 @@
 import { Nodule } from '@globality/nodule-config';
 import request from 'supertest';
 
-import createApp from './app';
+import createApp from './app.js';
 
 describe('routes', () => {
     beforeEach(async () => {

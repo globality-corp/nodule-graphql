@@ -1,7 +1,7 @@
 import { clearBinding, Nodule } from '@globality/nodule-config';
 import '@globality/nodule-logging'; // factory import
 
-import passBasicAuth from '../passBasicAuth';
+import passBasicAuth from '../passBasicAuth.js';
 
 describe('passBasicAuth middleware', () => {
     let res;
@@ -10,12 +10,16 @@ describe('passBasicAuth middleware', () => {
         clearBinding('config');
 
         res = {};
+        // @ts-ignore
         res.status = jest.fn((code) => {
             res.code = code;
             return res;
         });
+        // @ts-ignore
         res.json = jest.fn(() => res);
+        // @ts-ignore
         res.set = jest.fn(() => res);
+        // @ts-ignore
         res.end = jest.fn(() => null);
     });
 

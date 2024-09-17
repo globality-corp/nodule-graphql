@@ -5,7 +5,7 @@
 import { getContainer } from '@globality/nodule-config';
 import { NotFound, InternalServerError } from '@globality/nodule-express';
 import { concurrentPaginate, all } from '@globality/nodule-openapi';
-import { assign, chunk, chain, flatten, get, groupBy, omit, uniq } from 'lodash';
+import { assign, chunk, chain, flatten, get, groupBy, omit, uniq } from 'lodash-es';
 
 /* Checks that a service request can be batched:
  * 1. Contains an accumulateBy value (such as userId)
@@ -268,6 +268,7 @@ export default async function batchRequests(
     const resonseObjects = await concurrentPaginate(requestPromises);
     const { createKey } = getContainer();
     // Merge all responses to one (str(args) => response) object and arrange the response
+    // @ts-ignore
     const responsesObject = Object.assign(...resonseObjects);
     return argsList.map((args) => responsesObject[createKey(args)]);
 }

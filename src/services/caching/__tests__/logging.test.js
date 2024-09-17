@@ -1,4 +1,4 @@
-import logCacheUsage from '../logging';
+import logCacheUsage from '../logging.js';
 
 jest.mock('@globality/nodule-config', () => ({
     bind: () => null,

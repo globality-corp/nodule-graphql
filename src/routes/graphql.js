@@ -5,7 +5,7 @@ import { ApolloServerPluginUsageReportingDisabled } from '@apollo/server/plugin/
 import { ApolloServerPluginUsageReporting } from '@apollo/server/plugin/usageReporting';
 
 import { bind, getContainer, setDefaults } from '@globality/nodule-config';
-import { get, includes, merge, pickBy } from 'lodash';
+import { get, includes, merge, pickBy } from 'lodash-es';
 
 /**
  * Inject custom extensions in the graphql response.
@@ -60,9 +60,13 @@ function determineErrorMessage(error) {
 function formatError(formattedError, error) {
     const extensions = formattedError.extensions || {};
     const originalError = unwrapResolverError(error);
+    // @ts-ignore
     const code = extensions.code || originalError.code;
+    // @ts-ignore
     const headers = originalError.headers || {};
+    // @ts-ignore
     const traceId = extensions.traceId || originalError.traceId || headers['x-trace-id'];
+    // @ts-ignore
     const requestId = extensions.requestId || originalError.requestId || headers['x-request-id'];
 
     // Include the HTTP status code, trace ID and request ID if they exist. These can come from
@@ -79,13 +83,16 @@ function formatError(formattedError, error) {
     // According to section 7.1.2 of the GraphQL specification, fields `message`, and `path` are
     // required. The `locations` field may be included.
     newError.message = determineErrorMessage(formattedError);
+    // @ts-ignore
     newError.path = formattedError.path;
 
     if (formattedError.locations) {
+        // @ts-ignore
         newError.locations = formattedError.locations;
     }
 
     const newExts = {};
+    // @ts-ignore
     newError.extensions = newExts;
 
     if (code) {

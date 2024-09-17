@@ -1,6 +1,6 @@
 import { GraphQLID, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
-import { getResolver } from 'index';
+import { getResolver } from 'index.js';
 
 export const CompanyType = new GraphQLObjectType({
     name: 'CompanyType',

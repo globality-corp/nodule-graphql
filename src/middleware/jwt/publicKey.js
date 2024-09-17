@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 
-import { memoize } from 'lodash';
+import { memoize } from 'lodash-es';
 
 /**
  * Convert JWKS data to PEM format.
@@ -53,6 +53,7 @@ const rsaPublicKeyToPEM = (modulusB64, exponentB64) => {
     const der = Buffer.from(encodedPubkey, 'hex').toString('base64');
 
     let pem = '-----BEGIN RSA PUBLIC KEY-----\n';
+    // @ts-ignore
     pem += `${der.match(/.{1,64}/g).join('\n')}`;
     pem += '\n-----END RSA PUBLIC KEY-----\n';
     return pem;
@@ -71,6 +72,7 @@ const rsaPublicKeyToPEM = (modulusB64, exponentB64) => {
 export default function loadPublicKey(domain, kid, publicKeyRootPath) {
     const path = `${publicKeyRootPath}/${domain}.jwks`;
     // NB: don't load the file more than once
+    // @ts-ignore
     const jwks = JSON.parse(memoize(readFileSync)(path));
     const signingKeys = jwks.keys.filter((key) => key.kid === kid);
     const signingKey = signingKeys[0];

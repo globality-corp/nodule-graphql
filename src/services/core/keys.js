@@ -1,5 +1,5 @@
 import { getContainer } from '@globality/nodule-config';
-import { get, isObject, toPairs } from 'lodash';
+import { get, isObject, toPairs } from 'lodash-es';
 import { v5 as uuidv5 } from 'uuid';
 
 function valueToString(value) {

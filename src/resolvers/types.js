@@ -1,8 +1,8 @@
 import { getContainer } from '@globality/nodule-config';
-import { isFunction, isNil } from 'lodash';
+import { isFunction, isNil } from 'lodash-es';
 import { v4 as uuidv4 } from 'uuid';
 
-import { requestContext } from './context';
+import { requestContext } from './context.js';
 
 /**
  * @typedef {object} Context
@@ -71,6 +71,7 @@ export class Resolver {
             if (isNil(context.callCounts[this.resolverId])) {
                 context.callCounts[this.resolverId] = 0;
             }
+            // @ts-ignore
             const callCount = ++context.callCounts[this.resolverId]; // eslint-disable-line no-plusplus
             if (callCount > this.maxCallsPerRequest) {
                 const { logger } = getContainer();
@@ -85,8 +86,10 @@ export class Resolver {
 
             // always invoke authorizers with standard resolver arguments
             if (isNil(this.authorizeData)) {
+                // @ts-ignore
                 await authorize(obj, args, context, info);
             } else {
+                // @ts-ignore
                 await authorize(this.authorizeData, obj, args, context, info);
             }
         }
@@ -96,16 +99,19 @@ export class Resolver {
 
         // apply preAggregate
         if (this.preAggregate) {
+            // @ts-ignore
             await this.preAggregate(...masked);
         }
 
         // aggregate asynchronous requests over services.
+        // @ts-ignore
         const aggregated = await requestContext.run(context, () => this.aggregate(...masked));
         if (!this.transform) {
             return aggregated;
         }
 
         // transform aggregated service data into a resource
+        // @ts-ignore
         return this.transform(aggregated, ...masked);
     }
 }

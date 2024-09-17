@@ -1,4 +1,4 @@
-import { get, set, values } from 'lodash';
+import { get, set, values } from 'lodash-es';
 
 /**
  * Safely fetch fields from a type.

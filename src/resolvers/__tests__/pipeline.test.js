@@ -1,8 +1,8 @@
 import { bind } from '@globality/nodule-config';
 
-import { getResolverPipeline } from '../pipeline';
-import { createResolver } from '../types';
-import '../null';
+import { getResolverPipeline } from '../pipeline.js';
+import { createResolver } from '../types.js';
+import '../null.js';
 
 describe('Resolver pipeline', () => {
     beforeEach(() => {

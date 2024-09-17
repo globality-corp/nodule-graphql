@@ -6,7 +6,7 @@
 
 import { getConfig, getContainer } from '@globality/nodule-config';
 
-import sendUnauthorized from './errors';
+import sendUnauthorized from './errors.js';
 
 export default function passBasicAuth(req, res, next) {
     const { logger } = getContainer();
@@ -33,6 +33,7 @@ export default function passBasicAuth(req, res, next) {
         return sendUnauthorized(req, res, realm);
     }
 
+    // @ts-ignore
     req.headers.authorization = `Bearer ${credentials[1].trim()}`;
 
     return next();

@@ -1,6 +1,6 @@
 import { clearBinding, Nodule } from '@globality/nodule-config';
 
-import negotiateKey from '../negotiate';
+import negotiateKey from '../negotiate.js';
 
 describe('negotiateKey', () => {
     beforeEach(() => {

@@ -7,8 +7,8 @@ jest.mock('@apollo/server');
 jest.mock('@apollo/server/plugin/disabled');
 jest.mock('@apollo/server/plugin/usageReporting');
 
-import '../graphql'; // eslint-disable-line import/first
-import '../../terminal'; // eslint-disable-line import/first
+import '../graphql.js'; // eslint-disable-line import/first
+import '../../terminal.js'; // eslint-disable-line import/first
 
 const QueryType = new GraphQLObjectType({
     name: 'QueryType',
@@ -30,7 +30,9 @@ bind('graphql.schema', () => schema);
 describe('routes.graphql', () => {
     it('will supply apollo engine configs to apollo server instance', async () => {
         const mockApolloServer = jest.fn();
+        // @ts-ignore
         apolloServer.ApolloServer.mockImplementation(mockApolloServer.mockReturnThis());
+        // @ts-ignore
         const mockApolloServerPluginUsageReporting = ApolloServerPluginUsageReporting.mockImplementation(
             () => 'ApolloServerPluginUsageReporting'
         );

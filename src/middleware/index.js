@@ -1,4 +1,4 @@
-import './cors';
-import './helmet';
-import './jwt';
-import './requestId';
+import './cors.js';
+import './helmet.js';
+import './jwt/index.js';
+import './requestId.js';

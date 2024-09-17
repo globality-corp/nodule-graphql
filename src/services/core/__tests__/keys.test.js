@@ -1,4 +1,4 @@
-import createKey from '../keys';
+import createKey from '../keys.js';
 
 describe('cacheKey', () => {
     it('generates expected values', async () => {
