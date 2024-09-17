@@ -3,6 +3,7 @@
     "version": "3.6.0",
     "description": "Node GraphQL Conventions",
     "main": "lib/",
+    "type": "module",
     "repository": {
         "type": "git",
         "url": "git+ssh://git@github.com/globality-corp/nodule-graphql.git"
