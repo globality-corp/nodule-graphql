@@ -15,7 +15,7 @@
     "license": "MIT",
     "scripts": {
         "clean": "rm -rf ./lib",
-        "build": "tsc -p tsconfig.build.json && babel src --out-dir lib --ignore '**/__tests__/*,**/__mocks__/*' --extensions '.js,.ts'",
+        "build": "tsc -p tsconfig.build.json",
         "lint": "gi-eslint-run lint",
         "lint:fix": "gi-eslint-run lint --fix",
         "pack:dev": "./scripts/pack-dev.sh",
