@@ -2,7 +2,7 @@
     "name": "@globality/nodule-graphql",
     "version": "3.6.0",
     "description": "Node GraphQL Conventions",
-    "main": "lib/",
+    "main": "lib/index.js",
     "type": "module",
     "repository": {
         "type": "git",
