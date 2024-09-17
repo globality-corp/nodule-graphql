@@ -19,7 +19,7 @@
         "lint": "gi-eslint-run lint",
         "lint:fix": "gi-eslint-run lint --fix",
         "pack:dev": "./scripts/pack-dev.sh",
-        "test": "jest",
+        "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\"  jest",
         "verify": "yarn lint && yarn test",
         "preyalc": "yarn clean && yarn build"
     },
@@ -77,15 +77,6 @@
         "express": "^4.19.2",
         "lodash": "^4.17.21",
         "xss": "1.0.10"
-    },
-    "jest": {
-        "preset": "ts-jest/presets/js-with-babel",
-        "testEnvironment": "node",
-        "testRegex": "/__tests__/.*(test)\\.[jt]s",
-        "modulePaths": [
-            "<rootDir>/src"
-        ],
-        "testURL": "http://localhost"
     },
     "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
