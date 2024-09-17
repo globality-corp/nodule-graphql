@@ -2033,6 +2033,11 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
+"@total-typescript/tsconfig@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@total-typescript/tsconfig/-/tsconfig-1.0.4.tgz#e9fc9b7be05e2be2f72a50494b7df7114279a5c8"
+  integrity sha512-fO4ctMPGz1kOFOQ4RCPBRBfMy3gDn+pegUfrGyUFRMv/Rd0ZM3/SHH3hFCYG4u6bPLG8OlmOGcBLDexvyr3A5w==
+
 "@types/babel__core@^7.1.14":
   version "7.1.19"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.19.tgz#7b497495b7d1b4812bdb9d02804d0576f43ee460"
