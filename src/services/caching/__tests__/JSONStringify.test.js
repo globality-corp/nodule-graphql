@@ -1,4 +1,4 @@
-import JSONStringify from '../JSONStringify';
+import JSONStringify from '../JSONStringify.js';
 
 describe('JSONStringify', () => {
     it('adds newline at the end of the string', () => {

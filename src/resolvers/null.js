@@ -1,6 +1,6 @@
 import { bind } from '@globality/nodule-config';
 
-import { createResolver } from './types';
+import { createResolver } from './types.js';
 
 /**
  * Register a default 'null' resolver.

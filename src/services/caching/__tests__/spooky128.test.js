@@ -1,4 +1,4 @@
-import spooky128 from '../spooky128';
+import spooky128 from '../spooky128.js';
 
 describe('spooky', () => {
     it('creates microcosm compatible cache', () => {

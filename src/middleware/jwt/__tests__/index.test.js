@@ -9,7 +9,7 @@ import { signSymmetric, signPrivate } from 'index';
 describe('Configuring the middleware', () => {
     const audience = 'audience';
     const domain = 'example';
-    const publicKeyRootPath = __dirname;
+    const publicKeyRootPath = `${process.platform === 'win32' ? '' : '/'}${/file:\/{2,3}(.+)\/[^/]/.exec(import.meta.url)![1]}`;
     const secret = 'secret';
 
     let app;
@@ -65,7 +65,7 @@ describe('Configuring the middleware', () => {
 
     it('handles RS256 authorization', async () => {
         const email = 'first.last@example.com';
-        const key = readFileSync(`${__dirname}/example.key`, 'ascii');
+        const key = readFileSync(`${`${process.platform === 'win32' ? '' : '/'}${/file:\/{2,3}(.+)\/[^/]/.exec(import.meta.url)![1]}`}/example.key`, 'ascii');
         const token = signPrivate({ email }, key, audience);
 
         const response = await request(app).get('/').set('Authorization', `Bearer ${token}`);

@@ -1,1 +1,1 @@
-export { default as withArgs } from './masking';
+export { default as withArgs } from './masking.js';

@@ -2,10 +2,10 @@ import { getContainer } from '@globality/nodule-config';
 import { anyNonNil } from 'is-uuid';
 import { get, includes, isArray, isEqual, isFunction, isNil, isUndefined } from 'lodash';
 
-import createKey from '../core/keys';
+import createKey from '../core/keys.js';
 
-import JSONStringify from './JSONStringify';
-import spooky128 from './spooky128';
+import JSONStringify from './JSONStringify.js';
+import spooky128 from './spooky128.js';
 
 export const ANY_NOT_NULL = (value) => !isNil(value);
 export const ANY_PARAMETER = (value) => !isUndefined(value);

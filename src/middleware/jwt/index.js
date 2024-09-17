@@ -1,7 +1,7 @@
 import { bind, setDefaults } from '@globality/nodule-config';
 
-import createValidateJWTMiddleware from './middleware';
-import passBasicAuth from './passBasicAuth';
+import createValidateJWTMiddleware from './middleware.js';
+import passBasicAuth from './passBasicAuth.js';
 
 /* Configure JWT-based authorization as a middleware.
  */

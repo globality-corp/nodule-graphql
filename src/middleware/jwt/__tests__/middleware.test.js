@@ -2,7 +2,7 @@ import { clearBinding, Nodule } from '@globality/nodule-config';
 
 import { signSymmetric } from 'index';
 
-import createValidateJWTMiddleware from '../middleware';
+import createValidateJWTMiddleware from '../middleware.js';
 
 const flushPromises = () => new Promise(setImmediate);
 

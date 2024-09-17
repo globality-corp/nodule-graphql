@@ -3,10 +3,10 @@ import DataLoader from 'dataloader';
 import Enum from 'enum';
 import { get, set } from 'lodash';
 
-import dedup from '../dedup/wrapper';
+import dedup from '../dedup/wrapper.js';
 
-import logCacheUsage from './logging';
-import traceCacheCall from './traceCacheCall';
+import logCacheUsage from './logging.js';
+import traceCacheCall from './traceCacheCall.js';
 
 /**
  * Cache outcomes.

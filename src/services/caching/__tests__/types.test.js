@@ -2,7 +2,7 @@
  */
 import Enum from 'enum';
 
-import { CachingSpec, ANY_UUID } from '../types';
+import { CachingSpec, ANY_UUID } from '../types.js';
 
 jest.mock('@globality/nodule-config', () => ({
     getContainer: () => ({

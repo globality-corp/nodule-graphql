@@ -1,8 +1,8 @@
 import Enum from 'enum';
 
-import createKey from '../../core/keys';
-import { ANY_NOT_NULL, ANY_PARAMETER, ANY_SINGLE_ITEM_LIST, ANY_UUID, CachingSpec } from '../types';
-import cached from '../wrapper';
+import createKey from '../../core/keys.js';
+import { ANY_NOT_NULL, ANY_PARAMETER, ANY_SINGLE_ITEM_LIST, ANY_UUID, CachingSpec } from '../types.js';
+import cached from '../wrapper.js';
 
 let req;
 let plumbusRetrieve;

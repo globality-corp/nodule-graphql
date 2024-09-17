@@ -1,7 +1,7 @@
 import { set as mockSet } from 'lodash';
 
-import mockCreateKey from '../../core/keys';
-import dedup from '../wrapper';
+import mockCreateKey from '../../core/keys.js';
+import dedup from '../wrapper.js';
 
 const mockConfig = {
     createKey: mockCreateKey,

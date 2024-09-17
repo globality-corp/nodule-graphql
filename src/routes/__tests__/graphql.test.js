@@ -7,8 +7,8 @@ jest.mock('@apollo/server');
 jest.mock('@apollo/server/plugin/disabled');
 jest.mock('@apollo/server/plugin/usageReporting');
 
-import '../graphql'; // eslint-disable-line import/first
-import '../../terminal'; // eslint-disable-line import/first
+import '../graphql.js'; // eslint-disable-line import/first
+import '../../terminal.js'; // eslint-disable-line import/first
 
 const QueryType = new GraphQLObjectType({
     name: 'QueryType',

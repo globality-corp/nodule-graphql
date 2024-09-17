@@ -2,7 +2,7 @@ import { getContainer } from '@globality/nodule-config';
 import { isFunction, isNil } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
-import { requestContext } from './context';
+import { requestContext } from './context.js';
 
 /**
  * @typedef {object} Context

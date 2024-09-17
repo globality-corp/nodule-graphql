@@ -1,6 +1,6 @@
-import { dedupMany } from '../dedup/wrapper';
+import { dedupMany } from '../dedup/wrapper.js';
 
-import batchRequests from './batchRequests';
+import batchRequests from './batchRequests.js';
 
 /**
  * In-request caching and batching wrapper

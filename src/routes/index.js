@@ -1,2 +1,2 @@
-import './graphiql';
-import './graphql';
+import './graphiql.js';
+import './graphql.js';

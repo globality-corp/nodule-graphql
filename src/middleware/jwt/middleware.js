@@ -3,8 +3,8 @@ import { expressjwt as jwt } from 'express-jwt';
 import { StatusCodes } from 'http-status-codes';
 import { get } from 'lodash';
 
-import sendUnauthorized from './errors';
-import negotiateKey from './negotiate';
+import sendUnauthorized from './errors.js';
+import negotiateKey from './negotiate.js';
 
 export function chooseAudience(audience) {
     if (!audience) {

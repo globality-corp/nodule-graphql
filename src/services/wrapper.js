@@ -7,10 +7,10 @@
 import { getContainer } from '@globality/nodule-config';
 import { flatten } from 'lodash';
 
-import batched from './batching/wrapper';
-import cached from './caching/wrapper';
-import named from './core/named';
-import deduped from './dedup/wrapper';
+import batched from './batching/wrapper.js';
+import cached from './caching/wrapper.js';
+import named from './core/named.js';
+import deduped from './dedup/wrapper.js';
 
 function buildWrappers() {
     const wrappers = [];

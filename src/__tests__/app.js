@@ -4,8 +4,8 @@ import '@globality/nodule-express';
 
 import 'index';
 // activate component bindings
-import './services';
-import './schema';
+import './services.js';
+import './schema.js';
 
 export default async function createApp() {
     const { express, graphql: graphqlRoute, health, notFound } = getContainer('routes');

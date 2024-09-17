@@ -1,7 +1,7 @@
 import { getConfig, getMetadata } from '@globality/nodule-config';
 import { get } from 'lodash';
 
-import loadPublicKey from './publicKey';
+import loadPublicKey from './publicKey.js';
 
 export const ALGORITHMS = {
     HS256: ({ secret }) => {
