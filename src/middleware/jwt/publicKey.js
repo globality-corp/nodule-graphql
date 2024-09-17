@@ -53,6 +53,7 @@ const rsaPublicKeyToPEM = (modulusB64, exponentB64) => {
     const der = Buffer.from(encodedPubkey, 'hex').toString('base64');
 
     let pem = '-----BEGIN RSA PUBLIC KEY-----\n';
+    // @ts-ignore
     pem += `${der.match(/.{1,64}/g).join('\n')}`;
     pem += '\n-----END RSA PUBLIC KEY-----\n';
     return pem;

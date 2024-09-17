@@ -30,7 +30,9 @@ bind('graphql.schema', () => schema);
 describe('routes.graphql', () => {
     it('will supply apollo plugins configs to apollo server instance', async () => {
         const mockApolloServer = jest.fn();
+        // @ts-ignore
         apolloServer.ApolloServer.mockImplementation(mockApolloServer.mockReturnThis());
+        // @ts-ignore
         const mockApolloServerPluginUsageReportingDisabled = ApolloServerPluginUsageReportingDisabled.mockImplementation(
             () => 'ApolloServerPluginUsageReportingDisabled'
         );

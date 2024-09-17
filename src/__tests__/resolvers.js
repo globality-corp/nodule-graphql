@@ -1,7 +1,7 @@
 import { bind, getContainer } from '@globality/nodule-config';
 import { Forbidden } from '@globality/nodule-express';
 
-import { createResolver } from 'index';
+import { createResolver } from 'index.js';
 
 const retrieveCompanyName = createResolver({
     aggregate: ({ companyId }) => {
@@ -12,11 +12,13 @@ const retrieveCompanyName = createResolver({
 });
 
 const retrieveUser = createResolver({
+    // @ts-ignore
     preAggregate: () => {},
     aggregate: ({ userId }) => {
         const { services } = getContainer();
         return services.user.retrieve(userId);
     },
+    // @ts-ignore
     authorize: (obj, { id }) => {
         if (id === '23') {
             throw new Forbidden('Not Authorized');

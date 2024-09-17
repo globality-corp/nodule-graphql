@@ -60,6 +60,7 @@ describe('cache wrapper', () => {
     it('should try to fetch from cache', async () => {
         mockCacheGet.mockReturnValueOnce([{ id: 1 }]);
 
+        // @ts-ignore
         const spec = new CachingSpec({
             resourceName: CachedObjectType.plumbus.key,
         });
@@ -80,6 +81,7 @@ describe('cache wrapper', () => {
 
         const spec = new CachingSpec({
             resourceName: CachedObjectType.plumbus.key,
+            // @ts-ignore
             loaderName: 'plumbusLoader',
         });
         const spy = jest.spyOn(spec, 'setEndpointName');
@@ -112,6 +114,7 @@ describe('cache wrapper', () => {
 
         const spec = new CachingSpec({
             resourceName: CachedObjectType.plumbus.key,
+            // @ts-ignore
             requireArgs: { id: ANY_PARAMETER },
         });
         const wrapper = cached(plumbusRetrieve, spec);
@@ -126,6 +129,7 @@ describe('cache wrapper', () => {
 
         const spec = new CachingSpec({
             resourceName: CachedObjectType.plumbus.key,
+            // @ts-ignore
             requireArgs: { id: ANY_PARAMETER, id2: ANY_PARAMETER },
         });
         const wrapper = cached(plumbusRetrieve, spec);
@@ -140,6 +144,7 @@ describe('cache wrapper', () => {
 
         const spec = new CachingSpec({
             resourceName: CachedObjectType.plumbus.key,
+            // @ts-ignore
             requireArgs: { id: ANY_PARAMETER },
         });
         const wrapper = cached(plumbusRetrieve, spec);
@@ -154,6 +159,7 @@ describe('cache wrapper', () => {
 
         const spec = new CachingSpec({
             resourceName: CachedObjectType.plumbus.key,
+            // @ts-ignore
             requireArgs: { id: ANY_PARAMETER, id2: ANY_PARAMETER },
         });
         const wrapper = cached(plumbusRetrieve, spec);
@@ -169,6 +175,7 @@ describe('cache wrapper', () => {
 
         const spec = new CachingSpec({
             resourceName: CachedObjectType.plumbus.key,
+            // @ts-ignore
             requireArgs: { id: ANY_NOT_NULL },
         });
         const wrapper = cached(plumbusRetrieve, spec);
@@ -184,6 +191,7 @@ describe('cache wrapper', () => {
 
         const spec = new CachingSpec({
             resourceName: CachedObjectType.plumbus.key,
+            // @ts-ignore
             requireArgs: { id: ANY_NOT_NULL },
         });
         const wrapper = cached(plumbusRetrieve, spec);
@@ -198,6 +206,7 @@ describe('cache wrapper', () => {
 
         const spec = new CachingSpec({
             resourceName: CachedObjectType.plumbus.key,
+            // @ts-ignore
             requireArgs: { id: ANY_UUID },
         });
         const wrapper = cached(plumbusRetrieve, spec);
@@ -212,6 +221,7 @@ describe('cache wrapper', () => {
 
         const spec = new CachingSpec({
             resourceName: CachedObjectType.plumbus.key,
+            // @ts-ignore
             requireArgs: { id: ANY_UUID },
         });
         const wrapper = cached(plumbusRetrieve, spec);
@@ -226,6 +236,7 @@ describe('cache wrapper', () => {
 
         const spec = new CachingSpec({
             resourceName: CachedObjectType.plumbus.key,
+            // @ts-ignore
             requireArgs: { id: ANY_SINGLE_ITEM_LIST },
         });
         const wrapper = cached(plumbusRetrieve, spec);
@@ -240,6 +251,7 @@ describe('cache wrapper', () => {
 
         const spec = new CachingSpec({
             resourceName: CachedObjectType.plumbus.key,
+            // @ts-ignore
             requireArgs: { id: ANY_SINGLE_ITEM_LIST },
         });
         const wrapper = cached(plumbusRetrieve, spec);
@@ -254,6 +266,7 @@ describe('cache wrapper', () => {
 
         mockCacheGet.mockReturnValueOnce([{ id: 1 }]);
 
+        // @ts-ignore
         const spec = new CachingSpec({
             resourceName: CachedObjectType.dinglebop.key,
             supportNoCache: true,
@@ -270,6 +283,7 @@ describe('cache wrapper', () => {
 
         mockCacheGet.mockReturnValueOnce([{ id: 1 }]);
 
+        // @ts-ignore
         const spec = new CachingSpec({
             resourceName: CachedObjectType.dinglebop.key,
         });
@@ -286,6 +300,7 @@ describe('cache wrapper', () => {
 
         req.cacheControl.etags = { plumbus: [id1Etag] };
 
+        // @ts-ignore
         const spec = new CachingSpec({
             resourceName: CachedObjectType.plumbus.key,
         });
@@ -304,6 +319,7 @@ describe('cache wrapper', () => {
 
         req.cacheControl.etags = { plumbus: [id1Etag] };
 
+        // @ts-ignore
         const spec = new CachingSpec({
             resourceName: CachedObjectType.plumbus.key,
         });
@@ -322,6 +338,7 @@ describe('cache wrapper', () => {
 
         req.cacheControl.etags = { plumbus: [otherEtag, id1Etag] };
 
+        // @ts-ignore
         const spec = new CachingSpec({
             resourceName: CachedObjectType.plumbus.key,
         });
@@ -339,6 +356,7 @@ describe('cache wrapper', () => {
 
         req.cacheControl.etags = { user: [otherEtag] };
 
+        // @ts-ignore
         const spec = new CachingSpec({
             resourceName: CachedObjectType.plumbus.key,
         });

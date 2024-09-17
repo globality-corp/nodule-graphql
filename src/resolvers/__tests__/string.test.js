@@ -1,9 +1,10 @@
-import { createStrictResolver } from 'index';
+import { createStrictResolver } from 'index.js';
 
 describe('a strict resolver', () => {
     it('requires an aggregate function', async () => {
         expect(() =>
             createStrictResolver({
+                // @ts-ignore
                 authorize: () => true,
                 transform: (value) => value,
             })

@@ -20,6 +20,7 @@ const CachingConfig = {
     'fleeb.grumbo.search': new CachingSpec({
         resourceName: CachedObjectType.grumbo.key,
         endpointName: 'fleeb.grumbo.search',
+        // @ts-ignore
         requireArgs: {
             blamfId: ANY_UUID,
             plumbusTypes: ['BlamfInvited', 'BlamfActivated', 'BlamfDeactivated'],
@@ -27,6 +28,7 @@ const CachingConfig = {
     }),
     'fleeb.grumbo.retrieve': new CachingSpec({
         resourceName: CachedObjectType.grumbo.key,
+        // @ts-ignore
         requireArgs: [
             {
                 blamfId: ANY_UUID,

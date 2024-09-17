@@ -1,6 +1,6 @@
 import { Nodule } from '@globality/nodule-config';
 
-import { getResolver } from 'index';
+import { getResolver } from 'index.js';
 
 describe('null resolver', () => {
     beforeEach(async () => {

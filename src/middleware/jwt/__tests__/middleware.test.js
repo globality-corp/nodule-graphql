@@ -1,6 +1,6 @@
 import { clearBinding, Nodule } from '@globality/nodule-config';
 
-import { signSymmetric } from 'index';
+import { signSymmetric } from 'index.js';
 
 import createValidateJWTMiddleware from '../middleware.js';
 
@@ -13,12 +13,16 @@ describe('JWT middleware', () => {
         clearBinding('config');
 
         res = {};
+        // @ts-ignore
         res.status = jest.fn((code) => {
             res.code = code;
             return res;
         });
+        // @ts-ignore
         res.json = jest.fn(() => res);
+        // @ts-ignore
         res.set = jest.fn(() => res);
+        // @ts-ignore
         res.end = jest.fn(() => null);
     });
 

@@ -1,4 +1,4 @@
-import { withArgs } from 'index';
+import { withArgs } from 'index.js';
 
 describe('withArgs', () => {
     it('replaces arguments', () => {

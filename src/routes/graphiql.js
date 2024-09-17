@@ -12,6 +12,7 @@ function createMiddleware(config) {
             })
         );
         const { endpointUrl } = config.routes.graphiql;
+        // @ts-ignore
         expressPlayground({
             endpoint: `${endpointUrl}?headers=${headers}`,
             settings: {

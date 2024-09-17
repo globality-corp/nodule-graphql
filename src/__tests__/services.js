@@ -16,7 +16,9 @@ async function retrieveCompany(companyId) {
 async function retrieveUser(userId) {
     if (userId && userId === '999') {
         const error = new Error('Custom error');
+        // @ts-ignore
         error.code = 503;
+        // @ts-ignore
         error.headers = {
             'x-request-id': '1234',
             'x-trace-id': '5432',

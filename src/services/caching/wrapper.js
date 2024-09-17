@@ -88,6 +88,7 @@ async function getFromCacheThenService(wrapped, spec, req, args, key) {
         return [serviceData, CacheResult.noop];
     } catch (err) {
         const result = CacheResult.error;
+        // @ts-ignore
         logger.warning(req, err.message, {
             error: err,
             key,

@@ -34,6 +34,7 @@ async function executePipeline(pipeline, args) {
     // we expect exactly one resolver
     const resolverKey = Object.keys(pipeline.resolvers)[0];
     const resolverIndex = indexOf(pipeline.keys, resolverKey);
+    // @ts-ignore
     const resolver = pipeline.resolvers[resolverKey];
 
     // apply masks to the input arguments

@@ -29,6 +29,7 @@ describe('dataLoader wrapper', () => {
     });
 
     it('should use in-req cache', async () => {
+        // @ts-ignore
         const wrapper = dedup(companyRetrieve, {});
         let company = await wrapper(req, { id: 1 });
         expect(company.id).toBe(1);

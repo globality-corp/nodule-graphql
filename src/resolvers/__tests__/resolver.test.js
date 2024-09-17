@@ -1,12 +1,13 @@
 import { Forbidden } from '@globality/nodule-express';
 
-import { createResolver } from 'index';
+import { createResolver } from 'index.js';
 
 describe('a resolver', () => {
     it('returns an aggregated value', async () => {
         const resolver = createResolver({
             aggregate: async () => 42,
         });
+        // @ts-ignore
         expect(await resolver.resolve()).toEqual(42);
     });
 
@@ -15,6 +16,7 @@ describe('a resolver', () => {
             aggregate: async () => 21,
             transform: (result) => 2 * result,
         });
+        // @ts-ignore
         expect(await resolver.resolve()).toEqual(42);
     });
 
@@ -24,6 +26,7 @@ describe('a resolver', () => {
             authorize: async () => true,
             transform: (result) => 2 * result,
         });
+        // @ts-ignore
         expect(await resolver.resolve()).toEqual(42);
     });
 
@@ -35,6 +38,7 @@ describe('a resolver', () => {
             },
             transform: (result) => 2 * result,
         });
+        // @ts-ignore
         await expect(resolver.resolve()).rejects.toThrow('Forbidden');
     });
 
@@ -50,6 +54,7 @@ describe('a resolver', () => {
             authorizeData: true,
             transform: (result) => 2 * result,
         });
+        // @ts-ignore
         expect(await resolver.resolve()).toEqual(42);
     });
 
@@ -65,6 +70,7 @@ describe('a resolver', () => {
             authorizeData: false,
             transform: (result) => 2 * result,
         });
+        // @ts-ignore
         await expect(resolver.resolve()).rejects.toThrow('Forbidden');
     });
 
@@ -74,6 +80,7 @@ describe('a resolver', () => {
             authorize: 'null',
             transform: (result) => 2 * result,
         });
+        // @ts-ignore
         expect(await resolver.resolve()).toEqual(42);
     });
 
@@ -83,6 +90,7 @@ describe('a resolver', () => {
             mask: () => [],
             maxCallsPerRequest: 0,
         });
+        // @ts-ignore
         expect(await resolver.resolve()).toEqual(42);
     });
 
@@ -92,6 +100,7 @@ describe('a resolver', () => {
             aggregate: async () => 42,
             mask: () => [],
         });
+        // @ts-ignore
         expect(await resolver.resolve(undefined, undefined, context)).toEqual(42);
         expect(context.callCounts).toBeUndefined();
     });
@@ -108,7 +117,9 @@ describe('a resolver', () => {
             mask: () => [],
             maxCallsPerRequest: 1,
         });
+        // @ts-ignore
         expect(await resolverA.resolve(undefined, undefined, context)).toEqual(42);
+        // @ts-ignore
         expect(await resolverB.resolve(undefined, undefined, context)).toEqual(34);
         expect(context.callCounts[resolverA.resolverId]).toEqual(1);
         expect(context.callCounts[resolverB.resolverId]).toEqual(1);
@@ -122,7 +133,9 @@ describe('a resolver', () => {
             mask: () => [],
             maxCallsPerRequest: 1,
         });
+        // @ts-ignore
         expect(await resolver.resolve(undefined, undefined, context)).toEqual(42);
+        // @ts-ignore
         expect(await resolver.resolve(undefined, undefined, context)).toEqual(42);
         expect(context.callCounts[resolver.resolverId]).toEqual(2);
     });

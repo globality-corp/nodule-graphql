@@ -33,6 +33,7 @@ export default function passBasicAuth(req, res, next) {
         return sendUnauthorized(req, res, realm);
     }
 
+    // @ts-ignore
     req.headers.authorization = `Bearer ${credentials[1].trim()}`;
 
     return next();
